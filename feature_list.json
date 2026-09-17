@@ -7,9 +7,9 @@
       "milestone": "M1-observable-vertical-slice",
       "title": "Versioned command and event envelopes",
       "user_visible_behavior": "Valid controller messages are accepted as typed commands or facts, while malformed and unsupported protocol versions receive stable, actionable errors.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run packages/protocol/src/envelopes.test.ts", "make check"],
-      "evidence": "",
+      "evidence": "2026-09-17: envelopes.test.ts passed 11/11 tests, including JSON-schema round-trip validation, cyclic/non-JSON rejection, and credential exclusion; make check passed 2 test files and 12 tests with lint and all workspace typechecks.",
       "notes": "Foundation for every process boundary; SPEC sections 8 and 17."
     },
     {

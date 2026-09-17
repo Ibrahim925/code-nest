@@ -1,5 +1,16 @@
 # Design Decisions
 
+## 2026-09-17: Publish strict JSON Schema envelopes from one protocol package
+
+- Reason: model- and harness-agnostic adapters need a wire contract that can be
+  runtime-validated outside TypeScript while the reference implementation still
+  receives inferred static types.
+- Rejected alternative: TypeScript-only interfaces cannot validate subprocess or
+  network input; handwritten duplicate types and validators would drift.
+- Constraint: `typebox@1.3.30` is exact-pinned in `@code-nest/protocol`; v1
+  control objects reject unknown fields; breaking control or visibility changes
+  require a new version; capability credentials remain outside command bodies.
+
 ## 2026-09-16: Use one TypeScript workspace for the reference implementation
 
 - Reason: shared types reduce drift across the controller, protocol, replay

@@ -14,21 +14,35 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main` at the `chore: initialize agent harness`
-  initialization checkpoint.
-- **Verification status:** `make setup` passed with the frozen lockfile;
-  `make check` passed (ESLint, strict typechecks across six workspaces, one
-  Vitest file and one test); `pnpm peers check` reported no issues.
+- **Branch/commit:** `main`; `CN-001` is the latest verified feature checkpoint.
+- **Verification status:** `CN-001`'s focused suite passed 11 of 11 tests;
+  `make check` passed with ESLint, strict typechecks across six workspaces, two
+  Vitest files, and 12 tests.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin a fresh implementation session with `CN-001`,
-  Versioned command and event envelopes. Mark only that row `in_progress`,
-  implement it test-first, and require its listed verification before passing.
-- **Blockers:** none in the repository. This Codex task retains the pre-rename
-  sandbox path; reopen the project from `code-nest` so future cache-writing
-  commands use the correct workspace permission without extra approval.
+- **Next priority:** begin `CN-002`, the durable SQLite event ledger, test-first.
+  Review and approve its database schema before implementation as required by
+  `AGENTS.md`.
+- **Blockers:** none in `CN-001`. This Codex task retains the pre-rename sandbox
+  path; reopen the project from `code-nest` so future cache-writing commands use
+  the correct workspace permission without extra approval.
 
 ## Session Records
+
+### 2026-09-17 (cn-001-start) — Start versioned protocol envelopes
+
+- Outcome: done.
+- Did: exact-pinned TypeBox in the protocol package; published strict JSON Schema
+  2020-12 command and event envelopes with inferred TypeScript types; added
+  non-throwing parsers, stable JSON-pointer errors, targeted visibility rules,
+  and guards for process-local and cyclic payloads; documented compatibility.
+- Verification run: observed the new suite fail before implementation; final
+  focused verification passed 11 of 11 tests; protocol typecheck passed; final
+  `make check` passed ESLint, all six workspace typechecks, two test files, and
+  12 tests; JSON-serialized schemas were reconstructed and validated fixtures.
+- Risks / follow-ups: kind-specific payload schemas remain deliberately outside
+  the base envelope. `CN-002` must persist accepted envelopes without altering
+  their bytes or sequence semantics.
 
 ### 2026-09-16 (phase-0) — Approve the build specification
 
