@@ -1,5 +1,15 @@
 # Design Decisions
 
+## 2026-09-17: Store artifacts as immutable SHA-256 objects
+
+- Reason: large evidence must survive restart without filling SQLite event rows.
+  A digest binds a citation to the exact bytes that were inspected.
+- Rejected alternative: inline event payloads make replay and live delivery carry
+  logs repeatedly. Mutable named files allow a later write to alter old evidence.
+- Constraint: publish bytes before per-run metadata; never derive a path from a
+  submitted filename; verify the digest and size on every authorized read. One
+  run cannot reclassify an existing digest.
+
 ## 2026-09-17: Project visibility by omitting whole events
 
 - Reason: one event has one visibility tag. Returning either its complete saved

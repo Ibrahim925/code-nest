@@ -70,6 +70,40 @@ Version 1 records one result event per accepted command and assumes a single
 controller writer. Adding multi-event command results or a remote database needs
 a schema migration and a new decision record.
 
+## Artifact store v1
+
+`apps/controller/src/artifacts` stores bounded logs, patches, diffs, and reports
+outside SQLite. Bytes are addressed as `sha256:<64 lowercase hex>` and live at:
+
+```text
+objects/sha256/<first-two-hex>/<full-hex>
+```
+
+Each run has one immutable metadata record for a digest:
+
+```text
+records/<run-id>/sha256/<first-two-hex>/<full-hex>.json
+```
+
+The record contains its schema version, run ID, digest, byte count, media type,
+redacted preview, and visibility. The same bytes may be reused across runs, but
+one run cannot assign different metadata or visibility to the same digest.
+
+Publication writes a `0600` temporary file, syncs it, and creates the final name
+with a hard link that cannot replace an existing file. The containing directory
+is then synced. Bytes are published before metadata, so an interrupted write may
+leave an unreachable object but cannot publish a record for partial bytes.
+
+Reads validate the run ID and digest before building either path. They parse the
+metadata again, apply the shared visibility rule, and verify both SHA-256 and byte
+count before returning bytes. Missing and unauthorized reads have the same empty
+result. No participant container may mount this directory.
+
+The store limits `redactedPreview` to 4,096 UTF-8 bytes but does not scrub
+secrets; collection code must redact the preview and object bytes before calling
+`put`. Version 1 accepts bounded byte arrays. A streaming ingestion path can be
+added if later scenarios need larger objects.
+
 ## Failure behavior
 
 Model timeout, policy rejection, container exit, OOM, operator cancellation,

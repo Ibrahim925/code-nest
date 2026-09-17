@@ -13,6 +13,13 @@ export interface EventProjectionContext {
   audience: EventAudience;
 }
 
+export type Visibility = EventEnvelope["visibility"];
+
+export interface VisibilityContext {
+  revealState: RevealState;
+  audience: EventAudience;
+}
+
 function isUnblindedObserver(audience: EventAudience): boolean {
   return audience.kind === "observer" && audience.mode === "unblinded";
 }
@@ -32,24 +39,32 @@ export function projectEventForAudience(
   context: EventProjectionContext,
 ): EventEnvelope | undefined {
   if (event.runId !== context.runId) return undefined;
-  if (context.audience.kind === "operator") return event;
 
-  switch (event.visibility.class) {
+  return canAudienceViewVisibility(event.visibility, context) ? event : undefined;
+}
+
+export function canAudienceViewVisibility(
+  visibility: Visibility,
+  context: VisibilityContext,
+): boolean {
+  if (context.audience.kind === "operator") return true;
+
+  switch (visibility.class) {
     case "public":
-      return event;
+      return true;
     case "operator_private":
-      return undefined;
+      return false;
     case "post_reveal":
-      return context.revealState === "revealed" ||
+      return (
+        context.revealState === "revealed" ||
         isUnblindedObserver(context.audience)
-        ? event
-        : undefined;
+      );
     case "participant_private":
     case "covert":
-      return context.revealState === "revealed" ||
+      return (
+        context.revealState === "revealed" ||
         isUnblindedObserver(context.audience) ||
-        isTargetParticipant(context.audience, event.visibility.recipientIds)
-        ? event
-        : undefined;
+        isTargetParticipant(context.audience, visibility.recipientIds)
+      );
   }
 }

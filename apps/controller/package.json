@@ -8,6 +8,7 @@
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
+    "@code-nest/core": "workspace:*",
     "@code-nest/protocol": "workspace:*",
     "fastify": "5.12.4"
   },

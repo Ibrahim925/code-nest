@@ -14,19 +14,35 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-003` is the latest verified feature checkpoint.
-- **Verification status:** `CN-003`'s focused suite passed 10 of 10 tests;
-  `make check` passed with ESLint, strict typechecks across six workspaces, four
-  Vitest files, and 29 tests.
+- **Branch/commit:** `main`; `CN-004` is the latest verified feature checkpoint.
+- **Verification status:** `CN-004`'s focused suite passed 11 of 11 tests;
+  `make check` passed with ESLint, strict typechecks across six workspaces, five
+  Vitest files, and 40 tests.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-004`, the content-addressed artifact store. Define
-  its digest, path, size, and authorization rules before implementation.
-- **Blockers:** none in `CN-003`. This Codex task retains the pre-rename sandbox
+- **Next priority:** begin `CN-005`, the deterministic match-phase state machine.
+  Fix transition, rejection, terminal, and replay rules before implementation.
+- **Blockers:** none in `CN-004`. This Codex task retains the pre-rename sandbox
   path; reopen the project from `code-nest` so future cache-writing commands use
   the correct workspace permission without extra approval.
 
 ## Session Records
+
+### 2026-09-17 (cn-004) — Build the artifact store
+
+- Outcome: done.
+- Did: added a versioned, content-addressed artifact store with SHA-256 object
+  paths, immutable per-run metadata, atomic no-replace publication, file and
+  directory syncing, exact-size checks, owner-only files, and verified reads;
+  reused CN-003's visibility predicate rather than duplicating access rules. No
+  external dependency was added.
+- Verification run: observed the focused suite fail before implementation; final
+  focused verification passed 11 of 11 tests against real temporary directories.
+  Final `make check` passed ESLint, all six workspace typechecks, five test files,
+  and 40 tests.
+- Risks / follow-ups: Version 1 accepts bounded byte arrays rather than streaming
+  uploads. Producers must scrub secrets before persistence. The store permits
+  global byte deduplication but forbids metadata reclassification within one run.
 
 ### 2026-09-17 (cn-003) — Build the visibility projector
 
