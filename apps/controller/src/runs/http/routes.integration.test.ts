@@ -4,8 +4,8 @@ import { join } from "node:path";
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import { buildApp } from "../app";
-import { EventLedger } from "../ledger/ledger";
+import { buildApp } from "../../app";
+import { EventLedger } from "../../ledger/ledger";
 
 const OPERATOR_TOKEN = "test-operator-token";
 const AUTHORIZATION = { authorization: `Bearer ${OPERATOR_TOKEN}` };

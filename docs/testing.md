@@ -17,6 +17,21 @@
 Keep most rule coverage below Docker and browser layers so failures are fast and
 diagnostic. Do not mock the component whose boundary the test claims to verify.
 
+## Test placement
+
+Colocate tests with the module that owns the behavior by default:
+
+- `thing.test.ts` sits beside pure domain or application code;
+- `thing.integration.test.ts` sits beside the adapter boundary it exercises;
+- shared fixtures and reusable contract suites belong in `packages/testing`;
+- cross-package user flows, full-system recovery, and end-to-end checks belong
+  in a top-level `tests/` tree because no single source module owns them;
+- scenario inputs and their scorer checks remain under `scenarios/`.
+
+Colocation improves discoverability and makes ownership obvious. Do not force a
+test beside one file when it actually verifies several packages or a deployed
+system. Test location follows behavioral ownership, not a universal folder rule.
+
 ## Determinism
 
 Inject clocks, random seeds, IDs, and external effects. A completed replay must

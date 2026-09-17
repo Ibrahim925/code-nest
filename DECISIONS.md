@@ -1,5 +1,18 @@
 # Design Decisions
 
+## 2026-09-17: Use feature-oriented hexagonal boundaries
+
+- Reason: controller capabilities must remain testable without Fastify, SQLite,
+  Docker, or a specific runtime while still keeping related code discoverable.
+  Domain rules and application use cases therefore depend inward on narrow ports,
+  with transport and persistence implemented as adapters.
+- Rejected alternative: global `controllers`, `services`, and `repositories`
+  folders scatter one capability across the application. Requiring an interface
+  for every helper adds indirection without isolating a real side effect.
+- Constraint: organize hexagonal layers within each feature, create ports only
+  at external or replaceable boundaries, wire implementations in composition
+  roots, and colocate narrow tests with the layer whose behavior they verify.
+
 ## 2026-09-17: Derive run lifecycle state from audit events
 
 - Reason: create, pause, resume, and cancel must be durable and replayable, and

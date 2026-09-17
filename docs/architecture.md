@@ -28,6 +28,29 @@ Dependency direction points inward: applications may depend on packages;
 `protocol` and `core` must not import applications. Core game logic must not
 depend on Fastify, React, Docker, SQLite, or a model provider.
 
+## Hexagonal module rule
+
+Implement controller capabilities as feature-oriented hexagons when they cross
+an external boundary:
+
+```text
+domain <- application/ports <- adapters <- composition root
+```
+
+- **Domain:** deterministic state, invariants, transitions, and domain errors;
+  it imports no HTTP, database, filesystem, Docker, or provider code.
+- **Application:** use cases and ports expressed in domain terms; it coordinates
+  work but does not know which framework or storage engine fulfills a port.
+- **Adapters:** Fastify routes, SQLite repositories, process runners, and other
+  translations between external representations and application ports.
+- **Composition root:** application entry points construct concrete adapters and
+  inject them into use cases. Wiring belongs here, not in the domain.
+
+Organize these layers inside a capability such as `runs/`, rather than creating
+one global directory per layer. Introduce a port only for an actual side-effect
+or replaceable boundary. Pure helpers and single-step rules do not need an
+interface merely to look architectural.
+
 ## State flow
 
 1. A typed command reaches the controller with an idempotency key.
@@ -152,7 +175,9 @@ sequence. The permitted transitions are:
 
 Successful mutations append public `run.created`, `run.paused`, `run.resumed`,
 or `run.cancelled` events. Reads rebuild the view from those durable events; no
-second run-state table can drift from the ledger. Retrying the same action with
+second run-state table can drift from the ledger. The run domain and application
+service depend on a lifecycle-store port; the SQLite ledger and Fastify routes
+are outer adapters wired in `app.ts`. Retrying the same action with
 the same key returns the state produced by the original event, even if later
 events have moved the run onward. Reusing a key for a different action is a
 conflict. Invalid transitions and unauthorized requests never append a lifecycle

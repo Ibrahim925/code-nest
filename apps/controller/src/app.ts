@@ -3,9 +3,16 @@ import { mkdirSync } from "node:fs";
 
 import Fastify, { type FastifyInstance } from "fastify";
 
-import { registerRunRoutes, type RunRouteOptions } from "./runs/routes.js";
+import { EventLedger } from "./ledger/ledger.js";
+import { EventLedgerRunStore } from "./runs/adapters/event-ledger-run-store.js";
+import { RunLifecycleService } from "./runs/application/run-lifecycle.js";
+import { registerRunRoutes } from "./runs/http/routes.js";
 
-export interface BuildAppOptions extends Partial<RunRouteOptions> {
+export interface BuildAppOptions {
+  readonly databasePath?: string;
+  readonly operatorToken?: string;
+  readonly now?: () => Date;
+  readonly createEventId?: () => string;
   readonly logger?: boolean;
 }
 
@@ -23,12 +30,17 @@ export function buildApp(options: BuildAppOptions = {}): FastifyInstance {
       "Generated an ephemeral local operator token for this controller process.",
     );
   }
-  registerRunRoutes(app, {
-    databasePath,
-    operatorToken,
+  const ledger = EventLedger.open(databasePath);
+  const runStore = new EventLedgerRunStore(ledger);
+  const runService = new RunLifecycleService({
+    store: runStore,
     createEventId: options.createEventId ?? randomUUID,
-    ...(options.now === undefined ? {} : { now: options.now }),
+    now: options.now ?? (() => new Date()),
   });
+  app.addHook("onClose", async () => {
+    ledger.close();
+  });
+  registerRunRoutes(app, runService, operatorToken);
 
   app.get("/health", async () => ({
     service: "code-nest-controller",

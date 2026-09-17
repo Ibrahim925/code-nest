@@ -39,6 +39,11 @@ Use package public entry points across workspace boundaries. Avoid deep imports
 into another package's internals. One file should have one dominant concern;
 split a file when unrelated state machines or boundary adapters accumulate.
 
+Within controller capabilities, use feature-first hexagonal folders when an
+external boundary exists: `domain/`, `application/`, and adapter folders named
+for the technology or boundary, such as `http/` or `adapters/`. Dependencies
+point inward. Keep framework types and persistence records out of domain APIs.
+
 Generated schemas, replay fixtures, lockfiles, and vendored scenario repositories
 are changed through their owning generator or documented workflow, never by
 hand.

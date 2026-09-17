@@ -74,7 +74,7 @@
       "title": "Run lifecycle API",
       "user_visible_behavior": "An operator can create, inspect, pause, resume, and cancel a run through the documented local HTTP endpoints, with every mutation audited.",
       "status": "passing",
-      "verification": ["corepack pnpm vitest run apps/controller/src/runs/routes.integration.test.ts", "make check"],
+      "verification": ["corepack pnpm vitest run apps/controller/src/runs/domain/lifecycle.test.ts apps/controller/src/runs/http/routes.integration.test.ts", "make check"],
       "evidence": "2026-09-17: routes.integration.test.ts passed 8/8 tests against a real SQLite ledger, covering authenticated create/inspect, pause/resume/cancel, explicit operator cancellation, invalid and concurrent transitions, exact request validation, historical idempotency replay, key reuse rejection, durable audit events, and restart recovery; make check passed 8 test files and 93 tests with lint and all workspace typechecks.",
       "notes": "Lifecycle state is folded from strict public audit events without a schema or protocol-envelope change; runtime interruption and clock effects remain later controller work."
     },

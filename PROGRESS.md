@@ -15,9 +15,10 @@ actually verified.
 ## Current Verified State
 
 - **Branch/commit:** `main`; `CN-007` is the latest verified feature checkpoint.
-- **Verification status:** `CN-007`'s focused suite passed 8 of 8 tests; `make
-  check` passed with ESLint, strict typechecks across six workspaces, eight
-  Vitest files, and 93 tests.
+- **Verification status:** `CN-007` remains passing after its hexagonal refactor;
+  the focused domain and HTTP suites passed 11 of 11 tests. `make check` passed
+  with ESLint, strict typechecks across six workspaces, nine Vitest files, and 96
+  tests.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
 - **Next priority:** begin `CN-008`, the reconnectable SSE event stream. Preserve
@@ -26,6 +27,24 @@ actually verified.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-17 (architecture) — Adopt feature-oriented hexagonal boundaries
+
+- Outcome: done.
+- Did: refactored the run lifecycle into a framework-free domain, application
+  use cases with inbound and persistence ports, a SQLite event-ledger adapter,
+  a Fastify HTTP adapter, and explicit composition-root wiring. Added direct
+  domain coverage and documented when to use hexagonal layers without creating
+  interfaces for pure helpers. Codified colocated unit and narrow integration
+  tests as the default, with cross-package, end-to-end, isolation, and scenario
+  tests kept in their higher-level owning suites.
+- Verification run: baseline `make check` passed 8 files and 93 tests before the
+  refactor. The focused domain and HTTP suites passed 11 of 11 tests afterward.
+  Final `make check` passed ESLint, all six workspace typechecks, nine test files,
+  and 96 tests.
+- Risks / follow-ups: apply ports at external or genuinely replaceable
+  boundaries, not around every function. CN-008 should follow the same inward
+  dependency direction for stream subscriptions and event delivery.
 
 ### 2026-09-17 (cn-007) — Build the run lifecycle API
 
