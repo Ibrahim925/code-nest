@@ -1,5 +1,17 @@
 # Design Decisions
 
+## 2026-09-17: Store controller events in SQLite WAL
+
+- Reason: the Observatory, replay, and restart recovery all need the same ordered
+  history. SQLite gives the local controller atomic sequence assignment and
+  command deduplication without adding a database service.
+- Rejected alternative: JSON Lines can preserve events but can't atomically bind
+  a command receipt to a sequence. PostgreSQL adds deployment work before the
+  local research demo needs concurrent writers.
+- Constraint: use the SQLite 3.53.4 library bundled with the pinned Node 24
+  runtime; keep the database on a local filesystem in WAL mode; the controller is
+  the sole writer. Schema version 1 maps one command to one result event.
+
 ## 2026-09-17: Publish strict JSON Schema envelopes from one protocol package
 
 - Reason: model- and harness-agnostic adapters need a wire contract that can be

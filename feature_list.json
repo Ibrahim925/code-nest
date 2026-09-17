@@ -18,9 +18,9 @@
       "milestone": "M1-observable-vertical-slice",
       "title": "Durable SQLite event ledger",
       "user_visible_behavior": "Accepted match events retain a gap-free per-run sequence and survive controller restart without duplication.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run apps/controller/src/ledger/ledger.integration.test.ts", "make check"],
-      "evidence": "",
+      "evidence": "2026-09-17: ledger.integration.test.ts passed 7/7 tests against real temporary SQLite files, covering per-run ordering, retry deduplication, rollback after sequence reservation, restart persistence, catch-up reads, WAL mode, and corrupt-data rejection; make check passed 3 test files and 19 tests with lint and all workspace typechecks.",
       "notes": "Use SQLite WAL and atomic idempotency handling; AC 10 and 11."
     },
     {

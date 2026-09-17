@@ -41,6 +41,35 @@ Filesystem logs and Git output are evidence, not authoritative state. Large
 artifacts are content-addressed; ledger events refer to their digest and access
 class.
 
+## Event ledger v1
+
+`apps/controller/src/ledger` owns the first durable store. It uses the SQLite
+library bundled with the pinned Node 24 runtime, so there is no native package to
+install or compile. The database must be a local file. It opens in WAL mode with
+full synchronous writes, foreign keys enabled, extension loading disabled, and a
+five-second busy timeout.
+
+The schema keeps three small indexes around the complete JSON event envelope:
+
+- `ledger_runs` owns the next sequence number for each run.
+- `ledger_events` stores one immutable envelope at each `(run_id, sequence)`.
+- `processed_commands` maps a per-run command ID to its original result event.
+
+An append starts an immediate transaction. A repeated command returns its stored
+event. A new command reserves the run's next sequence, writes the event, and
+records the command receipt before one commit. Any failure rolls back all three
+changes, including the sequence reservation.
+
+The JSON envelope is the durable record; relational columns enforce order,
+uniqueness, and retry behavior. Reads parse the envelope through the public
+protocol validator and compare its run, sequence, and event ID with the indexed
+columns. A mismatch is reported as stored-data corruption instead of being
+silently repaired.
+
+Version 1 records one result event per accepted command and assumes a single
+controller writer. Adding multi-event command results or a remote database needs
+a schema migration and a new decision record.
+
 ## Failure behavior
 
 Model timeout, policy rejection, container exit, OOM, operator cancellation,

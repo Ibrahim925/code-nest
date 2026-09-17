@@ -14,20 +14,36 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-001` is the latest verified feature checkpoint.
-- **Verification status:** `CN-001`'s focused suite passed 11 of 11 tests;
-  `make check` passed with ESLint, strict typechecks across six workspaces, two
-  Vitest files, and 12 tests.
+- **Branch/commit:** `main`; `CN-002` is the latest verified feature checkpoint.
+- **Verification status:** `CN-002`'s focused suite passed 7 of 7 tests against
+  real SQLite files; `make check` passed with ESLint, strict typechecks across
+  six workspaces, three Vitest files, and 19 tests.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-002`, the durable SQLite event ledger, test-first.
-  Review and approve its database schema before implementation as required by
-  `AGENTS.md`.
-- **Blockers:** none in `CN-001`. This Codex task retains the pre-rename sandbox
+- **Next priority:** begin `CN-003`, the server-side visibility projector. Define
+  each audience and reveal-state rule before implementation.
+- **Blockers:** none in `CN-002`. This Codex task retains the pre-rename sandbox
   path; reopen the project from `code-nest` so future cache-writing commands use
   the correct workspace permission without extra approval.
 
 ## Session Records
+
+### 2026-09-17 (cn-002) — Build the durable event ledger
+
+- Outcome: done.
+- Did: added a schema-versioned, three-table event ledger using the pinned Node
+  runtime's built-in SQLite 3.53.4; made command receipt, sequence reservation,
+  and event insertion one transaction; added validated catch-up reads and stable
+  corruption/write errors; configured WAL and documented the single-writer local
+  storage boundary. No third-party database package was added.
+- Verification run: observed the focused suite fail before the ledger existed;
+  final focused verification passed 7 of 7 tests against real temporary SQLite
+  files. The rollback test forces an insertion failure after sequence reservation.
+  Final `make check` passed ESLint, all six workspace typechecks, three test files,
+  and 19 tests.
+- Risks / follow-ups: Node's built-in SQLite API is still marked release candidate,
+  so Code Nest pins Node 24. Version 1 maps one accepted command to one result
+  event and supports a local single-controller writer only.
 
 ### 2026-09-17 (cn-001-start) — Start versioned protocol envelopes
 
