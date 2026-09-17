@@ -1,5 +1,20 @@
 # Design Decisions
 
+## 2026-09-17: Track scenario sources as cloneable bare repositories
+
+- Reason: a scenario must pin a real Git commit that workspace provisioning can
+  clone, while the outer Code Nest repository must track every byte needed to
+  reproduce it. A bare repository preserves commits, trees, and refs as ordinary
+  outer-repository files without creating a nested working-tree gitlink.
+- Rejected alternative: committing a repository with an inner `.git` directory
+  turns it into an opaque nested repository and can omit its source files from the
+  outer checkout. Shipping only an exported tree loses commit identity and makes
+  the manifest's base revision unverifiable.
+- Constraint: the scenario repository has no remote, its `HEAD` names the pinned
+  default branch, and `scenario.json` records a full commit ID. Scenario tests
+  clone the fixture, verify that exact revision, and exercise the resulting
+  working tree. Temporary authoring clones are never committed.
+
 ## 2026-09-17: Integrate normalized patches in a controller-owned clone
 
 - Reason: participant repositories are intentionally independent and cannot

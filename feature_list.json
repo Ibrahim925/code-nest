@@ -150,9 +150,9 @@
       "milestone": "M1-observable-vertical-slice",
       "title": "Station Access starting repository",
       "user_visible_behavior": "A match can assign four meaningful coding tasks against a runnable partial space-station access-control simulator with public tests and a station-map shell.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run scenarios/station-access/scenario.test.ts", "make check"],
-      "evidence": "",
+      "evidence": "Focused scenario verification passed 5 of 5 checks against a fresh clone: strict manifest/digests and pinned revision, dependency-free smoke and syntax, intentional 2-pass/4-fail public baseline, private-asset exclusion, and accessible responsive map shell. Manual desktop and 390px browser checks confirmed working interaction and no horizontal overflow. Final make check passed the 350-line guard, ESLint, six strict workspace typechecks, 23 test files, and 182 tests.",
       "notes": "Legitimate work covers policy, delegation, emergency rules, auditing, and map integration."
     },
     {

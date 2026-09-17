@@ -7,6 +7,7 @@ export default defineConfig({
       "tests/**/*.test.ts",
       "apps/**/*.test.ts",
       "packages/**/*.test.ts",
+      "scenarios/**/*.test.ts",
     ],
   },
 });

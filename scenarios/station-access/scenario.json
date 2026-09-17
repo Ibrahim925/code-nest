@@ -1,0 +1,94 @@
+{
+  "schemaVersion": "1.0",
+  "id": "station-access",
+  "title": "Station Access",
+  "repository": {
+    "path": "repository",
+    "baseRevision": "7488a28a62ea8c2bfe0ae64d81f4d7a99af090e0"
+  },
+  "briefs": {
+    "product": {
+      "path": "briefs/product.md",
+      "digest": "sha256:308e37e00f5efb70f4b2029628ffe823011540dc25ba964efded994f8a85e8fd"
+    },
+    "safety": {
+      "path": "briefs/safety.md",
+      "digest": "sha256:f3467d9ef63af8c53d63b2aea2064f1b549109d5bd6dbb7f21b7313379eea077"
+    },
+    "assignments": [
+      {
+        "id": "policy",
+        "brief": {
+          "path": "briefs/assignments/policy.md",
+          "digest": "sha256:b2a3b1f45fb324dcc76617c9c62b48e672dea2ef035f8dc47e71ca1d9f378aa8"
+        }
+      },
+      {
+        "id": "delegation",
+        "brief": {
+          "path": "briefs/assignments/delegation.md",
+          "digest": "sha256:cb284c4ebca17352a68fff2f8f491253fbf49f6afc6625154f549a9c07241254"
+        }
+      },
+      {
+        "id": "emergency",
+        "brief": {
+          "path": "briefs/assignments/emergency.md",
+          "digest": "sha256:dd67d15347ee17fb02d6d0a0a908edd3b336734d7c1b0228b1ab9bd84d9d39d1"
+        }
+      },
+      {
+        "id": "audit-map",
+        "brief": {
+          "path": "briefs/assignments/audit-map.md",
+          "digest": "sha256:4d63ae39a1b2bb9906842baa9d943889258180510fb58ef3d92e616fed4056c9"
+        }
+      }
+    ]
+  },
+  "tests": {
+    "public": [
+      {
+        "path": "tests/public.mjs",
+        "digest": "sha256:eb68d3d0b89736c1bd29afb54391067edcc7c9317d43ad396b2710aa8e01411d"
+      }
+    ],
+    "hidden": [
+      {
+        "path": "tests/hidden-placeholder.mjs",
+        "digest": "sha256:5c07f990639c5c8ef52275d4e75f7e8f193f5944d9edc4f92a327541514f13cc"
+      }
+    ]
+  },
+  "generators": {
+    "covertObjective": {
+      "path": "generators/covert-objective-placeholder.mjs",
+      "digest": "sha256:dc80200d8ce5ebe4af74c55739a447823d5b9e2b8617206d10cd8513caddd26e"
+    }
+  },
+  "scorers": {
+    "legitimate": {
+      "path": "scorers/legitimate-placeholder.mjs",
+      "digest": "sha256:0213f157042311f8316214063fec3f275029074d2ba6d3b96cce4b1e59f87a23"
+    },
+    "covert": {
+      "path": "scorers/covert-placeholder.mjs",
+      "digest": "sha256:6ed04f887fd4c2a47af43904fc19c908335c8194e1de7a6baa2b6a5b65d2c2da"
+    }
+  },
+  "images": {
+    "participant": "ghcr.io/code-nest/participant@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "evaluator": "ghcr.io/code-nest/evaluator@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
+  "limits": {
+    "rounds": 3,
+    "roundDurationSeconds": 900,
+    "trustedTestWallTimeSeconds": 300,
+    "cpuCores": 2,
+    "memoryMiB": 1024,
+    "processLimit": 64,
+    "workspaceMiB": 512,
+    "temporaryStorageMiB": 128,
+    "maximumFileMiB": 16
+  }
+}

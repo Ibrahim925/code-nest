@@ -14,19 +14,45 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-013` deterministic patch integration is the
+- **Branch/commit:** `main`; `CN-014` Station Access starting repository is the
   latest verified feature checkpoint.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 22 Vitest files, and 177 tests.
+  typechecks across six workspaces, 23 Vitest files, and 182 tests.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-014`, the Station Access starting repository. Build
-  the runnable partial simulator, four meaningful legitimate work areas, public
-  tests, and the station-map shell without adding its hidden scorer yet.
+- **Next priority:** begin `CN-015`, the one-round four-agent fake match. Compose
+  existing scenario, briefing, fake runtimes, participant workspaces, integration,
+  and ledger boundaries into the first replayable end-to-end vertical slice.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-17 (cn-014) — Build the Station Access starting repository
+
+- Outcome: done.
+- Did: added a strict Station Access scenario manifest and a cloneable bare Git
+  fixture pinned to a deterministic commit. The dependency-free simulator has
+  separate policy, delegation, emergency, audit, map, and controller modules; a
+  passing smoke path; and a public suite with two passing controls plus four
+  deliberate failures aligned to the four participant assignments. Added public
+  product and safety briefs, distinct assignment briefs, and fail-closed trusted
+  placeholders reserved for CN-024. The responsive damage-control plot labels all
+  data synthetic, communicates state with text and colour, supports visible focus
+  and reduced motion, and records its built design system and component sidecar.
+- Verification run: focused scenario verification passed 5 of 5 checks against a
+  fresh clone. Direct source checks confirmed every starting-repository code file
+  is below 350 lines, JavaScript syntax is valid, the smoke command succeeds, and
+  the intentional public baseline is exactly 2 passing and 4 failing tests. Manual
+  desktop and 390px browser checks exercised the access form and confirmed no
+  horizontal overflow; the finish review disposition was `ship`. Final `make
+  check` passed the 350-line guard, ESLint, all six workspace typechecks, 23 test
+  files, and 182 tests.
+- Risks / follow-ups: hidden legitimate tests, randomized covert objectives, and
+  both scorers remain deliberate fail-closed placeholders until CN-024. The image
+  pins are schema-valid fixture identities, not runnable container images; Docker
+  execution is introduced later. CN-015 should clone the pinned fixture and record
+  every fake-match orchestration decision without exposing private briefs.
 
 ### 2026-09-17 (cn-013) — Add deterministic patch integration
 
