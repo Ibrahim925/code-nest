@@ -1,0 +1,19 @@
+.PHONY: setup dev test lint check
+
+NODE24_PREFIX := $(if $(wildcard /opt/homebrew/opt/node@24/bin/node),/opt/homebrew/opt/node@24/bin:,)
+PNPM := env PATH="$(NODE24_PREFIX)$(PATH)" corepack pnpm
+
+setup:  ## install and lock dependencies
+	$(PNPM) install --frozen-lockfile
+
+dev:  ## run the controller and Live Observatory locally
+	$(PNPM) dev
+
+test:  ## run the test suite
+	$(PNPM) test
+
+lint:  ## run formatting checks, lint, and strict typecheck
+	$(PNPM) lint
+	$(PNPM) typecheck
+
+check: lint test  ## aggregate gate

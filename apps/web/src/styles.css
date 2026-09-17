@@ -1,0 +1,30 @@
+:root {
+  color: #e8ece8;
+  background: #111411;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+}
+
+main {
+  box-sizing: border-box;
+  display: grid;
+  min-height: 100vh;
+  place-content: center;
+  padding: 2rem;
+}
+
+.eyebrow {
+  color: #9eb69e;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+h1,
+p {
+  margin-block: 0.5rem;
+}

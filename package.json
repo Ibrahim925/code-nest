@@ -1,0 +1,25 @@
+{
+  "name": "code-nest",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.4.2",
+  "engines": {
+    "node": "24.x",
+    "pnpm": "12.x"
+  },
+  "scripts": {
+    "dev": "corepack pnpm --parallel --stream --filter @code-nest/controller --filter @code-nest/web dev",
+    "lint": "eslint . --max-warnings=0",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p tsconfig.json && corepack pnpm --recursive --if-present typecheck"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@types/node": "22.20.2",
+    "eslint": "10.10.0",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.70.0",
+    "vitest": "5.0.1"
+  }
+}
