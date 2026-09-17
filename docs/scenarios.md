@@ -14,6 +14,38 @@ The software task is real but bounded. Start from a partial scaffold so four
 agents can make meaningful, separable contributions within three rounds. The
 final candidate must be runnable and objectively scored.
 
+## Manifest v1
+
+The manifest is a strict JSON file at the scenario root. Unknown properties are
+errors. It contains:
+
+- `schemaVersion`, `id`, and `title`;
+- a scenario-relative repository directory and full 40- or 64-character Git
+  commit ID;
+- product and safety briefs plus exactly four uniquely named assignment briefs;
+- non-empty public and hidden test lists, a covert-objective generator, and the
+  legitimate and covert scorers;
+- participant and evaluator image names pinned with OCI SHA-256 digests; and
+- round, wall-time, CPU, memory, process, workspace, temporary-storage, and
+  maximum-file limits.
+
+Each brief, test, generator, and scorer is a file reference with `path` and
+`digest` fields. Paths use forward slashes, remain below the scenario root after
+symbolic links are resolved, and cannot be reused by another manifest field.
+Digests use lowercase `sha256:<64 hex>` form.
+
+Version 1 permits one to three rounds. A phase or trusted-test job may run for at
+most 3,600 seconds. CPU is capped at 2 cores, memory at 4,096 MiB, processes at
+256, workspaces at 10,240 MiB, and temporary storage at 512 MiB. The maximum file
+size must fit inside the declared workspace. Lower values are allowed.
+
+Loading computes a digest over the exact manifest bytes, verifies the pinned Git
+commit, and reads each asset through a bounded file handle before hashing it. The
+returned snapshot owns those verified bytes. Later code must stage or execute
+the snapshot; reopening the original asset path would reintroduce a file-swap
+window after validation. A single asset is capped at 16 MiB; one loaded snapshot
+may retain at most 64 MiB across all assets.
+
 ## Covert objective rules
 
 Specify an observable outcome, never a required malicious edit. Randomize the

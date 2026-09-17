@@ -14,20 +14,37 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-005` is the latest verified feature checkpoint.
-- **Verification status:** `CN-005`'s focused suite passed 11 of 11 tests;
-  `make check` passed with ESLint, strict typechecks across six workspaces, six
-  Vitest files, and 51 tests.
+- **Branch/commit:** `main`; `CN-006` is the latest verified feature checkpoint.
+- **Verification status:** `CN-006`'s focused suite passed 34 of 34 tests;
+  `make check` passed with ESLint, strict typechecks across six workspaces, seven
+  Vitest files, and 85 tests.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-006`, the pinned scenario manifest loader. Freeze
-  the manifest's trust boundary, digest rules, and validation failures before
-  choosing its runtime schema shape.
-- **Blockers:** none in `CN-005`. This Codex task retains the pre-rename sandbox
+- **Next priority:** begin `CN-007`, the run lifecycle API. Freeze the run-state,
+  persistence, authorization, idempotency, and audit-event contract before adding
+  HTTP routes.
+- **Blockers:** none in `CN-006`. This Codex task retains the pre-rename sandbox
   path; reopen the project from `code-nest` so future cache-writing commands use
   the correct workspace permission without extra approval.
 
 ## Session Records
+
+### 2026-09-17 (cn-006) — Build the scenario manifest loader
+
+- Outcome: done.
+- Did: added strict Version 1 manifest parsing, full Git commit verification,
+  OCI image pins, bounded reads, SHA-256 verification, lexical and canonical path
+  containment, distinct file enforcement, exact manifest-byte hashing, retained
+  asset snapshots, resource ceilings, and stable field-specific errors. No package
+  was added and no database or protocol contract changed.
+- Verification run: observed the focused suite fail on the missing loader before
+  implementation; the first implementation passed 31 of 32 cases and exposed one
+  imprecise path field. Final focused verification passed 34 of 34 tests. Final
+  `make check` passed ESLint, all six workspace typechecks, seven test files, and
+  85 tests.
+- Risks / follow-ups: each asset is capped at 16 MiB and the retained set at 64
+  MiB. Later consumers must use the verified bytes, and CN-011 must create Git
+  workspaces from `baseRevision`, never from the repository's mutable checkout.
 
 ### 2026-09-17 (cn-005) — Build the match phase state machine
 

@@ -62,10 +62,10 @@
       "milestone": "M1-observable-vertical-slice",
       "title": "Pinned scenario manifest loader",
       "user_visible_behavior": "An operator can load a scenario only when its repository, briefs, tests, scorers, images, limits, and digests form a valid reproducible manifest.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run apps/controller/src/scenarios/manifest.test.ts", "make check"],
-      "evidence": "",
-      "notes": "Invalid or unsafe manifests fail before a run starts."
+      "evidence": "2026-09-17: manifest.test.ts passed 34/34 tests against real temporary files and Git repositories, covering strict JSON shape and versions, exact manifest-byte retention, full commit and OCI image pins, assignment cardinality, limit ceilings, malformed and mismatched digests, missing/non-file/duplicate/oversized assets, aggregate memory bounds, lexical traversal, symlink escape, and snapshot stability; make check passed 7 test files and 85 tests with lint and all workspace typechecks.",
+      "notes": "No dependency, database, or protocol change; consumers must use verified asset bytes and the pinned commit."
     },
     {
       "id": "CN-007",

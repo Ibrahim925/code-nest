@@ -1,5 +1,17 @@
 # Design Decisions
 
+## 2026-09-17: Snapshot scenario files during manifest verification
+
+- Reason: validating a digest and later reopening the named file leaves time for
+  its contents to change. Keeping the bytes that passed verification gives run
+  setup an exact input and preserves the matching manifest digest for replay.
+- Rejected alternative: trusting paths after one preflight check makes the run
+  depend on mutable local files. Copying before validation would preserve the
+  wrong bytes just as faithfully.
+- Constraint: scenario consumers use the loaded byte snapshot. Git workspaces are
+  created from the verified full commit ID, and container images use digest-pinned
+  names. Paths are diagnostic metadata, not authority after the load completes.
+
 ## 2026-09-17: Store artifacts as immutable SHA-256 objects
 
 - Reason: large evidence must survive restart without filling SQLite event rows.
