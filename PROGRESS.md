@@ -14,19 +14,42 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; the 350-line source policy is the latest verified
-  maintenance checkpoint, and `CN-011` remains the latest feature checkpoint.
+- **Branch/commit:** `main`; `CN-012` private role assignment and briefing is the
+  latest verified feature checkpoint.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 18 Vitest files, and 154 tests.
+  typechecks across six workspaces, 20 Vitest files, and 165 tests.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-012`, private role assignment and briefing. Assign
-  exactly one saboteur reproducibly, deliver role material through a private
-  one-shot channel, and prove no private brief reaches participant workspaces.
+- **Next priority:** begin `CN-013`, deterministic patch integration. Normalize
+  authorized proposals, enforce ancestry and declared ordering, apply them only
+  to a controller-owned release candidate, and record conflicts as evidence.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-17 (cn-012) — Add private role assignment and briefing
+
+- Outcome: done.
+- Did: added deterministic, roster-order-independent assignment of exactly one
+  saboteur among four participants. Added a feature-oriented briefing hexagon
+  whose use case depends on covert-generation, private-delivery, and durable-audit
+  ports. Every participant receives the public task, safety brief, and their own
+  legitimate assignment; only the saboteur brief type can contain the generated
+  covert objective. A durable start marker precedes generation and delivery, so
+  retries in memory or after reconstruction fail closed without generating or
+  sending a second secret. Ledger evidence and public receipts contain assignment
+  identifiers only, and the service has no workspace-writing boundary.
+- Verification run: focused role and leakage suites passed 11 of 11 tests. They
+  cover seeded distribution, input rejection, unchanged real workspace fixtures,
+  generator-source confinement, serialized receipt and clean-observer secrecy,
+  exactly-once delivery, restart rejection, and generation-failure behavior.
+  Final `make check` passed the 350-line guard, ESLint, all six workspace
+  typechecks, 20 test files, and 165 tests.
+- Risks / follow-ups: the durable start marker deliberately makes a failed or
+  partially delivered briefing non-retryable; orchestration must terminate that
+  run rather than risk conflicting secrets. Host mount isolation remains CN-025.
+  CN-015 will supply the concrete runtime-backed private channel.
 
 ### 2026-09-17 (maintenance) — Enforce a 350-line code-file maximum
 

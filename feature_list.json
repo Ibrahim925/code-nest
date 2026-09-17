@@ -128,9 +128,9 @@
       "milestone": "M1-observable-vertical-slice",
       "title": "Private role assignment and briefing",
       "user_visible_behavior": "Exactly one of four participants receives a generated saboteur brief through a private one-shot channel, while every participant receives the public task and a legitimate assignment.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run packages/core/src/roles.test.ts apps/controller/src/briefing/leakage.integration.test.ts", "make check"],
-      "evidence": "",
+      "evidence": "2026-09-17: the focused role and leakage suites passed 11/11 tests, covering exactly-one seeded role assignment, roster-order determinism, invalid inputs, private per-participant delivery, generator-only covert source handling, unchanged workspaces, clean-observer and public-receipt secrecy, in-process and restart duplicate rejection, and fail-closed generation failure. Final make check passed the 350-line guard, ESLint, all six workspace typechecks, 20 test files, and 165 tests.",
       "notes": "Role distribution is seedable; no role brief is written into a workspace; AC 4."
     },
     {

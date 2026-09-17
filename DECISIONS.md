@@ -1,5 +1,19 @@
 # Design Decisions
 
+## 2026-09-17: Mark private briefing before generating or delivering it
+
+- Reason: role material is a one-shot secret. A durable attempt marker lets a
+  restarted controller reject a repeat before it regenerates the covert objective
+  or sends a second brief.
+- Rejected alternative: recording only successful completion leaves a crash window
+  in which retrying can deliver the role twice. Persisting the brief itself would
+  create another secret-bearing store and replay surface.
+- Constraint: the audit marker contains public assignment identifiers only. After
+  an attempt begins, generation, delivery, or completion failure fails the run
+  closed rather than retrying. Covert source bytes and generated role material may
+  cross only their explicit private ports and never enter workspace files, public
+  receipts, or ledger payloads.
+
 ## 2026-09-17: Isolate participants with independent detached clones
 
 - Reason: a linked Git worktree shares administrative files, object storage, and

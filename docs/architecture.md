@@ -257,6 +257,34 @@ authorizes them through the scoped participant capability service, and only then
 commits resulting controller events. Adapter messages, commits, usage, and tool
 summaries are evidence inputs, never direct state mutations.
 
+## Private role briefing v1
+
+`packages/core/src/roles.ts` assigns exactly one saboteur among exactly four
+distinct participants. It canonicalizes participant identifiers before applying
+the injected non-negative integer seed, so the same roster and seed select the
+same participant even if input order changes. The returned assignments retain
+input order for deterministic delivery.
+
+`apps/controller/src/briefing` is a feature-oriented hexagon. Its application
+service depends on three narrow ports: a covert-objective generator, a private
+brief channel, and a durable briefing audit. It sends every participant the
+public task, safety brief, and that participant's legitimate assignment. Only the
+saboteur variant can represent `covertObjective`, preventing accidental builder
+serialization through an optional secret field.
+
+Before objective generation or delivery, the ledger audit appends an
+operator-private `briefing.delivery_started` marker using a stable per-run command
+identifier. A retry in the same process or after reconstruction is rejected
+before the generator or channel runs again. Successful delivery appends public
+`briefing.completed` evidence. Both events contain assignment identifiers only;
+roles, generator source bytes, and generated objectives remain outside the
+ledger, public receipt, and participant workspaces.
+
+The trusted process may retain the role lookup in memory, while the deterministic
+core function can reconstruct it from the verified roster and seed. A failure
+after the start marker is not retried because avoiding duplicate or conflicting
+secrets takes precedence; orchestration must terminate that run explicitly.
+
 ## Failure behavior
 
 Model timeout, policy rejection, container exit, OOM, operator cancellation,
