@@ -11,18 +11,18 @@ import {
   type WorkspaceCapture,
 } from "../domain/workspace.js";
 import {
-  DEFAULT_MAX_CAPTURE_BYTES,
+  DEFAULT_MAX_GIT_BYTES,
   GitCommandError,
   gitText,
   isNodeErrorWithCode,
   runGit,
-} from "./git-command.js";
+} from "../../git/git-command.js";
 import { captureGitWorkspace } from "./git-workspace-capture.js";
 
 export class GitWorkspaceRepository implements WorkspaceRepository {
   readonly #maximumCaptureBytes: number;
 
-  constructor(maximumCaptureBytes = DEFAULT_MAX_CAPTURE_BYTES) {
+  constructor(maximumCaptureBytes = DEFAULT_MAX_GIT_BYTES) {
     if (!Number.isSafeInteger(maximumCaptureBytes) || maximumCaptureBytes < 1) {
       throw new WorkspaceError(
         "INVALID_WORKSPACE_INPUT",

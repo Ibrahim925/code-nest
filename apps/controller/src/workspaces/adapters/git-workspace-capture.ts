@@ -15,7 +15,7 @@ import {
   gitLineList,
   gitText,
   runGit,
-} from "./git-command.js";
+} from "../../git/git-command.js";
 
 function digest(bytes: Uint8Array): `sha256:${string}` {
   return `sha256:${createHash("sha256").update(bytes).digest("hex")}`;

@@ -285,6 +285,36 @@ core function can reconstruct it from the verified roster and seed. A failure
 after the start marker is not retried because avoiding duplicate or conflicting
 secrets takes precedence; orchestration must terminate that run explicitly.
 
+## Deterministic patch integration v1
+
+`apps/controller/src/integration` accepts commit-backed proposals only after an
+upstream constitution or operator has authorized them. The domain contract
+requires full Git object IDs, one shared verified base, unique proposal IDs, and
+an explicit order containing every proposal exactly once. Authorization policy
+does not live in the integrator.
+
+The application use case preflights and normalizes every source before creating a
+release candidate. Its repository port separates deterministic ordering from Git
+and filesystem effects. The Git adapter requires each source to be exactly the
+private repository at `<workspace-root>/<run-id>/<participant-id>`, verifies the
+candidate is descended from the declared base, and emits a bounded
+`--binary --full-index` diff with a SHA-256 evidence digest. It never checks out,
+stages, or commits in a participant repository.
+
+The release candidate is a new owner-only, detached clone of the verified base
+under a controller-owned root. It has no remote. Normalized patches are applied
+in declared order with Git's indexed three-way machinery. A clean mechanical
+merge becomes a deterministic commit using the integrator identity and fixed
+metadata. A real conflict restores the candidate to its previous clean commit,
+records a conflict outcome, and allows later independent proposals to proceed;
+the integrator does not invent semantic resolutions. Unrelated ancestry and
+no-change proposals are also explicit report outcomes.
+
+The report contains the exact base and final revision, candidate path, ordered
+proposal outcomes, normalized patch digests, integrated commit IDs, and safe
+reasons. CN-015 records this report and its artifact references in the event
+ledger when the one-round vertical slice wires the components together.
+
 ## Failure behavior
 
 Model timeout, policy rejection, container exit, OOM, operator cancellation,

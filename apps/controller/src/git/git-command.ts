@@ -1,6 +1,6 @@
 import { execFile } from "node:child_process";
 
-export const DEFAULT_MAX_CAPTURE_BYTES = 16 * 1024 * 1024;
+export const DEFAULT_MAX_GIT_BYTES = 16 * 1024 * 1024;
 export const GIT_COMMAND_OVERHEAD_BYTES = 1024 * 1024;
 
 export interface GitCommandResult {
@@ -32,10 +32,11 @@ export function runGit(
     readonly cwd?: string;
     readonly maximumBytes?: number;
     readonly allowedExitCodes?: readonly number[];
+    readonly environment?: Readonly<Record<string, string>>;
   } = {},
 ): Promise<GitCommandResult> {
   const maximumBytes =
-    options.maximumBytes ?? DEFAULT_MAX_CAPTURE_BYTES + GIT_COMMAND_OVERHEAD_BYTES;
+    options.maximumBytes ?? DEFAULT_MAX_GIT_BYTES + GIT_COMMAND_OVERHEAD_BYTES;
   const allowedExitCodes = options.allowedExitCodes ?? [0];
 
   return new Promise((resolvePromise, rejectPromise) => {
@@ -51,6 +52,7 @@ export function runGit(
           GIT_CONFIG_NOSYSTEM: "1",
           GIT_CONFIG_SYSTEM: "/dev/null",
           GIT_TERMINAL_PROMPT: "0",
+          ...options.environment,
         },
         maxBuffer: maximumBytes,
         windowsHide: true,

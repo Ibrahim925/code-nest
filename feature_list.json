@@ -139,9 +139,9 @@
       "milestone": "M1-observable-vertical-slice",
       "title": "Deterministic patch integrator",
       "user_visible_behavior": "Authorized patch proposals are normalized and applied in a declared order to a release candidate, with conflicts and rejected ancestry reported as evidence.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run apps/controller/src/integration/integrator.integration.test.ts", "make check"],
-      "evidence": "",
+      "evidence": "2026-09-17: integrator.integration.test.ts passed 6/6 real-Git tests covering declared ordering, SHA-256 normalized patches, mechanically safe three-way merging, true conflict recovery, unrelated ancestry evidence, deterministic candidate revisions, invalid-order preflight, release collision preservation, participant/source binding, unchanged participant repositories, and no-change proposals. The colocated domain suite passed 6/6 validation cases. Final make check passed the 350-line guard, ESLint, all six workspace typechecks, 22 test files, and 177 tests.",
       "notes": "Participant workspaces never write the release branch directly."
     },
     {

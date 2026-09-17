@@ -1,5 +1,23 @@
 # Design Decisions
 
+## 2026-09-17: Integrate normalized patches in a controller-owned clone
+
+- Reason: participant repositories are intentionally independent and cannot
+  safely share refs or write the release branch. Converting each authorized full
+  commit to one bounded binary diff gives the integrator a portable, hashable unit
+  that it can apply in an explicit governance order.
+- Rejected alternative: fetching and cherry-picking participant commits imports
+  participant history and refs into the release repository. Applying patches in
+  arrival order makes the result depend on runtime scheduling rather than the
+  recorded governance decision.
+- Constraint: a proposal source must be the exact managed path for its run and
+  participant, and its full candidate must descend from the common verified base.
+  The integrator creates an owner-only detached clone with no remote, hashes every
+  normalized patch, uses Git's three-way application only for clean mechanical
+  merges, restores the candidate after a real conflict, and never edits a source
+  workspace. Fixed integrator commit metadata makes identical inputs reproducible;
+  participant provenance remains in the integration report.
+
 ## 2026-09-17: Mark private briefing before generating or delivering it
 
 - Reason: role material is a one-shot secret. A durable attempt marker lets a

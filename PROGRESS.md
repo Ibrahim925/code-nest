@@ -14,19 +14,41 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-012` private role assignment and briefing is the
+- **Branch/commit:** `main`; `CN-013` deterministic patch integration is the
   latest verified feature checkpoint.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 20 Vitest files, and 165 tests.
+  typechecks across six workspaces, 22 Vitest files, and 177 tests.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-013`, deterministic patch integration. Normalize
-  authorized proposals, enforce ancestry and declared ordering, apply them only
-  to a controller-owned release candidate, and record conflicts as evidence.
+- **Next priority:** begin `CN-014`, the Station Access starting repository. Build
+  the runnable partial simulator, four meaningful legitimate work areas, public
+  tests, and the station-map shell without adding its hidden scorer yet.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-17 (cn-013) — Add deterministic patch integration
+
+- Outcome: done.
+- Did: added a feature-oriented integration hexagon with strict proposal and
+  report types, a framework-free ordering use case, a Git repository port, and
+  separate Git adapters for source normalization and release-candidate lifecycle.
+  Authorized full commits are bound to the exact managed run/participant path,
+  checked against the shared base, converted to bounded full-index binary diffs,
+  and hashed. A fresh owner-only candidate clone has no remote and receives
+  patches only in the declared order. Clean three-way merges become deterministic
+  integrator commits; real conflicts restore the previous clean candidate and
+  become report evidence. Participant repositories are read-only throughout.
+- Verification run: the exact real-Git feature suite passed 6 of 6 tests. The
+  colocated domain suite passed 6 of 6 malformed/order cases. Final `make check`
+  passed the 350-line guard, ESLint, all six workspace typechecks, 22 test files,
+  and 177 tests.
+- Risks / follow-ups: Version 1 normalization consumes committed candidate
+  revisions; uncommitted captures remain evidence until submitted as a commit or
+  a later explicit patch-artifact proposal. CN-015 must persist the integration
+  report and artifact references in the event trace. Integration authorization
+  remains the caller's governance responsibility by design.
 
 ### 2026-09-17 (cn-012) — Add private role assignment and briefing
 
