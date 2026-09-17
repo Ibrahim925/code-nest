@@ -1,5 +1,18 @@
 # Design Decisions
 
+## 2026-09-17: Separate audience delivery order from ledger order
+
+- Reason: omitting a covert or private event while exposing its ledger sequence
+  still reveals that something happened. Clean observers need deterministic
+  ordering and reconnection without learning hidden source positions.
+- Rejected alternative: sending complete persisted envelopes creates visible
+  sequence gaps; renumbering the persisted event mutates audit identity; using a
+  delivery number as the reconnect cursor is ambiguous across audiences.
+- Constraint: the stored Version 1 event envelope remains unchanged. SSE sends a
+  separately versioned strict delivery record with a contiguous audience-visible
+  ordinal and an event with no ledger sequence. Stable opaque event IDs are the
+  only reconnect cursor, and the server validates cursor visibility.
+
 ## 2026-09-17: Use feature-oriented hexagonal boundaries
 
 - Reason: controller capabilities must remain testable without Fastify, SQLite,

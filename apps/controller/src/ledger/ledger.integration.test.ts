@@ -198,6 +198,31 @@ describe("durable event ledger", () => {
     ).toEqual([2, 3]);
   });
 
+  it("publishes new events only after commit and never republishes a retry", async () => {
+    const ledger = openLedger(await createDatabasePath());
+    const published: Array<{ eventId: string; persisted: boolean }> = [];
+    let resolvePublished = (): void => {};
+    const firstPublication = new Promise<void>((resolve) => {
+      resolvePublished = resolve;
+    });
+    const unsubscribe = ledger.subscribe("run-a", (event) => {
+      published.push({
+        eventId: event.eventId,
+        persisted: ledger.getEvent(event.eventId) !== undefined,
+      });
+      resolvePublished();
+    });
+    const draft = eventDraft("run-a", "evt-a-1", "cmd-a-1");
+
+    ledger.appendCommandEvent("cmd-a-1", draft);
+    await firstPublication;
+    ledger.appendCommandEvent("cmd-a-1", draft);
+    await Promise.resolve();
+
+    expect(published).toEqual([{ eventId: "evt-a-1", persisted: true }]);
+    unsubscribe();
+  });
+
   it("opens file-backed databases in WAL mode", async () => {
     const path = await createDatabasePath();
     const ledger = openLedger(path);

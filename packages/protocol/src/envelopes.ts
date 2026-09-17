@@ -3,6 +3,7 @@ import Schema from "typebox/schema";
 
 export const COMMAND_PROTOCOL_VERSION = "1.0" as const;
 export const EVENT_SCHEMA_VERSION = "1.0" as const;
+export const EVENT_DELIVERY_VERSION = "1.0" as const;
 
 const JSON_SCHEMA_DRAFT_2020_12 =
   "https://json-schema.org/draft/2020-12/schema" as const;
@@ -142,6 +143,33 @@ export const EventEnvelopeSchema = Type.Object(
 
 export type EventEnvelope = Type.Static<typeof EventEnvelopeSchema>;
 
+export const DeliveredEventSchema = Type.Omit(
+  EventEnvelopeSchema,
+  ["sequence"],
+  {
+    $id: "urn:code-nest:protocol:v1:delivered-event",
+    $schema: JSON_SCHEMA_DRAFT_2020_12,
+    additionalProperties: false,
+  },
+);
+
+export type DeliveredEvent = Type.Static<typeof DeliveredEventSchema>;
+
+export const EventDeliverySchema = Type.Object(
+  {
+    deliveryVersion: Type.Literal(EVENT_DELIVERY_VERSION),
+    deliverySequence: Type.Integer({ minimum: 1 }),
+    event: DeliveredEventSchema,
+  },
+  {
+    $id: "urn:code-nest:protocol:v1:event-delivery",
+    $schema: JSON_SCHEMA_DRAFT_2020_12,
+    additionalProperties: false,
+  },
+);
+
+export type EventDelivery = Type.Static<typeof EventDeliverySchema>;
+
 export interface ValidationIssue {
   code: string;
   message: string;
@@ -166,12 +194,31 @@ export interface UnsupportedVersionError {
 
 export type EnvelopeError = InvalidEnvelopeError | UnsupportedVersionError;
 
-export type ParseResult<T> =
+export type ParseResult<T, Error = EnvelopeError> =
   | { ok: true; value: T }
-  | { ok: false; error: EnvelopeError };
+  | { ok: false; error: Error };
+
+export interface InvalidEventDeliveryError {
+  code: "INVALID_EVENT_DELIVERY";
+  message: string;
+  issues: ValidationIssue[];
+}
+
+export interface UnsupportedEventDeliveryVersionError {
+  code: "UNSUPPORTED_EVENT_DELIVERY_VERSION";
+  message: string;
+  receivedVersion: string;
+  supportedVersions: readonly ["1.0"];
+  issues: ValidationIssue[];
+}
+
+export type EventDeliveryError =
+  | InvalidEventDeliveryError
+  | UnsupportedEventDeliveryVersionError;
 
 const commandValidator = Schema.Compile(CommandEnvelopeSchema);
 const eventValidator = Schema.Compile(EventEnvelopeSchema);
+const eventDeliveryValidator = Schema.Compile(EventDeliverySchema);
 
 type RawValidationIssue = ReturnType<
   typeof commandValidator.Errors
@@ -276,6 +323,13 @@ function findNonJsonValue(
 function payloadJsonIssue(input: unknown): ValidationIssue | undefined {
   if (!isRecord(input) || !("payload" in input)) return undefined;
   return findNonJsonValue(input.payload, "/payload", new Set<object>());
+}
+
+function deliveryPayloadJsonIssue(input: unknown): ValidationIssue | undefined {
+  if (!isRecord(input) || !isRecord(input.event)) return undefined;
+  const issue = payloadJsonIssue(input.event);
+  if (issue === undefined) return undefined;
+  return { ...issue, path: `/event${issue.path}` };
 }
 
 function stringArrayParam(
@@ -525,6 +579,58 @@ export function parseEventEnvelope(input: unknown): ParseResult<EventEnvelope> {
         ...normalizeIssues(errors),
         ...targetedVisibilityIssues(input),
       ]),
+    },
+  };
+}
+
+export function parseEventDelivery(
+  input: unknown,
+): ParseResult<EventDelivery, EventDeliveryError> {
+  if (isRecord(input)) {
+    const receivedVersion = input.deliveryVersion;
+    if (
+      typeof receivedVersion === "string" &&
+      receivedVersion !== EVENT_DELIVERY_VERSION
+    ) {
+      return {
+        ok: false,
+        error: {
+          code: "UNSUPPORTED_EVENT_DELIVERY_VERSION",
+          message: `Unsupported event delivery version "${receivedVersion}". Supported versions: 1.0.`,
+          receivedVersion,
+          supportedVersions: [EVENT_DELIVERY_VERSION],
+          issues: [
+            {
+              code: "unsupported_version",
+              message: "Expected one of: 1.0.",
+              path: "/deliveryVersion",
+            },
+          ],
+        },
+      };
+    }
+  }
+
+  const jsonIssue = deliveryPayloadJsonIssue(input);
+  if (jsonIssue !== undefined) {
+    return {
+      ok: false,
+      error: {
+        code: "INVALID_EVENT_DELIVERY",
+        message: "Event delivery failed validation.",
+        issues: [jsonIssue],
+      },
+    };
+  }
+  if (eventDeliveryValidator.Check(input)) return { ok: true, value: input };
+
+  const [, errors] = eventDeliveryValidator.Errors(input);
+  return {
+    ok: false,
+    error: {
+      code: "INVALID_EVENT_DELIVERY",
+      message: "Event delivery failed validation.",
+      issues: normalizeIssues(errors),
     },
   };
 }

@@ -14,19 +14,40 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-007` is the latest verified feature checkpoint.
-- **Verification status:** `CN-007` remains passing after its hexagonal refactor;
-  the focused domain and HTTP suites passed 11 of 11 tests. `make check` passed
-  with ESLint, strict typechecks across six workspaces, nine Vitest files, and 96
-  tests.
+- **Branch/commit:** `main`; `CN-008` is the latest verified feature checkpoint.
+- **Verification status:** `CN-008` is passing. Focused protocol, application,
+  and SSE verification passed 21 of 21 tests. `make check` passed with ESLint,
+  strict typechecks across six workspaces, 11 Vitest files, and 107 tests.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-008`, the reconnectable SSE event stream. Preserve
-  server-side visibility projection, commit-before-broadcast ordering, and
-  sequence-based catch-up without duplicating projected state.
+- **Next priority:** begin `CN-009`, scoped participant capability tokens. Keep
+  credentials out of commands and replay, bind authority to run/player/action,
+  and audit rejected as well as accepted requests without leaking bearer values.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-17 (cn-008) — Build reconnectable audience-safe SSE
+
+- Outcome: done.
+- Did: added a feature-oriented events hexagon with an application stream
+  service, historical/subscription source port, SQLite-ledger adapter, Fastify
+  SSE adapter, and composition-root wiring. Added distinct operator and clean
+  observer authentication, visible-cursor validation, subscribe-before-catch-up
+  buffering, committed-event publication, heartbeats, disconnect cleanup, and
+  retry-safe live delivery. Added an approved Version 1 delivery schema whose
+  audience-contiguous sequence replaces the private ledger sequence on the wire;
+  stable event IDs drive `Last-Event-ID` reconnection.
+- Verification run: focused protocol, application, and HTTP suites passed 21 of
+  21 tests. The ledger integration test proves subscribers can read the event
+  from durable storage and idempotent retries do not republish it. Final
+  `make check` passed ESLint, all six workspace typechecks, 11 test files, and
+  107 tests.
+- Risks / follow-ups: Version 1 subscriptions are process-local and slow clients
+  reconnect after response-buffer overflow. Resolving an observer cursor scans
+  prior events to reconstruct its visible ordinal; a persisted audience index
+  or multi-process broadcaster can replace the source adapter later without
+  changing the delivery contract.
 
 ### 2026-09-17 (architecture) — Adopt feature-oriented hexagonal boundaries
 

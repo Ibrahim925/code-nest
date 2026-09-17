@@ -187,6 +187,33 @@ Lifecycle state does not claim that a participant process was interrupted or a
 phase clock was frozen. Runtime supervision and phase-clock effects attach to
 these accepted events in later features and must not silently invent success.
 
+## SSE event delivery v1
+
+`GET /runs/{run_id}/events` is a feature-oriented hexagon under
+`apps/controller/src/events`. Its application service depends on one source port
+for historical reads and committed-event subscriptions. The event-ledger source
+and Fastify SSE route are outer adapters, and `app.ts` supplies both audience
+tokens at the composition root.
+
+The route authenticates either the operator token or a distinct clean-observer
+token (`CODE_NEST_OBSERVER_TOKEN`). It derives a sealed projection context from
+that authority; no request field can select a stronger audience. Before opening
+the response, it resolves an optional `Last-Event-ID` to a visible event in the
+same run. It then subscribes before reading catch-up pages, buffers events that
+race with the scan, and suppresses them by private source sequence after the
+scan. This closes the catch-up/live handoff without broadcasting before commit.
+
+The wire record has its own Version 1 schema in `@code-nest/protocol`. It carries
+a contiguous audience-visible delivery sequence and the projected event without
+its ledger sequence. SSE frame IDs remain stable event IDs for reconnection.
+This split preserves deterministic client ordering without revealing gaps made
+by covert, participant-private, post-reveal, or operator-private events.
+
+The first implementation keeps subscriptions in the single controller process.
+Slow connections are closed when the response buffer fills and can recover from
+their last event ID. A multi-process broadcaster or persisted audience index is
+a later boundary implementation, not a change to the application use case.
+
 ## Failure behavior
 
 Model timeout, policy rejection, container exit, OOM, operator cancellation,

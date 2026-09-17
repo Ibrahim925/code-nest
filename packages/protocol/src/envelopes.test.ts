@@ -4,9 +4,12 @@ import Schema from "typebox/schema";
 import {
   COMMAND_PROTOCOL_VERSION,
   CommandEnvelopeSchema,
+  EVENT_DELIVERY_VERSION,
   EVENT_SCHEMA_VERSION,
+  EventDeliverySchema,
   EventEnvelopeSchema,
   parseCommandEnvelope,
+  parseEventDelivery,
   parseEventEnvelope,
 } from "./envelopes";
 
@@ -55,6 +58,14 @@ const validEvent = {
   parentEventIds: [],
   artifactDigests: [],
   resourceCost: {},
+} as const;
+
+const { sequence: _sourceSequence, ...deliveredEvent } = validEvent;
+void _sourceSequence;
+const validDelivery = {
+  deliveryVersion: EVENT_DELIVERY_VERSION,
+  deliverySequence: 1,
+  event: deliveredEvent,
 } as const;
 
 describe("versioned command envelopes", () => {
@@ -236,9 +247,71 @@ describe("versioned event envelopes", () => {
   });
 });
 
+describe("audience-safe event deliveries", () => {
+  it("accepts a delivery without a ledger sequence", () => {
+    expect(parseEventDelivery(validDelivery)).toEqual({
+      ok: true,
+      value: validDelivery,
+    });
+  });
+
+  it("rejects a leaked ledger sequence", () => {
+    const result = parseEventDelivery({
+      ...validDelivery,
+      event: { ...validDelivery.event, sequence: 7 },
+    });
+
+    expect(result.ok).toBe(false);
+    if (result.ok) return;
+    expect(result.error.issues).toContainEqual({
+      code: "unexpected_property",
+      message: "Unexpected property.",
+      path: "/event/sequence",
+    });
+  });
+
+  it("rejects unsupported delivery versions with a stable error", () => {
+    expect(
+      parseEventDelivery({ ...validDelivery, deliveryVersion: "2.0" }),
+    ).toEqual({
+      ok: false,
+      error: {
+        code: "UNSUPPORTED_EVENT_DELIVERY_VERSION",
+        message:
+          'Unsupported event delivery version "2.0". Supported versions: 1.0.',
+        receivedVersion: "2.0",
+        supportedVersions: ["1.0"],
+        issues: [
+          {
+            code: "unsupported_version",
+            message: "Expected one of: 1.0.",
+            path: "/deliveryVersion",
+          },
+        ],
+      },
+    });
+  });
+
+  it("checks delivered payloads at transport-relative paths", () => {
+    const result = parseEventDelivery({
+      ...validDelivery,
+      event: { ...validDelivery.event, payload: { observedAt: new Date() } },
+    });
+
+    expect(result.ok).toBe(false);
+    if (result.ok) return;
+    expect(result.error.issues).toContainEqual({
+      code: "non_json_value",
+      message: "Value must be representable in JSON.",
+      path: "/event/payload/observedAt",
+    });
+  });
+});
+
 describe("portable envelope schemas", () => {
   it("exports strict JSON Schema 2020-12 documents", () => {
     const commandSchema = JSON.parse(JSON.stringify(CommandEnvelopeSchema));
+    const deliverySchema = JSON.parse(JSON.stringify(EventDeliverySchema));
     const eventSchema = JSON.parse(JSON.stringify(EventEnvelopeSchema));
 
     expect(commandSchema).toMatchObject({
@@ -253,13 +326,21 @@ describe("portable envelope schemas", () => {
       additionalProperties: false,
       type: "object",
     });
+    expect(deliverySchema).toMatchObject({
+      $id: "urn:code-nest:protocol:v1:event-delivery",
+      $schema: "https://json-schema.org/draft/2020-12/schema",
+      additionalProperties: false,
+      type: "object",
+    });
   });
 
   it("validates with schemas reconstructed from serialized JSON", () => {
     const commandSchema = JSON.parse(JSON.stringify(CommandEnvelopeSchema));
+    const deliverySchema = JSON.parse(JSON.stringify(EventDeliverySchema));
     const eventSchema = JSON.parse(JSON.stringify(EventEnvelopeSchema));
 
     expect(Schema.Compile(commandSchema).Check(validCommand)).toBe(true);
+    expect(Schema.Compile(deliverySchema).Check(validDelivery)).toBe(true);
     expect(Schema.Compile(eventSchema).Check(validEvent)).toBe(true);
   });
 });

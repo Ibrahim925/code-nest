@@ -3,6 +3,9 @@ import { mkdirSync } from "node:fs";
 
 import Fastify, { type FastifyInstance } from "fastify";
 
+import { EventLedgerEventSource } from "./events/adapters/event-ledger-event-source.js";
+import { EventStreamService } from "./events/application/event-stream.js";
+import { registerSseRoutes } from "./events/http/sse.js";
 import { EventLedger } from "./ledger/ledger.js";
 import { EventLedgerRunStore } from "./runs/adapters/event-ledger-run-store.js";
 import { RunLifecycleService } from "./runs/application/run-lifecycle.js";
@@ -11,6 +14,7 @@ import { registerRunRoutes } from "./runs/http/routes.js";
 export interface BuildAppOptions {
   readonly databasePath?: string;
   readonly operatorToken?: string;
+  readonly observerToken?: string;
   readonly now?: () => Date;
   readonly createEventId?: () => string;
   readonly logger?: boolean;
@@ -30,7 +34,21 @@ export function buildApp(options: BuildAppOptions = {}): FastifyInstance {
       "Generated an ephemeral local operator token for this controller process.",
     );
   }
+  const configuredObserverToken =
+    options.observerToken ?? process.env.CODE_NEST_OBSERVER_TOKEN;
+  const observerToken = configuredObserverToken ?? randomUUID();
+  if (configuredObserverToken === undefined) {
+    app.log.warn(
+      { observerToken },
+      "Generated an ephemeral local observer token for this controller process.",
+    );
+  }
+  if (observerToken === operatorToken) {
+    throw new Error("Operator and observer tokens must be distinct.");
+  }
   const ledger = EventLedger.open(databasePath);
+  const eventSource = new EventLedgerEventSource(ledger);
+  const eventStreamService = new EventStreamService(eventSource);
   const runStore = new EventLedgerRunStore(ledger);
   const runService = new RunLifecycleService({
     store: runStore,
@@ -40,6 +58,7 @@ export function buildApp(options: BuildAppOptions = {}): FastifyInstance {
   app.addHook("onClose", async () => {
     ledger.close();
   });
+  registerSseRoutes(app, eventStreamService, { observerToken, operatorToken });
   registerRunRoutes(app, runService, operatorToken);
 
   app.get("/health", async () => ({

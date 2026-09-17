@@ -120,9 +120,34 @@ replays permanently.
 
 ## Delivery and replay
 
-The controller commits events before publishing SSE. Clients reconnect from the
-last observed sequence and deduplicate by sequence because delivery is at least
-once. Missing sequence ranges are fetched before live projection resumes.
+The controller commits events before publishing SSE. The ledger's sequence is a
+trusted ordering field and is never sent to a filtered audience: a gap would
+reveal that an omitted event exists. SSE data therefore uses a separate strict
+Version 1 delivery record:
+
+```text
+deliveryVersion = "1.0"
+deliverySequence = audience-visible integer starting at one
+event = event envelope without its ledger sequence
+```
+
+`deliverySequence` is contiguous within one run and projection context. It
+counts only events that audience may receive. It is suitable for ordering a
+rendered projection, but it is not a durable ledger cursor and must never be
+translated back into a source sequence by a client.
+
+Each SSE frame uses the stable, opaque event ID as its `id`. A reconnect sends
+that value through `Last-Event-ID`; the controller verifies that the referenced
+event belongs to the requested run and is visible to the authenticated
+audience, computes its visible ordinal, catches up from the private source
+position, and then resumes live delivery. Unknown, cross-run, and unauthorized
+cursors all fail as `INVALID_EVENT_CURSOR`. Clients deduplicate by event ID
+because delivery is at least once.
+
+The authenticated token determines whether the stream is a clean-observer or
+operator projection. Audience, run identity, reveal state, source sequences,
+and hidden placeholders are never accepted from or returned to a clean client.
+Missing source events are fetched before live projection resumes.
 
 Projectors must be deterministic:
 
@@ -137,5 +162,5 @@ migrator version.
 - Add a new version when semantics change; do not reinterpret historical data.
 - Include a fixture for valid, invalid, duplicate, late, and unauthorized input.
 - Test each observer mode and the post-reveal transition.
-- Test reconnect from an arbitrary sequence with duplicate delivery.
+- Test reconnect from an arbitrary visible event ID with duplicate delivery.
 - Document compatibility and migration before merging a breaking change.

@@ -83,11 +83,11 @@
       "area": "streaming",
       "milestone": "M1-observable-vertical-slice",
       "title": "Reconnectable SSE event stream",
-      "user_visible_behavior": "A disconnected observer resumes from its last sequence, receives every missing authorized event, and sees no duplicate projected state.",
-      "status": "not_started",
-      "verification": ["corepack pnpm vitest run apps/controller/src/events/sse.integration.test.ts", "make check"],
-      "evidence": "",
-      "notes": "Commit before broadcast and tolerate at-least-once delivery; AC 14."
+      "user_visible_behavior": "A disconnected observer resumes from its last visible event, receives every missing authorized event, and sees no duplicate projected state or hidden-event gaps.",
+      "status": "passing",
+      "verification": ["corepack pnpm vitest run packages/protocol/src/envelopes.test.ts apps/controller/src/events/application/event-stream.test.ts apps/controller/src/events/http/sse.integration.test.ts", "make check"],
+      "evidence": "2026-09-17: focused protocol, application, and SSE suites passed 21/21 tests, covering the strict delivery schema, source-sequence omission, audience-contiguous ordering, authorization, cursor validation, catch-up/live race deduplication, observer/operator projection, reconnection, and live committed delivery. The ledger integration suite also proves subscriptions observe persisted events and retries are not republished. Final make check passed 11 test files and 107 tests with lint and all workspace typechecks.",
+      "notes": "SSE frames use stable event IDs as reconnect cursors and Version 1 audience-safe delivery records; private ledger sequences never cross the clean-observer boundary. AC 14."
     },
     {
       "id": "CN-009",

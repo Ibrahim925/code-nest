@@ -66,6 +66,8 @@ export interface ListEventsOptions {
   limit?: number;
 }
 
+export type EventListener = (event: EventEnvelope) => void;
+
 interface StoredEventRow {
   runId: string;
   sequence: number;
@@ -210,6 +212,7 @@ export class EventLedger {
   readonly #getCommandResult: StatementSync;
   readonly #getEvent: StatementSync;
   readonly #listEvents: StatementSync;
+  readonly #listeners = new Map<string, Set<EventListener>>();
   #closed = false;
 
   private constructor(database: DatabaseSync) {
@@ -330,6 +333,7 @@ export class EventLedger {
       this.#insertCommand.run(event.runId, commandId, event.eventId);
       this.#database.exec("COMMIT");
       transactionOpen = false;
+      this.#publish(event);
       return { status: "appended", event };
     } catch (error: unknown) {
       if (transactionOpen) this.#database.exec("ROLLBACK");
@@ -379,8 +383,39 @@ export class EventLedger {
       .map((row) => decodeStoredEvent(row));
   }
 
+  subscribe(runId: string, listener: EventListener): () => void {
+    let listeners = this.#listeners.get(runId);
+    if (listeners === undefined) {
+      listeners = new Set<EventListener>();
+      this.#listeners.set(runId, listeners);
+    }
+    listeners.add(listener);
+
+    return () => {
+      const current = this.#listeners.get(runId);
+      current?.delete(listener);
+      if (current?.size === 0) this.#listeners.delete(runId);
+    };
+  }
+
+  #publish(event: EventEnvelope): void {
+    if (!this.#listeners.has(event.runId)) return;
+    queueMicrotask(() => {
+      const listeners = this.#listeners.get(event.runId);
+      if (listeners === undefined) return;
+      for (const listener of [...listeners]) {
+        try {
+          listener(event);
+        } catch {
+          // A committed event cannot be rolled back by a failed live consumer.
+        }
+      }
+    });
+  }
+
   close(): void {
     if (this.#closed) return;
+    this.#listeners.clear();
     this.#database.close();
     this.#closed = true;
   }
