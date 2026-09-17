@@ -14,10 +14,11 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-011` is the latest verified feature checkpoint.
-- **Verification status:** `CN-011` is passing. Focused real-Git workspace
-  verification passed 7 of 7 tests. `make check` passed with ESLint, strict
-  typechecks across six workspaces, 17 Vitest files, and 154 tests.
+- **Branch/commit:** `main`; the 350-line source policy is the latest verified
+  maintenance checkpoint, and `CN-011` remains the latest feature checkpoint.
+- **Verification status:** every first-party code and test file is at most 350
+  physical lines. `make check` passed the file-length guard, ESLint, strict
+  typechecks across six workspaces, 18 Vitest files, and 154 tests.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
 - **Next priority:** begin `CN-012`, private role assignment and briefing. Assign
@@ -26,6 +27,25 @@ actually verified.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-17 (maintenance) — Enforce a 350-line code-file maximum
+
+- Outcome: done.
+- Did: split all seven existing violations by responsibility without changing
+  public APIs: scenario contract/parsing/loading, protocol schemas/validation,
+  artifact records/filesystem publication, ledger contract/database access, Git
+  execution/capture, and shared test fixtures now live in focused modules. Split
+  the scenario test suite by behavioral ownership. Added a dependency-free
+  repository scanner to the normal lint gate and documented that code and tests
+  must remain at or below 350 physical lines without compressed formatting.
+- Verification run: focused workspace (8), ledger (8), artifact (11), protocol
+  (15), scenario (34), and run-route (8) tests passed after their respective
+  splits. The file-length scanner passed across all recognized first-party source
+  formats. Final `make check` passed ESLint, all six workspace typechecks, 18 test
+  files, and the unchanged total of 154 tests.
+- Risks / follow-ups: physical length is a maintainability guard, not a substitute
+  for cohesion or complexity review. New code should split by domain or behavioral
+  ownership before reaching the cap. `CN-012` remains the next feature.
 
 ### 2026-09-17 (cn-011) — Add per-participant Git workspaces
 

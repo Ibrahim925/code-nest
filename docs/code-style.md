@@ -39,6 +39,11 @@ Use package public entry points across workspace boundaries. Avoid deep imports
 into another package's internals. One file should have one dominant concern;
 split a file when unrelated state machines or boundary adapters accumulate.
 
+First-party code and test files must not exceed 350 physical lines. Split files
+along domain or behavioral ownership before reaching the limit; do not compress
+formatting, combine statements, or remove useful names merely to reduce the count.
+`make lint` enforces this across the repository's first-party source formats.
+
 Within controller capabilities, use feature-first hexagonal folders when an
 external boundary exists: `domain/`, `application/`, and adapter folders named
 for the technology or boundary, such as `http/` or `adapters/`. Dependencies

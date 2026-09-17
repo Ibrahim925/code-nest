@@ -10,7 +10,7 @@
   },
   "scripts": {
     "dev": "corepack pnpm --parallel --stream --filter @code-nest/controller --filter @code-nest/web dev",
-    "lint": "eslint . --max-warnings=0",
+    "lint": "eslint . --max-warnings=0 && node scripts/check-file-length.mjs",
     "test": "vitest run",
     "typecheck": "tsc --noEmit -p tsconfig.json && corepack pnpm --recursive --if-present typecheck"
   },

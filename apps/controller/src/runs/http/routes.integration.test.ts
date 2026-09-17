@@ -1,58 +1,17 @@
-import { mkdtemp, rm } from "node:fs/promises";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
-
 import { afterEach, describe, expect, it } from "vitest";
 
 import { buildApp } from "../../app";
 import { EventLedger } from "../../ledger/ledger";
+import {
+  AUTHORIZATION,
+  appOptions,
+  cleanupRouteFixtures,
+  createDatabasePath,
+  createRun,
+  lifecycleHeaders,
+} from "./routes.test-fixture.js";
 
-const OPERATOR_TOKEN = "test-operator-token";
-const AUTHORIZATION = { authorization: `Bearer ${OPERATOR_TOKEN}` };
-const temporaryDirectories: string[] = [];
-
-async function createDatabasePath(): Promise<string> {
-  const directory = await mkdtemp(join(tmpdir(), "code-nest-runs-"));
-  temporaryDirectories.push(directory);
-  return join(directory, "events.sqlite");
-}
-
-function lifecycleHeaders(commandId: string): Record<string, string> {
-  return {
-    ...AUTHORIZATION,
-    "idempotency-key": commandId,
-  };
-}
-
-function appOptions(databasePath: string, startingEventIndex = 0) {
-  let eventIndex = startingEventIndex;
-  return {
-    databasePath,
-    operatorToken: OPERATOR_TOKEN,
-    logger: false,
-    now: () => new Date("2026-09-17T16:00:00.000Z"),
-    createEventId: () => `event-${++eventIndex}`,
-  };
-}
-
-async function createRun(
-  app: ReturnType<typeof buildApp>,
-  runId = "run-001",
-  commandId = "command-create",
-) {
-  return app.inject({
-    method: "POST",
-    url: "/runs",
-    headers: lifecycleHeaders(commandId),
-    payload: { runId },
-  });
-}
-
-afterEach(async () => {
-  for (const directory of temporaryDirectories.splice(0)) {
-    await rm(directory, { force: true, recursive: true });
-  }
-});
+afterEach(cleanupRouteFixtures);
 
 describe("run lifecycle API", () => {
   it("creates and inspects a run from its durable audit event", async () => {

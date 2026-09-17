@@ -5,189 +5,27 @@ import {
   type EventEnvelope,
 } from "@code-nest/protocol";
 
-const DATABASE_SCHEMA_VERSION = 1;
+import {
+  EventLedgerError,
+  type AppendEventResult,
+  type EventDraft,
+  type EventListener,
+  type ListEventsOptions,
+} from "./ledger-contract.js";
+import {
+  configureAndMigrateDatabase,
+  decodeStoredEvent,
+  readInteger,
+} from "./ledger-database.js";
 
-const CREATE_SCHEMA_SQL = `
-  CREATE TABLE ledger_runs (
-    run_id TEXT PRIMARY KEY,
-    next_sequence INTEGER NOT NULL DEFAULT 1 CHECK (next_sequence >= 1)
-  ) STRICT;
-
-  CREATE TABLE ledger_events (
-    run_id TEXT NOT NULL,
-    sequence INTEGER NOT NULL CHECK (sequence >= 1),
-    event_id TEXT NOT NULL UNIQUE,
-    envelope_json TEXT NOT NULL CHECK (json_valid(envelope_json)),
-    PRIMARY KEY (run_id, sequence),
-    FOREIGN KEY (run_id) REFERENCES ledger_runs(run_id) ON DELETE RESTRICT
-  ) STRICT;
-
-  CREATE TABLE processed_commands (
-    run_id TEXT NOT NULL,
-    command_id TEXT NOT NULL,
-    result_event_id TEXT NOT NULL UNIQUE,
-    PRIMARY KEY (run_id, command_id),
-    FOREIGN KEY (run_id) REFERENCES ledger_runs(run_id) ON DELETE RESTRICT,
-    FOREIGN KEY (result_event_id) REFERENCES ledger_events(event_id)
-      ON DELETE RESTRICT
-  ) STRICT;
-`;
-
-export type EventDraft = Omit<EventEnvelope, "sequence">;
-
-export type EventLedgerErrorCode =
-  | "CAUSATION_MISMATCH"
-  | "CORRUPT_STORED_EVENT"
-  | "EVENT_ID_CONFLICT"
-  | "INVALID_EVENT"
-  | "INVALID_QUERY"
-  | "UNSUPPORTED_DATABASE_SCHEMA"
-  | "WAL_UNAVAILABLE"
-  | "WRITE_FAILED";
-
-export class EventLedgerError extends Error {
-  constructor(
-    readonly code: EventLedgerErrorCode,
-    message: string,
-    cause?: unknown,
-  ) {
-    super(message, cause === undefined ? undefined : { cause });
-    this.name = "EventLedgerError";
-  }
-}
-
-export interface AppendEventResult {
-  status: "appended" | "duplicate";
-  event: EventEnvelope;
-}
-
-export interface ListEventsOptions {
-  afterSequence?: number;
-  limit?: number;
-}
-
-export type EventListener = (event: EventEnvelope) => void;
-
-interface StoredEventRow {
-  runId: string;
-  sequence: number;
-  eventId: string;
-  envelopeJson: string;
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
-}
-
-function readInteger(row: unknown, key: string): number | undefined {
-  if (!isRecord(row)) return undefined;
-  const value = row[key];
-  return typeof value === "number" && Number.isSafeInteger(value)
-    ? value
-    : undefined;
-}
-
-function readText(row: unknown, key: string): string | undefined {
-  if (!isRecord(row)) return undefined;
-  const value = row[key];
-  return typeof value === "string" ? value : undefined;
-}
-
-function storedEventRow(row: unknown): StoredEventRow {
-  const runId = readText(row, "run_id");
-  const sequence = readInteger(row, "sequence");
-  const eventId = readText(row, "event_id");
-  const envelopeJson = readText(row, "envelope_json");
-
-  if (
-    runId === undefined ||
-    sequence === undefined ||
-    eventId === undefined ||
-    envelopeJson === undefined
-  ) {
-    throw new EventLedgerError(
-      "CORRUPT_STORED_EVENT",
-      "Stored event metadata is invalid.",
-    );
-  }
-
-  return { runId, sequence, eventId, envelopeJson };
-}
-
-function decodeStoredEvent(row: unknown): EventEnvelope {
-  const stored = storedEventRow(row);
-  let value: unknown;
-
-  try {
-    value = JSON.parse(stored.envelopeJson) as unknown;
-  } catch (error: unknown) {
-    throw new EventLedgerError(
-      "CORRUPT_STORED_EVENT",
-      `Stored event ${stored.eventId} is not valid JSON.`,
-      error,
-    );
-  }
-
-  const parsed = parseEventEnvelope(value);
-  if (
-    !parsed.ok ||
-    parsed.value.runId !== stored.runId ||
-    parsed.value.sequence !== stored.sequence ||
-    parsed.value.eventId !== stored.eventId
-  ) {
-    throw new EventLedgerError(
-      "CORRUPT_STORED_EVENT",
-      `Stored event ${stored.eventId} does not match its ledger metadata.`,
-    );
-  }
-
-  return parsed.value;
-}
-
-function configureDatabase(database: DatabaseSync): void {
-  database.exec(`
-    PRAGMA foreign_keys = ON;
-    PRAGMA synchronous = FULL;
-    PRAGMA trusted_schema = OFF;
-    PRAGMA busy_timeout = 5000;
-  `);
-
-  const journalMode = readText(
-    database.prepare("PRAGMA journal_mode = WAL").get(),
-    "journal_mode",
-  );
-  if (journalMode !== "wal") {
-    throw new EventLedgerError(
-      "WAL_UNAVAILABLE",
-      "Event ledger requires SQLite WAL mode on a local filesystem.",
-    );
-  }
-}
-
-function migrateDatabase(database: DatabaseSync): void {
-  const currentVersion = readInteger(
-    database.prepare("PRAGMA user_version").get(),
-    "user_version",
-  );
-
-  if (currentVersion === DATABASE_SCHEMA_VERSION) return;
-  if (currentVersion !== 0) {
-    throw new EventLedgerError(
-      "UNSUPPORTED_DATABASE_SCHEMA",
-      `Unsupported event-ledger schema version ${String(currentVersion)}.`,
-    );
-  }
-
-  database.exec("BEGIN IMMEDIATE");
-  try {
-    database.exec(CREATE_SCHEMA_SQL);
-    database.exec(`PRAGMA user_version = ${DATABASE_SCHEMA_VERSION}`);
-    database.exec("COMMIT");
-  } catch (error: unknown) {
-    database.exec("ROLLBACK");
-    throw error;
-  }
-}
+export {
+  EventLedgerError,
+  type AppendEventResult,
+  type EventDraft,
+  type EventLedgerErrorCode,
+  type EventListener,
+  type ListEventsOptions,
+} from "./ledger-contract.js";
 
 function provisionalEvent(draft: EventDraft): EventEnvelope {
   const parsed = parseEventEnvelope({ ...draft, sequence: 1 });
@@ -273,10 +111,8 @@ export class EventLedger {
       enableDoubleQuotedStringLiterals: false,
       enableForeignKeyConstraints: true,
     });
-
     try {
-      configureDatabase(database);
-      migrateDatabase(database);
+      configureAndMigrateDatabase(database);
       return new EventLedger(database);
     } catch (error: unknown) {
       database.close();
@@ -303,7 +139,6 @@ export class EventLedger {
         transactionOpen = false;
         return { status: "duplicate", event };
       }
-
       this.#insertRun.run(provisional.runId);
       if (this.#findEvent.get(provisional.eventId) !== undefined) {
         throw new EventLedgerError(
@@ -311,7 +146,6 @@ export class EventLedger {
           `Event ID ${provisional.eventId} already exists.`,
         );
       }
-
       const sequence = readInteger(
         this.#reserveSequence.get(provisional.runId),
         "sequence",
@@ -322,7 +156,6 @@ export class EventLedger {
           "Failed to reserve the next event sequence.",
         );
       }
-
       const event: EventEnvelope = { ...provisional, sequence };
       this.#insertEvent.run(
         event.runId,
@@ -351,18 +184,12 @@ export class EventLedger {
     return row === undefined ? undefined : decodeStoredEvent(row);
   }
 
-  getCommandResult(
-    runId: string,
-    commandId: string,
-  ): EventEnvelope | undefined {
+  getCommandResult(runId: string, commandId: string): EventEnvelope | undefined {
     const row = this.#getCommandResult.get(runId, commandId);
     return row === undefined ? undefined : decodeStoredEvent(row);
   }
 
-  listEvents(
-    runId: string,
-    options: ListEventsOptions = {},
-  ): EventEnvelope[] {
+  listEvents(runId: string, options: ListEventsOptions = {}): EventEnvelope[] {
     const afterSequence = options.afterSequence ?? 0;
     const limit = options.limit ?? 1_000;
     if (
@@ -377,7 +204,6 @@ export class EventLedger {
         "Event query requires afterSequence >= 0 and limit between 1 and 1000.",
       );
     }
-
     return this.#listEvents
       .all(runId, afterSequence, limit)
       .map((row) => decodeStoredEvent(row));
@@ -390,7 +216,6 @@ export class EventLedger {
       this.#listeners.set(runId, listeners);
     }
     listeners.add(listener);
-
     return () => {
       const current = this.#listeners.get(runId);
       current?.delete(listener);
