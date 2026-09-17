@@ -95,6 +95,29 @@ semantics are reviewed. Role assignments, private beliefs, covert objectives,
 hidden-test details, credentials, and provider-private traces require the
 narrowest class.
 
+### Version 1 projection rules
+
+The controller builds projection context from the authenticated token and the
+durable run state. It must not accept an audience or reveal state from a request
+body. A requested run ID must also match the event's run ID.
+
+| Visibility class | Named participant | Clean observer | Unblinded observer | Operator | Revealed replay |
+|---|---|---|---|---|---|
+| `public` | yes | yes | yes | yes | yes |
+| `participant_private` | recipients only | no | yes | yes | yes |
+| `covert` | recipients only | no | yes | yes | yes |
+| `post_reveal` | no | no | yes | yes | yes |
+| `operator_private` | no | no | no | yes | no |
+
+Projection returns the complete event or omits it. It never leaves a redacted
+placeholder in the stream. If one domain action contains facts with different
+audiences, the producer must emit separate events before persistence.
+
+`sealed` projection is also used after a match when replaying what the team or a
+selected participant knew at the time. `revealed` projection is allowed only
+after scoring and role reveal. Operator-private events stay out of observer
+replays permanently.
+
 ## Delivery and replay
 
 The controller commits events before publishing SSE. Clients reconnect from the

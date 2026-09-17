@@ -222,7 +222,11 @@ importers:
 
   packages/adapters: {}
 
-  packages/core: {}
+  packages/core:
+    dependencies:
+      '@code-nest/protocol':
+        specifier: workspace:*
+        version: link:../protocol
 
   packages/protocol:
     dependencies:

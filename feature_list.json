@@ -29,9 +29,9 @@
       "milestone": "M1-observable-vertical-slice",
       "title": "Visibility-aware event projector",
       "user_visible_behavior": "Each participant, clean observer, operator, and post-reveal viewer receives only the event fields allowed for that identity and match state.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run packages/core/src/visibility.test.ts", "make check"],
-      "evidence": "",
+      "evidence": "2026-09-17: visibility.test.ts passed 10/10 tests, covering the five-class sealed matrix, post-reveal access, permanent operator privacy, exact participant targeting, cross-run denial, and serialized no-leak output; make check passed 4 test files and 29 tests with lint and all workspace typechecks.",
       "notes": "Visibility is enforced server-side; AC 4 and 15."
     },
     {

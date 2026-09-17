@@ -1,5 +1,16 @@
 # Design Decisions
 
+## 2026-09-17: Project visibility by omitting whole events
+
+- Reason: one event has one visibility tag. Returning either its complete saved
+  envelope or nothing keeps live delivery and replay deterministic.
+- Rejected alternative: browser filtering sends secrets across the boundary.
+  Field-by-field redaction can also leave event kinds, sequence metadata, or new
+  payload fields behind when schemas change.
+- Constraint: authenticated server state supplies the audience, run ID, and
+  reveal state. Mixed-sensitivity facts are split before persistence.
+  Operator-private events never enter an observer replay, even after role reveal.
+
 ## 2026-09-17: Store controller events in SQLite WAL
 
 - Reason: the Observatory, replay, and restart recovery all need the same ordered

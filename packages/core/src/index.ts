@@ -9,3 +9,5 @@ export function describeHarness(): HarnessStatus {
     ready: true,
   };
 }
+
+export * from "./visibility";

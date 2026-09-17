@@ -14,19 +14,36 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-002` is the latest verified feature checkpoint.
-- **Verification status:** `CN-002`'s focused suite passed 7 of 7 tests against
-  real SQLite files; `make check` passed with ESLint, strict typechecks across
-  six workspaces, three Vitest files, and 19 tests.
+- **Branch/commit:** `main`; `CN-003` is the latest verified feature checkpoint.
+- **Verification status:** `CN-003`'s focused suite passed 10 of 10 tests;
+  `make check` passed with ESLint, strict typechecks across six workspaces, four
+  Vitest files, and 29 tests.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-003`, the server-side visibility projector. Define
-  each audience and reveal-state rule before implementation.
-- **Blockers:** none in `CN-002`. This Codex task retains the pre-rename sandbox
+- **Next priority:** begin `CN-004`, the content-addressed artifact store. Define
+  its digest, path, size, and authorization rules before implementation.
+- **Blockers:** none in `CN-003`. This Codex task retains the pre-rename sandbox
   path; reopen the project from `code-nest` so future cache-writing commands use
   the correct workspace permission without extra approval.
 
 ## Session Records
+
+### 2026-09-17 (cn-003) — Build the visibility projector
+
+- Outcome: done.
+- Did: added a pure whole-event projector with typed participant, clean observer,
+  unblinded observer, operator, sealed, and revealed contexts; enforced run
+  matching and exact recipient IDs; kept operator-private events outside every
+  observer mode; exported the projector through `@code-nest/core` and documented
+  the server-owned trust boundary.
+- Verification run: observed the focused suite fail before implementation; final
+  focused verification passed 10 of 10 tests, including serialized no-leak and
+  post-reveal operator-privacy cases. Final `make check` passed ESLint, all six
+  workspace typechecks, four test files, and 29 tests.
+- Risks / follow-ups: retained ledger sequences can reveal that omitted events
+  exist. CN-008 must decide whether stable citation IDs are sufficient or whether
+  audience-specific stream cursors are also needed. Event producers must split
+  mixed-sensitivity facts before persistence.
 
 ### 2026-09-17 (cn-002) — Build the durable event ledger
 
