@@ -104,6 +104,23 @@ secrets; collection code must redact the preview and object bytes before calling
 `put`. Version 1 accepts bounded byte arrays. A streaming ingestion path can be
 added if later scenarios need larger objects.
 
+## Match phase state v1
+
+`packages/core/src/match-state.ts` owns the phase order. Briefing happens once at
+the start of round 1. Work, evidence, belief, Town Hall, governance, and
+integration then repeat; a non-final integration opens the next round at work,
+while the final integration enters completion.
+
+An advance request includes the round and phase it expects to leave. A stale or
+duplicate request is rejected with the current position and cannot move the
+match twice. Completion has no outgoing transition. Accepted results contain the
+old and new positions so the controller can wrap the decision in a durable event.
+
+The reducer has no clock, random source, generated identifier, storage call, or
+runtime readiness check. Later controller code decides when an advance may be
+requested and commits its transition. Pause, cancellation, phase deadlines,
+ballots, and phase-specific entry criteria remain separate concerns.
+
 ## Failure behavior
 
 Model timeout, policy rejection, container exit, OOM, operator cancellation,

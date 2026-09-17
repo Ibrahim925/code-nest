@@ -14,19 +14,34 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-004` is the latest verified feature checkpoint.
-- **Verification status:** `CN-004`'s focused suite passed 11 of 11 tests;
-  `make check` passed with ESLint, strict typechecks across six workspaces, five
-  Vitest files, and 40 tests.
+- **Branch/commit:** `main`; `CN-005` is the latest verified feature checkpoint.
+- **Verification status:** `CN-005`'s focused suite passed 11 of 11 tests;
+  `make check` passed with ESLint, strict typechecks across six workspaces, six
+  Vitest files, and 51 tests.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-005`, the deterministic match-phase state machine.
-  Fix transition, rejection, terminal, and replay rules before implementation.
-- **Blockers:** none in `CN-004`. This Codex task retains the pre-rename sandbox
+- **Next priority:** begin `CN-006`, the pinned scenario manifest loader. Freeze
+  the manifest's trust boundary, digest rules, and validation failures before
+  choosing its runtime schema shape.
+- **Blockers:** none in `CN-005`. This Codex task retains the pre-rename sandbox
   path; reopen the project from `code-nest` so future cache-writing commands use
   the correct workspace permission without extra approval.
 
 ## Session Records
+
+### 2026-09-17 (cn-005) — Build the match phase state machine
+
+- Outcome: done.
+- Did: added typed active and completed match states, positive safe-integer round
+  validation, the exact Section 12 transition order, integration-driven round
+  rollover, stale-position rejection, terminal completion, and transition records
+  for later ledger events. The reducer has no external effects or dependencies.
+- Verification run: observed all 11 focused cases fail before implementation;
+  final focused verification passed 11 of 11 tests. Final `make check` passed
+  ESLint, all six workspace typechecks, six test files, and 51 tests.
+- Risks / follow-ups: this reducer decides phase order only. The controller must
+  decide when a transition is authorized, persist it atomically, and own clocks,
+  pause/cancel behavior, runtime readiness, and phase-specific entry criteria.
 
 ### 2026-09-17 (cn-004) — Build the artifact store
 

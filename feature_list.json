@@ -51,10 +51,10 @@
       "milestone": "M1-observable-vertical-slice",
       "title": "Deterministic phase state machine",
       "user_visible_behavior": "A match advances only through briefing, work, evidence, belief, Town Hall, governance, integration, and completion in the declared order.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run packages/core/src/match-state.test.ts", "make check"],
-      "evidence": "",
-      "notes": "Inject clock, IDs, and randomness; SPEC section 12."
+      "evidence": "2026-09-17: match-state.test.ts passed 11/11 tests, covering the one-time briefing, exact three-round path, integration rollover, skipped and duplicate advance rejection, terminal completion, deterministic replay, and invalid round counts; make check passed 6 test files and 51 tests with lint and all workspace typechecks.",
+      "notes": "Pure transition logic has no clock, generated ID, randomness, storage, or runtime dependency; SPEC section 12."
     },
     {
       "id": "CN-006",
