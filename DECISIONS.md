@@ -1,5 +1,19 @@
 # Design Decisions
 
+## 2026-09-17: Negotiate runtime observability explicitly
+
+- Reason: coding runtimes expose materially different lifecycle controls and
+  evidence. A provider-neutral asynchronous port lets the controller drive each
+  one while preserving exactly what it did and did not declare.
+- Rejected alternative: provider-specific controller branches couple game flow
+  to SDKs. A lowest-common-denominator result discards useful evidence, while
+  synthesizing missing tool, usage, resume, or reasoning data makes comparisons
+  misleading.
+- Constraint: metadata and normalized results are strict runtime boundaries;
+  unsupported capabilities remain explicitly unavailable. Raw command candidates
+  are parsed and authorized outside the adapter. Private chain-of-thought is not
+  a capability. One adapter instance owns one participant session.
+
 ## 2026-09-17: Keep participant capabilities opaque and fail closed
 
 - Reason: short-lived opaque credentials give the controller immediate expiry,

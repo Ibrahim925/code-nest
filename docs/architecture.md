@@ -237,6 +237,26 @@ payload is built field by field without credentials. Runtime adapters introduced
 after this feature call the application service with a protocol-validated command;
 the capability authority does not depend on Fastify, Docker, or a provider SDK.
 
+## Runtime adapter boundary v1
+
+`packages/adapters` is the controller-facing port for participant runtimes. The
+contract uses one adapter instance per participant session and asynchronous
+`metadata`, `start`, `deliver`, `run`, `interrupt`, and `stop` operations. A
+subprocess, direct model loop, or deterministic fake implements that port; core
+game rules never import a provider SDK or process primitive.
+
+Runtime metadata and turn-result validation live separately from the stable
+types. Capability negotiation is set intersection with explicit unavailable
+results, not inference from a provider name. The controller must retain the
+validated metadata beside later events so execution mode and observability tier
+remain part of every comparison.
+
+Adapter command candidates are deliberately untrusted values. The orchestration
+layer introduced by the vertical slice parses them with the protocol package,
+authorizes them through the scoped participant capability service, and only then
+commits resulting controller events. Adapter messages, commits, usage, and tool
+summaries are evidence inputs, never direct state mutations.
+
 ## Failure behavior
 
 Model timeout, policy rejection, container exit, OOM, operator cancellation,

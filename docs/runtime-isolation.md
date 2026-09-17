@@ -39,6 +39,36 @@ identical. Unsupported capabilities are explicit. Observable output may include
 submitted work notes, commands, stdout/stderr, file changes, tool calls, and
 provider reasoning summaries where permitted and clearly labelled.
 
+### Runtime adapter contract v1
+
+`@code-nest/adapters` exposes one asynchronous `RuntimeAdapter` port per
+participant session:
+
+```text
+metadata -> start -> deliver / run / interrupt -> stop
+```
+
+Metadata records adapter, runtime, model, execution mode, observability tier,
+and a unique capability set. Negotiation returns requested capabilities in
+explicit `available` and `unavailable` lists. Tier 0 cannot declare typed tool
+events or work notes; provider reasoning summaries require Tier 2. The contract
+has no private-chain-of-thought capability.
+
+Start binds a run, scenario, participant, and workspace to one session. Turn
+results contain only bounded messages, raw command candidates, exact commit
+revisions, an optional tool summary, optional measured usage, and a declared
+status. Result objects and metadata are runtime-validated with strict keys.
+Commands intentionally remain `unknown` here: the controller must parse each
+one through `@code-nest/protocol` and apply participant capability authorization
+before accepting it.
+
+The deterministic fake adapter is a scripted outer implementation of the same
+port. It records lifecycle inputs, returns defensive copies, aggregates only
+reported usage, enforces start/stop ordering, and rejects scripts that expose
+tool, usage, or private-message data not declared by metadata. Interrupt and
+resume are separate capabilities; a successful interrupt does not imply the
+session can continue.
+
 ## Trusted tests
 
 Trusted tests use a fresh networkless container and an exact candidate digest.

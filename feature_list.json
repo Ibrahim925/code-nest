@@ -106,10 +106,10 @@
       "milestone": "M1-observable-vertical-slice",
       "title": "Runtime adapter contract and fake adapter",
       "user_visible_behavior": "The controller negotiates declared adapter capabilities and can drive a deterministic fake participant without inventing unavailable observability.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run packages/adapters/src/contract.test.ts packages/adapters/src/fake.test.ts", "make check"],
-      "evidence": "",
-      "notes": "Implements metadata/start/deliver/run/interrupt/stop semantics from SPEC section 8."
+      "evidence": "2026-09-17: focused contract and fake-adapter suites passed 19/19 tests, covering strict metadata and turn-result validation, execution modes and observability tiers, explicit available/unavailable capability negotiation, rejection of invented and tier-incompatible observability, deterministic metadata/start/deliver/run/interrupt/stop behavior, mutation-safe results and transcripts, measured-usage aggregation, unsupported interrupt/resume behavior, lifecycle ordering, script exhaustion, and invalid script rejection. Final make check passed 15 test files and 146 tests with lint and all workspace typechecks.",
+      "notes": "Raw adapter command candidates intentionally remain unknown until the controller parses and capability-authorizes them. No provider SDK, process implementation, dependency, or Docker behavior was added. Implements SPEC section 8."
     },
     {
       "id": "CN-011",

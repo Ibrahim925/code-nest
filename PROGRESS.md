@@ -14,19 +14,37 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-009` is the latest verified feature checkpoint.
-- **Verification status:** `CN-009` is passing. Focused capability and durable
-  audit verification passed 20 of 20 tests. `make check` passed with ESLint,
-  strict typechecks across six workspaces, 13 Vitest files, and 127 tests.
+- **Branch/commit:** `main`; `CN-010` is the latest verified feature checkpoint.
+- **Verification status:** `CN-010` is passing. Focused runtime contract and fake
+  adapter verification passed 19 of 19 tests. `make check` passed with ESLint,
+  strict typechecks across six workspaces, 15 Vitest files, and 146 tests.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-010`, the runtime adapter contract and deterministic
-  fake adapter. Negotiate only declared observability, keep provider/runtime
-  details outside core rules, and pass parsed participant commands through the
-  capability authority before accepting state changes.
+- **Next priority:** begin `CN-011`, per-participant Git workspaces. Create each
+  workspace from the scenario's verified immutable revision, isolate participant
+  writes, and collect exact commits/diffs without granting release-branch access.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-17 (cn-010) — Add the runtime contract and fake adapter
+
+- Outcome: done.
+- Did: added the provider-neutral asynchronous `RuntimeAdapter` contract,
+  explicit execution modes, observability tiers, capability vocabulary and
+  negotiation, strict metadata and observable-result parsers, stable boundary
+  errors, and a deterministic scripted fake. The fake owns one session, records
+  lifecycle inputs, returns defensive copies, aggregates only reported usage,
+  enforces start/stop and interrupt/resume semantics, and rejects evidence that
+  contradicts its declared observability. Public exports remain dependency-free.
+- Verification run: observed both focused suites fail before the modules existed.
+  Final focused verification passed 19 of 19 tests. Final `make check` passed
+  ESLint, all six workspace typechecks, 15 test files, and 146 tests.
+- Risks / follow-ups: streaming output and real process transport remain later
+  adapter implementations. Command candidates intentionally remain untrusted;
+  CN-015 orchestration must parse them through `@code-nest/protocol`, authorize
+  them with CN-009, and retain validated runtime metadata beside committed
+  evidence. CN-011 supplies real isolated workspace paths.
 
 ### 2026-09-17 (cn-009) — Add scoped participant capabilities
 
