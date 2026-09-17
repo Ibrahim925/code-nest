@@ -121,6 +121,47 @@ runtime readiness check. Later controller code decides when an advance may be
 requested and commits its transition. Pause, cancellation, phase deadlines,
 ballots, and phase-specific entry criteria remain separate concerns.
 
+## Run lifecycle API v1
+
+The local lifecycle surface is:
+
+```text
+POST /runs
+GET  /runs/{run_id}
+POST /runs/{run_id}/pause
+POST /runs/{run_id}/resume
+POST /runs/{run_id}/cancel
+```
+
+All five routes require `Authorization: Bearer <operator-token>`. Set the token
+with `CODE_NEST_OPERATOR_TOKEN`; when it is absent, the local process generates
+an ephemeral token and reports it in the controller log. Every `POST` also
+requires an `idempotency-key` whose syntax matches a protocol identifier.
+
+Creation accepts exactly `{ "runId": "<stable-id>" }`. The three state mutations
+accept no body. The response is a Version 1 view containing the run ID, status,
+terminal reason, creation and update timestamps, and last lifecycle-event
+sequence. The permitted transitions are:
+
+| Request | Required state | Result |
+|---|---|---|
+| create | absent | running |
+| pause | running | paused |
+| resume | paused | running |
+| cancel | running or paused | cancelled (`operator_cancelled`) |
+
+Successful mutations append public `run.created`, `run.paused`, `run.resumed`,
+or `run.cancelled` events. Reads rebuild the view from those durable events; no
+second run-state table can drift from the ledger. Retrying the same action with
+the same key returns the state produced by the original event, even if later
+events have moved the run onward. Reusing a key for a different action is a
+conflict. Invalid transitions and unauthorized requests never append a lifecycle
+event.
+
+Lifecycle state does not claim that a participant process was interrupted or a
+phase clock was frozen. Runtime supervision and phase-clock effects attach to
+these accepted events in later features and must not silently invent success.
+
 ## Failure behavior
 
 Model timeout, policy rejection, container exit, OOM, operator cancellation,

@@ -14,20 +14,38 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-006` is the latest verified feature checkpoint.
-- **Verification status:** `CN-006`'s focused suite passed 34 of 34 tests;
-  `make check` passed with ESLint, strict typechecks across six workspaces, seven
-  Vitest files, and 85 tests.
+- **Branch/commit:** `main`; `CN-007` is the latest verified feature checkpoint.
+- **Verification status:** `CN-007`'s focused suite passed 8 of 8 tests; `make
+  check` passed with ESLint, strict typechecks across six workspaces, eight
+  Vitest files, and 93 tests.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-007`, the run lifecycle API. Freeze the run-state,
-  persistence, authorization, idempotency, and audit-event contract before adding
-  HTTP routes.
-- **Blockers:** none in `CN-006`. This Codex task retains the pre-rename sandbox
-  path; reopen the project from `code-nest` so future cache-writing commands use
-  the correct workspace permission without extra approval.
+- **Next priority:** begin `CN-008`, the reconnectable SSE event stream. Preserve
+  server-side visibility projection, commit-before-broadcast ordering, and
+  sequence-based catch-up without duplicating projected state.
+- **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-17 (cn-007) — Build the run lifecycle API
+
+- Outcome: done.
+- Did: added bearer-authenticated create, inspect, pause, resume, and cancel HTTP
+  endpoints; exact request validation; explicit `operator_cancelled` terminal
+  state; public audit events; constant-time token comparison; historical
+  idempotency replay; cross-action key reuse rejection; concurrent transition
+  protection; event-derived restart recovery; safe boundary errors; and shutdown
+  cleanup. Added a read-only command-result lookup to the existing ledger but no
+  database schema, protocol envelope, or dependency change.
+- Verification run: observed all 7 initial route cases fail before implementation;
+  final focused verification passed 8 of 8 tests against real temporary SQLite
+  files. Final `make check` passed ESLint, all six workspace typechecks, eight
+  test files, and 93 tests.
+- Risks / follow-ups: Version 1 creation takes a caller-supplied stable run ID;
+  CN-027 will own full scenario and adapter setup. Lifecycle events record
+  accepted control state only; CN-010 and later controller coordination must
+  attach real interrupt, token-revocation, clock, and cleanup effects without
+  claiming they happened before confirmation.
 
 ### 2026-09-17 (cn-006) — Build the scenario manifest loader
 

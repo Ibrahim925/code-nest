@@ -1,5 +1,19 @@
 # Design Decisions
 
+## 2026-09-17: Derive run lifecycle state from audit events
+
+- Reason: create, pause, resume, and cancel must be durable and replayable, and
+  the event ledger already commits each idempotent operator command atomically.
+  Folding four strict event kinds makes the acknowledged audit history and the
+  inspected run state the same fact.
+- Rejected alternative: a separate mutable run-state table would need a schema
+  migration and an atomic dual write with the ledger before it provides any
+  behavior the first lifecycle slice needs.
+- Constraint: `run.created` is the first event. Lifecycle payloads are exact,
+  transitions are validated both before append and during replay, and later
+  runtime or clock side effects must attach to accepted lifecycle events without
+  rewriting them.
+
 ## 2026-09-17: Snapshot scenario files during manifest verification
 
 - Reason: validating a digest and later reopening the named file leaves time for

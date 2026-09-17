@@ -207,6 +207,7 @@ export class EventLedger {
   readonly #reserveSequence: StatementSync;
   readonly #insertEvent: StatementSync;
   readonly #insertCommand: StatementSync;
+  readonly #getCommandResult: StatementSync;
   readonly #getEvent: StatementSync;
   readonly #listEvents: StatementSync;
   #closed = false;
@@ -242,6 +243,12 @@ export class EventLedger {
     this.#insertCommand = database.prepare(`
       INSERT INTO processed_commands (run_id, command_id, result_event_id)
       VALUES (?, ?, ?)
+    `);
+    this.#getCommandResult = database.prepare(`
+      SELECT e.run_id, e.sequence, e.event_id, e.envelope_json
+      FROM processed_commands AS c
+      JOIN ledger_events AS e ON e.event_id = c.result_event_id
+      WHERE c.run_id = ? AND c.command_id = ?
     `);
     this.#getEvent = database.prepare(`
       SELECT run_id, sequence, event_id, envelope_json
@@ -337,6 +344,14 @@ export class EventLedger {
 
   getEvent(eventId: string): EventEnvelope | undefined {
     const row = this.#getEvent.get(eventId);
+    return row === undefined ? undefined : decodeStoredEvent(row);
+  }
+
+  getCommandResult(
+    runId: string,
+    commandId: string,
+  ): EventEnvelope | undefined {
+    const row = this.#getCommandResult.get(runId, commandId);
     return row === undefined ? undefined : decodeStoredEvent(row);
   }
 
