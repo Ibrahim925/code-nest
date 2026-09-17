@@ -95,10 +95,10 @@
       "milestone": "M1-observable-vertical-slice",
       "title": "Scoped participant capability tokens",
       "user_visible_behavior": "A participant can perform only its allowed actions for its run and player, while expired, cross-player, replayed, or operator-only requests are rejected and recorded.",
-      "status": "not_started",
-      "verification": ["corepack pnpm vitest run apps/controller/src/auth/capabilities.test.ts", "make check"],
-      "evidence": "",
-      "notes": "Tokens never enter public replay bundles; SPEC sections 9.5 and 24.4."
+      "status": "passing",
+      "verification": ["corepack pnpm vitest run apps/controller/src/auth/application/capabilities.test.ts apps/controller/src/auth/adapters/event-ledger-capability-audit.integration.test.ts", "make check"],
+      "evidence": "2026-09-17: focused capability and ledger-audit suites passed 20/20 tests, covering run/player/action/expiry binding, non-participant and operator-action denial, reserved bearer values, wrong and unknown credentials, exact-boundary expiration, individual and run-wide revocation, immutable returned scopes, per-run replay rejection across token rotation, strict issuance validation, existing-run enforcement, operator-private audit events, and serialized bearer non-leakage. Final make check passed 13 test files and 127 tests with lint and all workspace typechecks.",
+      "notes": "Opaque bearer digests and active grants are process-local and fail closed across restart; only non-secret token IDs enter commands and operator-private audit events. CN-010 and the participant gateway consume the framework-neutral authority. SPEC sections 9.5 and 24.4."
     },
     {
       "id": "CN-010",

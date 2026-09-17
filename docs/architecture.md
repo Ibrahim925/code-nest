@@ -214,6 +214,29 @@ Slow connections are closed when the response buffer fills and can recover from
 their last event ID. A multi-process broadcaster or persisted audience index is
 a later boundary implementation, not a change to the application use case.
 
+## Participant capability authority v1
+
+`apps/controller/src/auth` is a feature-oriented hexagon. Its pure domain rules
+validate run, participant, action-set, expiry, revocation, and per-run command
+replay constraints. The application service owns opaque bearer generation,
+SHA-256 digest comparison, active grants, and immediate revocation. It depends on
+one audit port; the event-ledger adapter persists trusted authorization evidence.
+
+Only the bearer digest is retained, and only in controller memory. The returned
+scope and audit action lists are copies so a caller cannot mutate active
+authority. A token ID selects a candidate grant, but authorization still hashes
+and compares the presented bearer using equal-length constant-time comparison.
+Unknown IDs, wrong bearers, cross-run use, cross-player use, expired or revoked
+grants, ungranted actions, non-participant actors, and reused command IDs all
+fail closed.
+
+The durable audit adapter refuses runs with no existing event, preventing an
+unauthenticated claimed run ID from manufacturing state that would later block
+real run creation. Issue and rejection evidence is operator-private, and its
+payload is built field by field without credentials. Runtime adapters introduced
+after this feature call the application service with a protocol-validated command;
+the capability authority does not depend on Fastify, Docker, or a provider SDK.
+
 ## Failure behavior
 
 Model timeout, policy rejection, container exit, OOM, operator cancellation,

@@ -79,6 +79,36 @@ Malformed envelopes return `INVALID_COMMAND_ENVELOPE` or
 than `1.0` returns the corresponding `UNSUPPORTED_*_VERSION` error and lists the
 supported versions. Parsers do not coerce or mutate accepted input.
 
+## Participant capabilities
+
+The controller issues each participant an opaque bearer token plus a non-secret
+token ID. The bearer exists only at the transport boundary; the matching parsed
+command carries the token ID in `capability.tokenId`. Authorization requires all
+of these facts to agree:
+
+- the bearer digest matches the selected active grant;
+- the command actor is a participant with the grant's participant ID;
+- the command run matches the grant's run;
+- the command kind appears in the grant's action set;
+- controller time is strictly before the expiry; and
+- the command ID has not already been authorized in that run, including under a
+  rotated token.
+
+Revocation takes effect in memory before its audit write, so an audit failure
+cannot leave the credential active. Controller restart discards all grants and
+therefore fails closed; the runtime supervisor must issue new short-lived tokens
+when it restores participant sessions. Operator and observer bearer values are
+reserved during participant-token generation so one credential cannot cross an
+API role boundary.
+
+The ledger records operator-private `capability.issued`,
+`capability.rejected`, and `capability.revoked` events only for existing runs.
+Those events contain token IDs, scopes, claimed request metadata, and rejection
+reasons, but never a bearer token or bearer digest. Public and participant replay
+therefore cannot recover credential material. A participant-facing transport
+must map all denial reasons to the same safe `CAPABILITY_DENIED` message;
+detailed reasons remain trusted audit facts.
+
 ## Visibility
 
 Visibility is enforced while reading, not left to the browser. Define explicit

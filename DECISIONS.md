@@ -1,5 +1,18 @@
 # Design Decisions
 
+## 2026-09-17: Keep participant capabilities opaque and fail closed
+
+- Reason: short-lived opaque credentials give the controller immediate expiry,
+  revocation, rotation, and per-run replay control without placing signing keys
+  or recoverable credentials in participant-visible state.
+- Rejected alternative: a self-contained signed token still needs server state
+  for immediate revocation and replay prevention. Persisting bearer values or
+  their digests would expand the secret-bearing recovery surface.
+- Constraint: active grants and bearer digests are process-local; restart
+  invalidates them and requires reissue. Commands carry only a token ID. Scope
+  and denial audits are operator-private, credential-free, and attach only to an
+  existing run. Command IDs are one-use per run across token rotation.
+
 ## 2026-09-17: Separate audience delivery order from ledger order
 
 - Reason: omitting a covert or private event while exposing its ledger sequence

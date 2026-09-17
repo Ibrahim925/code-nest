@@ -14,18 +14,41 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-008` is the latest verified feature checkpoint.
-- **Verification status:** `CN-008` is passing. Focused protocol, application,
-  and SSE verification passed 21 of 21 tests. `make check` passed with ESLint,
-  strict typechecks across six workspaces, 11 Vitest files, and 107 tests.
+- **Branch/commit:** `main`; `CN-009` is the latest verified feature checkpoint.
+- **Verification status:** `CN-009` is passing. Focused capability and durable
+  audit verification passed 20 of 20 tests. `make check` passed with ESLint,
+  strict typechecks across six workspaces, 13 Vitest files, and 127 tests.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-009`, scoped participant capability tokens. Keep
-  credentials out of commands and replay, bind authority to run/player/action,
-  and audit rejected as well as accepted requests without leaking bearer values.
+- **Next priority:** begin `CN-010`, the runtime adapter contract and deterministic
+  fake adapter. Negotiate only declared observability, keep provider/runtime
+  details outside core rules, and pass parsed participant commands through the
+  capability authority before accepting state changes.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-17 (cn-009) — Add scoped participant capabilities
+
+- Outcome: done.
+- Did: added a feature-oriented authorization hexagon with pure scope rules, an
+  application capability authority, a narrow audit port, and a SQLite-ledger
+  audit adapter. Tokens use opaque 256-bit random bearer material, retain only a
+  SHA-256 digest in memory, reserve operator/observer credentials, bind run,
+  participant, allowed actions, and expiry, reject per-run command replay across
+  token rotation, and support immediate token or run revocation. Issue, reject,
+  and revoke evidence is operator-private and built without bearer material.
+- Verification run: observed the focused suite fail before the capability module
+  existed. Final focused verification passed 20 of 20 tests. Pinned Node 24.21.0
+  directly verified 50-byte base64url bearer generation, 32-byte SHA-256 output,
+  and equal-length timing-safe comparison because Context7 was unavailable in
+  this session. Final `make check` passed ESLint, all six workspace typechecks,
+  13 test files, and 127 tests.
+- Risks / follow-ups: grants deliberately fail closed on controller restart and
+  must be reissued when participant sessions recover. The audit adapter refuses
+  nonexistent runs to avoid phantom run state. CN-010 and the later participant
+  command gateway must call this service only with protocol-validated envelopes
+  and map every detailed denial to the generic participant-facing message.
 
 ### 2026-09-17 (cn-008) — Build reconnectable audience-safe SSE
 
