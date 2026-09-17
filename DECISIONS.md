@@ -1,5 +1,21 @@
 # Design Decisions
 
+## 2026-09-17: Isolate participants with independent detached clones
+
+- Reason: a linked Git worktree shares administrative files, object storage, and
+  refs with its source repository. A standalone clone per participant keeps Git
+  metadata and new commits private while still starting every player at the same
+  verified commit.
+- Rejected alternative: linked worktrees are cheaper but expose a shared Git
+  control surface and do not work when only the participant directory is mounted
+  into a container. Named participant branches also make peer commits easier to
+  discover through shared refs.
+- Constraint: clone local objects without hardlinks, detach at the full verified
+  commit ID, remove the source remote, and never grant a release-branch path.
+  Container isolation must mount only that participant's directory; host sibling
+  access is enforced by CN-025, not claimed by Git alone. Freeze the runtime before
+  capture so commits, tracked patches, and untracked bytes form one stable view.
+
 ## 2026-09-17: Negotiate runtime observability explicitly
 
 - Reason: coding runtimes expose materially different lifecycle controls and

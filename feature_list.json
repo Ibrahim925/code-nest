@@ -117,9 +117,9 @@
       "milestone": "M1-observable-vertical-slice",
       "title": "Per-participant Git workspaces",
       "user_visible_behavior": "Four participants receive separate workspaces from one pinned base revision, and their commits and filesystem changes are captured without exposing another participant's uncommitted work.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run apps/controller/src/workspaces/manager.integration.test.ts", "make check"],
-      "evidence": "",
+      "evidence": "2026-09-17: manager.integration.test.ts passed 7/7 tests against real temporary Git repositories, covering exact detached base checkout, four independent owner-only clones without source remotes, commit/authorship and dirty-file capture, symbolic-link non-following, peer commit and uncommitted-file isolation, identity/traversal rejection, collision preservation, partial-run rollback, ancestry rejection, capture bounds, and cleanup. The colocated application test also proves rollback after a third-participant failure. Final make check passed 17 test files and 154 tests with lint and all six workspace typechecks.",
       "notes": "Record authorship and exact base/candidate digests; AC 1 and 6."
     },
     {

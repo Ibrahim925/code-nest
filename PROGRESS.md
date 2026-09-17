@@ -14,18 +14,40 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-010` is the latest verified feature checkpoint.
-- **Verification status:** `CN-010` is passing. Focused runtime contract and fake
-  adapter verification passed 19 of 19 tests. `make check` passed with ESLint,
-  strict typechecks across six workspaces, 15 Vitest files, and 146 tests.
+- **Branch/commit:** `main`; `CN-011` is the latest verified feature checkpoint.
+- **Verification status:** `CN-011` is passing. Focused real-Git workspace
+  verification passed 7 of 7 tests. `make check` passed with ESLint, strict
+  typechecks across six workspaces, 17 Vitest files, and 154 tests.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-011`, per-participant Git workspaces. Create each
-  workspace from the scenario's verified immutable revision, isolate participant
-  writes, and collect exact commits/diffs without granting release-branch access.
+- **Next priority:** begin `CN-012`, private role assignment and briefing. Assign
+  exactly one saboteur reproducibly, deliver role material through a private
+  one-shot channel, and prove no private brief reaches participant workspaces.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-17 (cn-011) — Add per-participant Git workspaces
+
+- Outcome: done.
+- Did: added a feature-oriented workspace hexagon with validated domain records,
+  an application repository port, transactional four-participant provisioning,
+  and a real Git/filesystem adapter. Each participant receives an owner-only,
+  independent clone detached at the full verified base commit, with copied Git
+  objects, no source remote, and participant-local commit identity. Capture
+  verifies ancestry and returns the exact candidate, ordered commit authorship,
+  a binary-capable tracked patch, and byte/digest records for untracked files and
+  symbolic links without following them. Existing runs are preserved, partial
+  new runs roll back, captures are bounded, and cleanup is explicit.
+- Verification run: focused manager and Git suites passed 8 of 8 tests; the exact
+  feature verification passed 7 of 7 integration tests against temporary real
+  repositories. Final `make check` passed ESLint, all six workspace typechecks,
+  17 test files, and 154 tests.
+- Risks / follow-ups: Git separation prevents shared metadata and peer commit
+  discovery, but host filesystem read isolation still depends on CN-025 mounting
+  only the participant's directory. The controller must freeze a runtime before
+  capture to prevent concurrent file changes. CN-013 consumes verified candidate
+  ancestry without allowing participants to write the release branch.
 
 ### 2026-09-17 (cn-010) — Add the runtime contract and fake adapter
 
