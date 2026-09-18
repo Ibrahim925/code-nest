@@ -113,6 +113,32 @@ active engine endpoint, then pulls that digest through an ephemeral credential-
 free Docker client configuration so public fixture installation neither reads
 nor writes registry account credentials.
 
+### Contained-runtime credential broker v1
+
+A contained participant uses the same image, identity, filesystem, namespace,
+capability, seccomp, restart, device, resource, and observed-policy controls as a
+split worker. Its only network is a participant-specific internal bridge with an
+isolated gateway. The participant has no published ports and no direct route to
+the provider, internet, host, or another participant.
+
+One trusted broker container joins that private bridge and a separate egress
+bridge. It is also exact-digest, non-root, read-only, capability-free,
+no-new-privileges, built-in-seccomp, device-free, non-restarting, resource-bounded,
+and unexposed. The broker receives provider configuration through a temporary
+owner-only Docker environment file; the participant receives only a short-lived
+grant bound to run, participant, provider, and expiry through the same mechanism.
+Those files are deleted immediately after container creation and secrets never
+enter Docker command arguments or the audit manifest.
+
+The broker accepts only bounded GET/POST requests for the configured provider and
+approved path prefixes. It verifies upstream HTTPS using the system or configured
+certificate authority, attaches the long-lived credential itself, rejects
+redirects and unsafe headers, and bounds request bytes, response bytes, and wall
+time. Audit records contain identifiers, method, path, outcome, status, and byte
+counts only—not grants, credentials, or prompt/response bodies. Startup inspects
+both containers and exact network membership before readiness. Failure rolls back
+in reverse order; normal stop removes the participant, broker, and both networks.
+
 ## Trusted tests
 
 Trusted tests use a fresh networkless container and an exact candidate digest.

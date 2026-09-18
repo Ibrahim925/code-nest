@@ -51,6 +51,7 @@ function observed(input: ReturnType<typeof request>): ObservedContainerPolicy {
     securityOptions: ["no-new-privileges=true"],
     deviceCount: 0,
     restartPolicy: "no",
+    publishedPortCount: 0,
     resourceLimits: {
       fsize: { soft: limits.maximumFileBytes, hard: limits.maximumFileBytes },
       nofile: { soft: 1_024, hard: 1_024 },
@@ -67,6 +68,7 @@ function observed(input: ReturnType<typeof request>): ObservedContainerPolicy {
     nanoCpus: 1_000_000_000,
     processCount: limits.processCount,
     bindMounts: [{ source: WORKSPACE, destination: "/opt/code-nest/seed", readOnly: true }],
+    attachedNetworks: ["none"],
     temporaryFilesystems: {
       "/workspace": `rw,size=${limits.workspaceBytes}`,
       "/home/agent": `rw,size=${limits.homeBytes}`,

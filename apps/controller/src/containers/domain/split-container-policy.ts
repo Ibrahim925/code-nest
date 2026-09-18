@@ -83,6 +83,7 @@ export interface ObservedContainerPolicy {
   readonly securityOptions: readonly string[];
   readonly deviceCount: number;
   readonly restartPolicy: string;
+  readonly publishedPortCount: number;
   readonly resourceLimits: Readonly<Record<string, { readonly soft: number; readonly hard: number }>>;
   readonly labels: Readonly<Record<string, string>>;
   readonly memoryBytes: number;
@@ -94,6 +95,7 @@ export interface ObservedContainerPolicy {
     readonly destination: string;
     readonly readOnly: boolean;
   }[];
+  readonly attachedNetworks: readonly string[];
   readonly temporaryFilesystems: Readonly<Record<string, string>>;
   readonly environmentNames: readonly string[];
 }
@@ -207,17 +209,20 @@ function hasTmpfs(policy: ObservedContainerPolicy, target: string, bytes: number
   return value !== undefined && value.split(",").includes(`size=${bytes}`);
 }
 
-export function assertObservedContainerPolicy(
+function observedContainerPolicyMatches(
   request: NormalizedSplitContainerRequest,
   policy: ObservedContainerPolicy,
-): void {
+  networkMode: string,
+  executionMode: "contained" | "split",
+): boolean {
   const seed = policy.bindMounts[0];
-  const valid = policy.running && !policy.paused &&
+  return policy.running && !policy.paused &&
     policy.user === `${request.user.uid}:${request.user.gid}` && !policy.privileged &&
-    policy.rootFilesystemReadOnly && policy.networkMode === "none" &&
+    policy.rootFilesystemReadOnly && policy.networkMode === networkMode &&
     policy.ipcMode === "private" && policy.cgroupNamespaceMode === "private" &&
     policy.pidMode === "" && policy.userNamespaceMode !== "host" &&
     policy.deviceCount === 0 && policy.restartPolicy === "no" &&
+    policy.publishedPortCount === 0 &&
     policy.capabilityDrops.length === 1 && policy.capabilityDrops[0]?.toUpperCase() === "ALL" &&
     policy.securityOptions.includes("no-new-privileges=true") &&
     policy.securityOptions.includes("seccomp=builtin") &&
@@ -229,7 +234,7 @@ export function assertObservedContainerPolicy(
     policy.resourceLimits.fsize?.hard === request.limits.maximumFileBytes &&
     policy.resourceLimits.nofile?.soft === 1_024 && policy.resourceLimits.nofile?.hard === 1_024 &&
     policy.labels["code-nest.managed"] === "true" &&
-    policy.labels["code-nest.execution-mode"] === "split" &&
+    policy.labels["code-nest.execution-mode"] === executionMode &&
     policy.labels["code-nest.run-id"] === request.runId &&
     policy.labels["code-nest.participant-id"] === request.participantId &&
     policy.labels["code-nest.attempt-id"] === request.attemptId &&
@@ -240,10 +245,33 @@ export function assertObservedContainerPolicy(
     hasTmpfs(policy, "/home/agent", request.limits.homeBytes) &&
     hasTmpfs(policy, "/tmp", request.limits.temporaryBytes) &&
     policy.environmentNames.every((name) => !FORBIDDEN_ENVIRONMENT.has(name));
+}
+
+export function assertObservedContainerPolicy(
+  request: NormalizedSplitContainerRequest,
+  policy: ObservedContainerPolicy,
+): void {
+  const valid = observedContainerPolicyMatches(request, policy, "none", "split") &&
+    policy.attachedNetworks.length === 1 && policy.attachedNetworks[0] === "none";
   if (!valid) {
     throw new SplitContainerError(
       "CONTAINER_POLICY_MISMATCH",
       "Docker did not apply the complete split-runtime isolation policy.",
+    );
+  }
+}
+
+export function assertObservedContainerPolicyForNetwork(
+  request: NormalizedSplitContainerRequest,
+  policy: ObservedContainerPolicy,
+  networkName: string,
+): void {
+  const valid = observedContainerPolicyMatches(request, policy, networkName, "contained") &&
+    policy.attachedNetworks.length === 1 && policy.attachedNetworks[0] === networkName;
+  if (!valid) {
+    throw new SplitContainerError(
+      "CONTAINER_POLICY_MISMATCH",
+      "Docker did not apply the complete contained-runtime participant policy.",
     );
   }
 }

@@ -14,21 +14,45 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-036` split-runtime participant containers is the
+- **Branch/commit:** `main`; `CN-037` contained runtime and credential broker is the
   latest verified feature checkpoint.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 61 Vitest files, and 368 tests, including the
-  real Docker isolation boundary.
+  typechecks across six workspaces, 63 Vitest files, and 375 tests, including the
+  real contained-runtime, credential, TLS, and Docker network boundaries.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-037`, the contained runtime and credential broker.
-  Run a complete coding-agent CLI inside its participant container while forcing
-  provider traffic through authenticated, allow-listed controlled egress and
-  keeping long-lived provider credentials in the trusted control plane.
+- **Next priority:** begin `CN-038`, disposable trusted-test containers. Run public
+  and hidden evaluators in fresh networkless containers against one exact
+  candidate digest while releasing only scenario-authorized result fields.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-18 (cn-037) — Contained runtime and credential broker
+
+- Outcome: done.
+- Did: added separate feature-oriented container and credential-broker hexagons.
+  A contained participant keeps the complete split-worker security and resource
+  policy but joins only a participant-specific internal bridge. A hardened trusted
+  broker is the sole member shared with a separate egress bridge, authenticates a
+  short run/participant/provider/expiry-bound grant, permits only configured HTTPS
+  provider paths, attaches the long-lived provider credential, and logs bounded
+  metadata without bodies or secrets. Temporary owner-only environment files keep
+  secrets out of Docker arguments. Startup inspects both containers and exact
+  network membership before readiness; rollback and normal shutdown remove every
+  managed resource. Added pinned Node and Alpine fixture images.
+- Verification run: seven focused service and real-container cases passed. They
+  exercised credential attachment, wrong/expired/cross-provider grants, path and
+  HTTPS allow-lists, byte and transport failures, a real TLS provider, broker-only
+  reachability, blocked participant provider/internet access, long-key absence
+  from participant environment, manifest, and logs, plus cleanup. Final
+  `make check` passed the 350-line guard, ESLint, all six strict workspace
+  typechecks, 63 test files, and 375 tests.
+- Risks / follow-ups: the pinned Alpine participant is an isolation fixture rather
+  than a production coding-agent image; callers still supply exact scenario image
+  digests. CN-038 adds trusted evaluator containers and CN-039 broadens adversarial
+  escape, leakage, exhaustion, and persistence checks.
 
 ### 2026-09-18 (cn-036) — Split-runtime participant containers
 

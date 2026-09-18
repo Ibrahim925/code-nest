@@ -13,9 +13,9 @@ import {
   dockerText,
   type DockerCommandRunner,
 } from "./docker-command.js";
+import { dockerParticipantCreateArguments } from "./docker-participant-profile.js";
 
 const LIFECYCLE_OUTPUT_BYTES = 1024 * 1024;
-const STARTUP_COMMAND = "cp -R /opt/code-nest/seed/. /workspace && exec tail -f /dev/null";
 
 function record(value: unknown): Record<string, unknown> | null {
   return typeof value === "object" && value !== null && !Array.isArray(value)
@@ -45,64 +45,6 @@ function lifecycleError(error: unknown): SplitContainerError {
     "Docker could not complete a container lifecycle operation.",
     error,
   );
-}
-
-function tmpfs(
-  target: string,
-  bytes: number,
-  uid: number,
-  gid: number,
-  noExecute = false,
-): string {
-  const options = ["rw", "nosuid", "nodev"];
-  if (noExecute) options.push("noexec");
-  options.push(`size=${bytes}`, `uid=${uid}`, `gid=${gid}`, "mode=0770");
-  return `${target}:${options.join(",")}`;
-}
-
-function createArguments(request: NormalizedSplitContainerRequest): string[] {
-  const { limits, user } = request;
-  return [
-    "container", "create",
-    "--name", request.containerName,
-    "--hostname", request.participantId,
-    "--pull", "never",
-    "--network", "none",
-    "--ipc", "private",
-    "--cgroupns", "private",
-    "--read-only",
-    "--cap-drop", "ALL",
-    "--security-opt", "no-new-privileges=true",
-    "--security-opt", "seccomp=builtin",
-    "--user", `${user.uid}:${user.gid}`,
-    "--memory", `${limits.memoryBytes}b`,
-    "--memory-swap", `${limits.memoryBytes}b`,
-    "--cpus", String(limits.cpuCount),
-    "--pids-limit", String(limits.processCount),
-    "--ulimit", `fsize=${limits.maximumFileBytes}:${limits.maximumFileBytes}`,
-    "--ulimit", "nofile=1024:1024",
-    "--tmpfs", tmpfs("/workspace", limits.workspaceBytes, user.uid, user.gid),
-    "--tmpfs", tmpfs("/home/agent", limits.homeBytes, user.uid, user.gid, true),
-    "--tmpfs", tmpfs("/tmp", limits.temporaryBytes, user.uid, user.gid),
-    "--mount", `type=bind,src=${request.workspacePath},dst=/opt/code-nest/seed,readonly`,
-    "--workdir", "/workspace",
-    "--env", "HOME=/home/agent",
-    "--env", "TMPDIR=/tmp",
-    "--env", "CODE_NEST_EXECUTION_MODE=split",
-    "--init",
-    "--restart", "no",
-    "--log-driver", "none",
-    "--no-healthcheck",
-    "--stop-timeout", String(limits.stopGraceSeconds),
-    "--label", "code-nest.managed=true",
-    "--label", "code-nest.execution-mode=split",
-    "--label", `code-nest.run-id=${request.runId}`,
-    "--label", `code-nest.participant-id=${request.participantId}`,
-    "--label", `code-nest.attempt-id=${request.attemptId}`,
-    "--entrypoint", "/bin/sh",
-    request.image,
-    "-c", STARTUP_COMMAND,
-  ];
 }
 
 function parseMounts(value: unknown): ObservedContainerPolicy["bindMounts"] {
@@ -158,9 +100,11 @@ function parseInspection(bytes: Uint8Array): ObservedContainerPolicy {
   const host = record(container?.HostConfig);
   const temporary = record(host?.Tmpfs);
   const restart = record(host?.RestartPolicy);
+  const networkSettings = record(container?.NetworkSettings);
+  const networks = record(networkSettings?.Networks);
   if (
     container === undefined || config === null || state === null || host === null ||
-    temporary === null || restart === null
+    temporary === null || restart === null || networks === null
   ) {
     throw lifecycleError(new Error("Docker inspection response was incomplete."));
   }
@@ -181,6 +125,9 @@ function parseInspection(bytes: Uint8Array): ObservedContainerPolicy {
     securityOptions: strings(host.SecurityOpt),
     deviceCount: Array.isArray(host.Devices) ? host.Devices.length : Number.NaN,
     restartPolicy: typeof restart.Name === "string" ? restart.Name : "",
+    publishedPortCount: record(host.PortBindings) === null
+      ? Number.NaN
+      : Object.keys(record(host.PortBindings) as Record<string, unknown>).length,
     resourceLimits: parseResourceLimits(host.Ulimits),
     labels: stringRecord(config.Labels),
     memoryBytes: number_(host.Memory),
@@ -188,6 +135,7 @@ function parseInspection(bytes: Uint8Array): ObservedContainerPolicy {
     nanoCpus: number_(host.NanoCpus),
     processCount: number_(host.PidsLimit),
     bindMounts: parseMounts(container.Mounts),
+    attachedNetworks: Object.keys(networks).sort(),
     temporaryFilesystems: Object.fromEntries(
       Object.entries(temporary).filter((entry): entry is [string, string] => typeof entry[1] === "string"),
     ),
@@ -200,7 +148,10 @@ export class DockerSplitContainerEngine implements SplitContainerEngine {
 
   async create(request: NormalizedSplitContainerRequest): Promise<string> {
     try {
-      const result = await this.runner.run(createArguments(request), {
+      const result = await this.runner.run(dockerParticipantCreateArguments(request, {
+        executionMode: "split",
+        networkName: "none",
+      }), {
         maximumOutputBytes: LIFECYCLE_OUTPUT_BYTES,
       });
       const id = dockerText(result.stdout).trim();

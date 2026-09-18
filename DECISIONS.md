@@ -1,5 +1,25 @@
 # Design Decisions
 
+## 2026-09-18: Route contained agents through a dual-homed credential broker
+
+- Reason: some coding-agent CLIs must run beside their tools, but giving that
+  container a long-lived provider key or general outbound network would turn one
+  compromised participant into a credential and exfiltration boundary failure.
+- Rejected alternative: injecting the provider key into the participant makes it
+  readable through environment, process, and artifact output. Attaching the
+  participant directly to an egress bridge lets it bypass hostname and request
+  policy. Passing secrets in Docker arguments exposes them through host process
+  inspection.
+- Constraint: each participant receives an isolated internal bridge and a short,
+  run-, participant-, provider-, and expiry-bound gateway grant. Only the trusted
+  broker joins both that bridge and a separate egress bridge. The broker validates
+  provider and path allow-lists, verifies upstream TLS, attaches the long-lived
+  credential, bounds request/response bytes and time, and logs metadata only.
+  Container environment files are owner-only and deleted immediately after
+  creation. Exact image digests and the complete observed container and network
+  policy must match before the runtime becomes ready; shutdown removes containers
+  and both networks.
+
 ## 2026-09-18: Seed bounded split workspaces from read-only participant sources
 
 - Reason: a writable host bind gives commands immediate access to durable host

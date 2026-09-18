@@ -37,17 +37,23 @@ async function engineHost() {
   return host;
 }
 
-if (typeof images.splitWorker !== "string") {
-  throw new Error("docker/images.json must declare splitWorker.");
+if (
+  typeof images.splitWorker !== "string" ||
+  typeof images.credentialBroker !== "string"
+) {
+  throw new Error("docker/images.json must declare splitWorker and credentialBroker.");
 }
 
 const temporaryConfig = await mkdtemp(join(tmpdir(), "code-nest-docker-config-"));
 try {
-  await execute(
-    "docker",
-    ["--config", temporaryConfig, "--host", await engineHost(), "pull", images.splitWorker],
-    { encoding: "utf8", env: environment(), maxBuffer: 4 * 1_048_576, timeout: 120_000 },
-  );
+  const host = await engineHost();
+  for (const image of [images.splitWorker, images.credentialBroker]) {
+    await execute(
+      "docker",
+      ["--config", temporaryConfig, "--host", host, "pull", image],
+      { encoding: "utf8", env: environment(), maxBuffer: 4 * 1_048_576, timeout: 120_000 },
+    );
+  }
 } finally {
   await rm(temporaryConfig, { recursive: true, force: true });
 }

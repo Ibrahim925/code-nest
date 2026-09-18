@@ -403,9 +403,9 @@
       "milestone": "M4-real-runtimes-and-isolation",
       "title": "Contained runtime and credential broker",
       "user_visible_behavior": "A contained agent can reach only its approved provider through authenticated controlled egress, while long-lived provider credentials never enter its environment or artifacts.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run apps/controller/src/containers/contained-runtime.integration.test.ts apps/controller/src/credentials/broker.integration.test.ts", "make check"],
-      "evidence": "",
+      "evidence": "A containers hexagon now validates contained-runtime inputs and safe manifests, coordinates transactional startup and cleanup through a process-neutral engine port, and applies Docker through an outer adapter. Each exact-digest non-root participant retains the split worker's read-only, capability-free, no-new-privileges, seccomp, namespace, device, restart, tmpfs, and resource controls, but attaches only to a participant-specific internal isolated bridge. A separate credentials hexagon authenticates short grants bound to run, participant, provider, and expiry, enforces HTTPS provider and path allow-lists plus request, response, and time bounds, attaches the long-lived credential inside a trusted dual-homed broker, and emits metadata-only audit records. Owner-only ephemeral environment files keep both credential configuration and participant grants out of Docker command arguments and are deleted after creation. Startup inspects the complete participant, hardened broker, and exact two-network membership before readiness; failure rolls back and normal stop removes both containers and networks. Seven focused tests passed, including a real contained participant reaching a TLS provider only through the broker, blocked direct provider/internet access, long-key omission from participant environment, manifest, and logs, credential attachment, wrong/expired/cross-provider grants, disallowed paths, unsafe configuration, byte/transport failures, and cleanup. Final make check passed the 350-line guard, ESLint, six strict workspace typechecks, 63 test files, and 375 tests.",
       "notes": "Record execution mode and network policy in the run manifest; AC 3 and 7."
     },
     {

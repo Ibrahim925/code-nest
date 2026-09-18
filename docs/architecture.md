@@ -51,6 +51,22 @@ one global directory per layer. Introduce a port only for an actual side-effect
 or replaceable boundary. Pure helpers and single-step rules do not need an
 interface merely to look architectural.
 
+## Contained runtime and credential broker
+
+`apps/controller/src/containers` owns participant lifecycle and applied Docker
+policy. Its pure domain layer validates exact images, identities, resource
+limits, safe manifests, and observed container/network state. The application
+layer coordinates transactional startup, execution, logs, and reverse cleanup
+through a process-neutral engine port. Docker CLI construction and inspection
+remain outer adapters.
+
+`apps/controller/src/credentials` separately owns provider access. Its domain
+contract validates provider allow-lists and scoped grants; its application
+service authenticates and authorizes bounded requests through transport and
+audit ports. Node HTTP/HTTPS and the broker process are adapters. Participant
+containers know only a short gateway grant and internal address; long-lived
+provider credentials never cross into the participant hexagon.
+
 ## State flow
 
 1. A typed command reaches the controller with an idempotency key.
