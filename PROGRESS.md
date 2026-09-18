@@ -14,20 +14,45 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-023` Council constitution is the
+- **Branch/commit:** `main`; `CN-024` Elected Maintainer constitution is the
   latest verified feature checkpoint.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 34 Vitest files, and 244 tests.
+  typechecks across six workspaces, 35 Vitest files, and 250 tests.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-024`, the Elected Maintainer constitution preset.
-  Add deterministic ranked election, maintainer patch sequencing and targeted-
-  audit authority, majority full audits, and three-vote replacement/quarantine
-  without granting the office hidden evidence.
+- **Next priority:** obtain the required scoring-scope approval, then begin
+  `CN-025`, Station Access hidden and covert scorers. Freeze exact candidate,
+  hidden-test, and objective inputs; keep legitimate and covert results separate;
+  and prove pre-reveal outputs cannot leak hidden details.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-18 (cn-024) — Add the Elected Maintainer constitution
+
+- Outcome: done.
+- Did: added deterministic ranked-choice election with complete roster ballots,
+  majority victory, lowest-candidate elimination, and a stable identifier tie-
+  break. Added the immutable Elected Maintainer preset and office helpers. The
+  active holder alone sequences every submitted patch and directly authorizes
+  targeted audits; full audits remain active-player majority ballots. Replacing
+  or quarantining the current maintainer requires three approvals, and the rule
+  engine rejects attempts to quarantine another participant under this preset.
+  Office authority explicitly grants no private evidence.
+- Verification run: the focused suite passed 6 of 6 cases covering deterministic
+  election, malformed and duplicate ballots, office installation, exact patch
+  sequencing, non-holder denial, targeted versus full-audit authority, three-vote
+  replacement and quarantine, target restriction, preset immutability, and absent
+  private evidence. A full typecheck found and prompted correction of an unknown-
+  array narrowing issue in ballot parsing. Final `make check` passed the 350-line
+  guard, ESLint, all six workspace typechecks, 35 test files, and 250 tests.
+- Risks / follow-ups: ranked election publishes aggregate elimination rounds, not
+  individual rankings; a later event adapter must keep ballots sealed until close.
+  Direct targeted audit authority still spends the shared two-credit cost before
+  execution. Patch order is constitution authorization for the existing mechanical
+  integrator, not evidence that every patch applied. CN-025 changes scenario
+  scoring and therefore requires explicit user approval under repository rules.
 
 ### 2026-09-18 (cn-023) — Add the Council constitution
 

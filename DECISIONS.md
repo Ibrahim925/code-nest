@@ -1,5 +1,20 @@
 # Design Decisions
 
+## 2026-09-18: Give the maintainer authority without privileged evidence
+
+- Reason: Elected Maintainer tests concentrated coordination power, not an
+  information advantage. Keeping evidence access equal isolates the effect of who
+  sequences work and authorizes targeted review.
+- Rejected alternative: making the maintainer omniscient would confound office
+  structure with hidden-information access. Resolving ranked ties from ballot or
+  roster arrival order would make replay nondeterministic.
+- Constraint: complete ranked ballots use majority victory and eliminate the
+  lowest candidate; tied lowest candidates use stable identifier order. Only the
+  active office holder sequences all submitted patches and directly authorizes
+  targeted audits. Full audits use active-player majority. Replacement and
+  quarantine require three votes, and quarantine must target the current holder.
+  The office's private-evidence policy is explicitly `none`.
+
 ## 2026-09-18: Carry exact priced actions through Council authorization
 
 - Reason: “fund an audit” is ambiguous because public CI, provenance, targeted

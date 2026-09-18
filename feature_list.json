@@ -260,9 +260,9 @@
       "milestone": "M2-governance-game",
       "title": "Elected Maintainer constitution",
       "user_visible_behavior": "Under Elected Maintainer, players elect and can replace a maintainer whose integration and audit powers follow the declared constitution.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run packages/core/src/constitutions/elected-maintainer.test.ts", "make check"],
-      "evidence": "",
+      "evidence": "The focused Elected Maintainer suite passed 6 of 6 tests: complete ranked ballots elected a maintainer through deterministic elimination with a stable identifier tie-break independent of ballot and roster order; malformed, duplicate, incomplete, and foreign ballots failed closed; the winner installed into the maintainer office; only the active holder could sequence every submitted patch exactly once or directly authorize a targeted audit; full audits remained three-of-four majority ballots; replacing or quarantining the current maintainer required three approvals while quarantine of another participant was disallowed; and the immutable preset explicitly granted the office no private evidence. The affected Council and generic governance suites passed, and final make check passed the 350-line guard, ESLint, six strict workspace typechecks, 35 test files, and 250 tests.",
       "notes": "The maintainer may secretly be the saboteur."
     },
     {

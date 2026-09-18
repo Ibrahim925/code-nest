@@ -16,6 +16,7 @@ export interface ConstitutionPreset {
   readonly participantQuarantine: ParticipantQuarantinePolicy;
   readonly participantAppeal: ParticipantAppealPolicy;
   readonly officeIds: readonly string[];
+  readonly officePrivateEvidence: "none";
   readonly governanceRules: GovernanceRules;
 }
 

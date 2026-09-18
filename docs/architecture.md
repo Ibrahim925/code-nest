@@ -511,6 +511,27 @@ two-credit `revert_patch` action. In both cases, ballot passage is authorization
 the controller must atomically spend credits before executing and recording the
 external result.
 
+## Elected Maintainer constitution v1
+
+`ranked-election.ts` validates one complete ranking from every active participant.
+It counts each ballot's highest remaining candidate, elects a strict majority, and
+otherwise eliminates the lowest count. When lowest counts tie, the greatest stable
+participant identifier is eliminated. Candidate and count output is sorted by ID,
+so roster and ballot arrival order do not affect replay.
+
+`elected-maintainer.ts` installs the winner into the named `maintainer` office.
+Only its active holder may order the complete set of submitted patches and directly
+authorize a targeted audit. That audit still enters the shared budget before its
+trusted job runs. A full patch audit is available only through an active-player
+simple-majority ballot.
+
+Replacing the office holder or quarantining the current holder requires exactly
+three approvals. Constitution rule restrictions reject quarantine motions aimed
+at anyone else. The office grants no appeal right and explicitly grants no private
+evidence; it may be held by any elected participant, including the saboteur. Office
+actions authorize later controller effects and do not directly mutate Git or
+artifact storage.
+
 ## Failure behavior
 
 Model timeout, policy rejection, container exit, OOM, operator cancellation,

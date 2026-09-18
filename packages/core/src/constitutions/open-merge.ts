@@ -31,6 +31,7 @@ export const OPEN_MERGE_CONSTITUTION: ConstitutionPreset = Object.freeze({
   participantQuarantine: "forbidden",
   participantAppeal: "none",
   officeIds: Object.freeze([]),
+  officePrivateEvidence: "none",
   governanceRules: GOVERNANCE_RULES,
 });
 

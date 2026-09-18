@@ -87,6 +87,8 @@ export interface GovernanceMotionRule {
   readonly proposer: MotionProposerRule;
   readonly electorate: MotionElectorateRule;
   readonly threshold: BallotThreshold;
+  readonly allowedAuditActions?: readonly AuditGovernanceAction[];
+  readonly requiredTarget?: { readonly kind: "office_holder"; readonly officeId: string };
 }
 
 export interface GovernanceRules {

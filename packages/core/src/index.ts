@@ -21,3 +21,5 @@ export * from "./governance.js";
 export * from "./constitutions/constitution.js";
 export * from "./constitutions/open-merge.js";
 export * from "./constitutions/council.js";
+export * from "./constitutions/ranked-election.js";
+export * from "./constitutions/elected-maintainer.js";

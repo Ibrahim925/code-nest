@@ -30,7 +30,12 @@ const TARGET_APPEAL: GovernanceMotionRule = Object.freeze({
 });
 
 const COUNCIL_MOTIONS = Object.freeze({
-  fund_audit: ACTIVE_MAJORITY,
+  fund_audit: Object.freeze({
+    ...ACTIVE_MAJORITY,
+    allowedAuditActions: Object.freeze([
+      "trusted_public_ci", "patch_provenance", "targeted_audit", "full_patch_audit",
+    ] as const),
+  }),
   accept_patch: PATCH_ENDORSEMENTS,
   delay_patch: ACTIVE_MAJORITY,
   reject_patch: ACTIVE_MAJORITY,
@@ -55,6 +60,7 @@ export const COUNCIL_CONSTITUTION: ConstitutionPreset = Object.freeze({
   participantQuarantine: "ballot",
   participantAppeal: "target_statement_ballot",
   officeIds: Object.freeze([]),
+  officePrivateEvidence: "none",
   governanceRules: COUNCIL_RULES,
 });
 

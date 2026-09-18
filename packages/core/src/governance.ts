@@ -13,6 +13,7 @@ import {
   type GovernanceVoteRequest,
   type MotionElectorateRule,
 } from "./governance-types.js";
+import { validateGovernanceRuleRestrictions } from "./governance-rules.js";
 
 export * from "./governance-types.js";
 export * from "./governance-ballot.js";
@@ -267,6 +268,7 @@ export function proposeGovernanceMotion(
   if (rule === undefined) {
     return fail("MOTION_NOT_ALLOWED", "The active constitution does not allow this motion.");
   }
+  validateGovernanceRuleRestrictions(state, motion, rule);
   validateProposer(state, motion, rule);
   const eligibleVoterIds = electorate(state, motion, rule.electorate);
   const deadline = time(closesAt, "ballot deadline");
