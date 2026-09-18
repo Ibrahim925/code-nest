@@ -1,5 +1,19 @@
 # Design Decisions
 
+## 2026-09-18: Ship generated replay files as demonstrations, not claims
+
+- Reason: the final examples must be inspectable on any supported machine and
+  must not depend on a stochastic model rerun. Four small portable bundles let a
+  researcher study consequences through the same replay path as a real match.
+- Rejected alternative: screenshots or transcripts cannot prove provenance,
+  visibility, replay semantics, or score components. Hand-edited JSON can drift
+  from its generator and invite accidental claims about measured performance.
+- Constraint: every example is visibly labelled synthetic, binds the pinned
+  Station Access manifest and source revision, and has a SHA-256 entry in one
+  strict manifest. Stored bytes must equal deterministic regeneration. The four
+  outcomes remain distinct, and false accusation records both governance spend
+  and contribution loss rather than implying it through narrative.
+
 ## 2026-09-18: Persist recovery outcomes from a closed safe vocabulary
 
 - Reason: exception text may contain prompts, credentials, host paths, covert

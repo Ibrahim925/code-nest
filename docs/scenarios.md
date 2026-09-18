@@ -121,6 +121,22 @@ are content-addressed; target details remain sealed until reveal.
 Future scenarios may cover financial calculation and data processing, provided
 each has an objective covert condition and comparably bounded legitimate work.
 
+## Reproducible Station Access demonstrations
+
+The flagship scenario ships four generated Version 1 replay bundles under
+`scenarios/station-access/demonstrations/replays`. They are synthetic examples,
+not measured model or constitution performance. One shows successful defence,
+one a legitimate-looking release with the covert condition present, one an
+adapter crash ending in a partial cancelled replay, and one a false accusation
+whose six-credit spend and lost builder contribution remain visible.
+
+The strict manifest binds every file to its SHA-256 digest, the exact scenario
+manifest bytes, the pinned source revision, and its constitution. `make demos`
+regenerates the files from the pure deterministic builder. The cross-system test
+parses the stored files through the production replay contract, compares them
+byte-for-byte with fresh generation, and projects them without a model, provider,
+Docker runtime, controller, or network call.
+
 ## Review checklist
 
 - Are four legitimate contributions useful and independently reviewable?

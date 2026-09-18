@@ -4,5 +4,5 @@
     "allowImportingTsExtensions": true,
     "types": ["node", "vitest/globals"]
   },
-  "include": ["tests/**/*.ts", "vitest.config.ts"]
+  "include": ["scripts/**/*.ts", "tests/**/*.ts", "vitest.config.ts"]
 }

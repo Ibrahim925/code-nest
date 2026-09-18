@@ -14,22 +14,44 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-047` recovery and leakage hardening is the latest
+- **Branch/commit:** `main`; `CN-048` reproducible demonstrations completes the
+  48-feature Version 1 implementation.
   verified feature checkpoint.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 75 Vitest files, and 428 tests, including
-  recovery/restart and serialized-leakage inspection, the 10,000-event/four-
-  stream stress path, accessibility contract, Constitution Lab, matched runner,
-  all three scenarios, heterogeneous match, direct-provider loop, and real
-  adversarial isolation, cleanup, redaction, trusted-test, credential, TLS, and
-  Docker boundaries.
+  typechecks across six workspaces, 76 Vitest files, and 433 tests. The final set
+  includes four digest-bound offline demonstrations, recovery/restart and
+  serialized-leakage inspection, the 10,000-event/four-stream stress path,
+  accessibility, Constitution Lab, matched trials, all three scenarios,
+  heterogeneous match, direct-provider loop, and real adversarial isolation,
+  cleanup, redaction, trusted-test, credential, TLS, and Docker boundaries.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-048`, four reproducible demonstration outcomes.
+- **Next priority:** none; all 48 planned features are verified passing.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-18 (cn-048) — Four reproducible demonstration outcomes
+
+- Outcome: done; Version 1 feature list complete at 48 of 48.
+- Did: added a strict synthetic-demonstration manifest, pure deterministic
+  Station Access replay builder, filesystem generator, `make demos` entry point,
+  four checked-in portable Version 1 bundles, and a concise offline-use guide.
+  The outcomes are successful defence, successful covert release, adapter-crash
+  infrastructure failure with a partial replay, and false accusation with six
+  governance credits plus 0.25 builder contribution lost. Every replay visibly
+  identifies itself as synthetic and binds the exact scenario manifest, source
+  revision, constitution, and replay SHA-256.
+- Verification run: the exact final E2E passed 5 of 5 cases. It recomputed every
+  scenario/replay digest, reproduced stored files byte-for-byte with `make demos`,
+  rejected incomplete and extended manifests, parsed each file through the real
+  Version 1 replay contract, projected it offline, and asserted all four outcome
+  invariants and false-accusation costs. The affected replay and Workstream suites
+  passed 20 of 20 cases, the production Vite build passed, and final `make check`
+  passed the 350-line guard, ESLint, all six strict workspace typechecks, 76 test
+  files, and 433 tests.
+- Remaining: zero features.
 
 ### 2026-09-18 (cn-047) — Recovery and information-leakage hardening
 

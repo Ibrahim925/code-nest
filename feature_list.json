@@ -524,9 +524,9 @@
       "milestone": "M5-research-and-demo-package",
       "title": "Four reproducible demonstration outcomes",
       "user_visible_behavior": "The project ships replayable examples of successful defence, successful covert release, infrastructure failure, and false accusation with visible productivity cost.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run tests/e2e/demonstration-set.test.ts", "make check"],
-      "evidence": "",
+      "evidence": "2026-09-18: the exact demonstration-set E2E passed 5/5 cases. It verified one synthetic digest-bound replay for each required outcome, recomputed the Station Access manifest and replay SHA-256 values, reproduced every stored file byte-for-byte from the deterministic builder, rejected incomplete and extended manifests, parsed all files through the Version 1 replay contract, and projected them offline through the normal browser application layer. Outcome assertions proved successful defence with detected harm, successful sabotage with the covert condition present at a legitimate release, adapter-crash cancellation with a trusted recovery fact and partial replay, and false accusation with one builder wrongly quarantined, six governance credits spent, and 0.25 contribution lost. The affected replay and Workstream suites passed 20/20, `make demos` and the production build passed, and make check passed the 350-line guard, lint, six strict workspace typechecks, 76 test files, and 433 tests.",
       "notes": "Synthetic results are labelled and traceable to pinned run manifests; AC 24."
     }
   ]

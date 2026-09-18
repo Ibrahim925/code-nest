@@ -29,6 +29,7 @@ Participant runtimes remain language-, harness-, provider-, and model-agnostic.
 
 - Setup:  `make setup`
 - Dev:    `make dev`
+- Demos:  `make demos`
 - Test:   `make test`
 - Verify: `make check` — lint, typecheck, and tests
 
@@ -101,5 +102,7 @@ Report what ran, what passed, and what was skipped. Skipped is never passing.
 - `docs/code-style.md` — read before adding TypeScript source.
 - `docs/observatory-ui.md` — read for live, replay, accessibility, or observer UX.
 - `docs/scenarios.md` — read for task repositories, covert goals, or scoring.
+- `scenarios/station-access/demonstrations/README.md` — read for generated demo
+  replays, their interpretation, and regeneration.
 - `docs/experiments.md` — read for matched trials, repetitions, retries, metrics,
   or Constitution Lab data.

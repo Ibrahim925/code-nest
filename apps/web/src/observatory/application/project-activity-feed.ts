@@ -217,6 +217,21 @@ function drafts(kind: string, payload: UnknownRecord): readonly ItemDraft[] {
       identifier(payload.participantId),
     )];
   }
+  if (kind === "demonstration.synthetic_declared") {
+    const source = sanitizeUntrustedText(payload.source, 200);
+    const expected = shortText(payload.expectedOutcome, 80);
+    if (payload.synthetic !== true || source === null || expected === null) return [];
+    return [factualItem(
+      "Synthetic demonstration",
+      "demonstration",
+      sanitizeUntrustedText(
+        `${source.text}\nExpected outcome · ${expected.replaceAll("_", " ")}`,
+        320,
+      ),
+      "trusted",
+      "Pinned deterministic demonstration manifest",
+    )];
+  }
   return [];
 }
 

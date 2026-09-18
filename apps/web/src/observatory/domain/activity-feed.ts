@@ -9,6 +9,7 @@ export type ActivityCategory =
   | "commit"
   | "usage"
   | "recovery"
+  | "demonstration"
   | "artifact";
 
 export type VerificationLabel =
