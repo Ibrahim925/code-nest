@@ -249,9 +249,9 @@
       "milestone": "M2-governance-game",
       "title": "Council constitution",
       "user_visible_behavior": "Under Council, the peer group spends shared credits and uses majority ballots to accept, delay, reject, audit, quarantine, or revert work.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run packages/core/src/constitutions/council.test.ts", "make check"],
-      "evidence": "",
+      "evidence": "The focused Council suite passed 8 of 8 tests: two non-author endorsements accepted a patch while excluding its author; three of four active votes quarantined a participant even when the target rejected; the quarantined target could submit one sanction-linked appeal statement but could not vote; audit motions required a three-of-four simple majority and carried the exact priced action into the shared 18-credit budget; delay, rejection, patch quarantine, and revert used active-player majority ballots; revert mapped to its two-credit budget action; and the immutable preset exposed no direct unvoted spending or office power. Equal inputs replayed identically. The affected governance and Open Merge suites also passed, and final make check passed the 350-line guard, ESLint, six strict workspace typechecks, 34 test files, and 244 tests.",
       "notes": "Default constitution and flagship experimental condition."
     },
     {

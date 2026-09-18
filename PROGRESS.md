@@ -14,20 +14,44 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-022` Open Merge constitution is the
+- **Branch/commit:** `main`; `CN-023` Council constitution is the
   latest verified feature checkpoint.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 33 Vitest files, and 236 tests.
+  typechecks across six workspaces, 34 Vitest files, and 244 tests.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-023`, the Council constitution preset. Encode one
-  vote per active player, two non-author endorsements for patch acceptance, three
-  approvals for participant quarantine in the four-player default, majority audit
-  authorization, shared-credit spending, and one non-voting target appeal.
+- **Next priority:** begin `CN-024`, the Elected Maintainer constitution preset.
+  Add deterministic ranked election, maintainer patch sequencing and targeted-
+  audit authority, majority full audits, and three-vote replacement/quarantine
+  without granting the office hidden evidence.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-18 (cn-023) — Add the Council constitution
+
+- Outcome: done.
+- Did: encoded Council as deeply immutable rule data for the shared governance
+  engine. Every active player has one sealed vote; patch acceptance snapshots the
+  active non-author electorate and requires two endorsements; participant
+  quarantine snapshots all active voters and requires three approvals; audits and
+  other patch dispositions use simple majority; and one sanction-linked appeal is
+  proposed by the quarantined target but voted only by active peers. Audit motions
+  now carry the exact priced action, and a small mapping turns passed audit or
+  revert effects into the existing shared-budget action without guessing.
+- Verification run: the focused Council suite passed 8 of 8 cases covering patch
+  endorsements, four-player quarantine, target appeal/no-vote behavior, audit
+  majority and exact two-credit targeted-audit spend, delay, rejection, patch
+  quarantine, priced revert, immutability, absent office/direct authority, and
+  deterministic replay. All affected governance and Open Merge tests passed.
+  Final `make check` passed the 350-line guard, ESLint, all six workspace
+  typechecks, 34 test files, and 244 tests.
+- Risks / follow-ups: a passed ballot authorizes a priced effect; the controller
+  must still spend from the ledger-backed budget and only then run the external
+  audit or Git revert. Council uses a fixed three-approval quarantine threshold as
+  specified for the default four-player match; with fewer active voters that
+  sanction becomes intentionally unavailable rather than silently weakening.
 
 ### 2026-09-18 (cn-022) — Add the Open Merge constitution
 

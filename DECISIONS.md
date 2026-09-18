@@ -1,5 +1,21 @@
 # Design Decisions
 
+## 2026-09-18: Carry exact priced actions through Council authorization
+
+- Reason: “fund an audit” is ambiguous because public CI, provenance, targeted
+  audit, and full audit have different costs. The passed ballot must identify the
+  action the group approved before shared credits can be spent correctly.
+- Rejected alternative: choosing the price from a subject ID or free-form motion
+  text would make accounting depend on convention and permit authorization to
+  drift from execution.
+- Constraint: Council audit motions carry one non-revert budget action and passed
+  effects preserve it. Revert effects map separately to `revert_patch`. Council
+  exposes no direct paid actions: a ballot authorizes first, then the existing
+  ledger-backed budget spends atomically, then the side-effect port executes.
+  Patch authors are absent from their endorsement electorate; participant targets
+  remain eligible on the quarantine ballot but are inactive and ineligible on the
+  one permitted appeal ballot.
+
 ## 2026-09-18: Represent Open Merge as explicit weak-governance policy
 
 - Reason: the baseline must be reproducible and comparable, so automatic patch

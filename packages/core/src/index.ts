@@ -20,3 +20,4 @@ export * from "./town-hall.js";
 export * from "./governance.js";
 export * from "./constitutions/constitution.js";
 export * from "./constitutions/open-merge.js";
+export * from "./constitutions/council.js";

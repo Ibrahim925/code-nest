@@ -21,6 +21,9 @@ const IDENTIFIER_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/;
 const MAX_PARTICIPANTS = 64;
 const MAX_PATCHES = 256;
 const MAX_OFFICES = 16;
+const AUDIT_ACTIONS = [
+  "trusted_public_ci", "patch_provenance", "targeted_audit", "full_patch_audit",
+] as const;
 
 function fail(code: GovernanceError["code"], message: string): never {
   throw new GovernanceError(code, message);
@@ -133,6 +136,9 @@ function validateMotionTarget(state: GovernanceState, motion: GovernanceMotion):
   identifier(motion.proposerId, "motion proposer ID");
   if (motion.kind === "fund_audit") {
     identifier(motion.subjectId, "audit subject ID");
+    if (!AUDIT_ACTIONS.includes(motion.action)) {
+      return fail("INVALID_GOVERNANCE", "Governance audit action is invalid.");
+    }
     return;
   }
   const patch = patchForMotion(state, motion);

@@ -490,6 +490,27 @@ must spend credits and execute the action before recording completion. The prese
 grants authority only; it does not bypass budget accounting or claim an external
 effect succeeded.
 
+## Council constitution v1
+
+`packages/core/src/constitutions/council.ts` is the default peer-governance preset.
+It has no direct paid actions or offices. Every decision enters the shared sealed
+ballot engine. An accept-patch motion snapshots active non-authors and requires two
+endorsements. Audit, delay, reject, patch quarantine, and revert motions snapshot
+all active participants and require a simple majority. Participant quarantine also
+includes all active participants, including the target, and requires exactly three
+approvals; the threshold does not weaken when active membership shrinks.
+
+A passed quarantine changes the target to inactive governance status. That target
+may submit one bounded appeal statement tied to the exact sanction, but only the
+remaining active participants enter its majority ballot. Rejection consumes the
+appeal right. The target cannot vote because quarantine removes voting authority.
+
+Audit motions include the exact budget action, so their passed effect feeds the
+existing cost table without interpreting text. Passed reverts map to the separate
+two-credit `revert_patch` action. In both cases, ballot passage is authorization;
+the controller must atomically spend credits before executing and recording the
+external result.
+
 ## Failure behavior
 
 Model timeout, policy rejection, container exit, OOM, operator cancellation,

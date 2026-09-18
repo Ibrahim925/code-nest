@@ -43,7 +43,11 @@ function nowMilliseconds(now: Date): number {
 function effectFor(motion: GovernanceMotion): GovernanceEffect {
   switch (motion.kind) {
     case "fund_audit":
-      return { kind: "audit_authorized", subjectId: motion.subjectId };
+      return {
+        kind: "audit_authorized",
+        action: motion.action,
+        subjectId: motion.subjectId,
+      };
     case "accept_patch":
     case "delay_patch":
     case "reject_patch":

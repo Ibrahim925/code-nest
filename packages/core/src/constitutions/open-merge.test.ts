@@ -98,6 +98,7 @@ describe("Open Merge constitution", () => {
           motionId: "motion-existing",
           proposerId: "player-a",
           kind: "fund_audit" as const,
+          action: "targeted_audit" as const,
           subjectId: "patch-a",
         },
         eligibleVoterIds: ["player-a"],

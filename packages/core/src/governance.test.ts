@@ -219,10 +219,12 @@ describe("constitution-driven governance", () => {
       motionId: "motion-audit",
       proposerId: "player-a",
       kind: "fund_audit",
+      action: "targeted_audit",
       subjectId: "patch-a",
     });
     expect(audit.ballot.effect).toEqual({
       kind: "audit_authorized",
+      action: "targeted_audit",
       subjectId: "patch-a",
     });
     const replacement = resolve(audit.state, {
@@ -252,6 +254,7 @@ describe("constitution-driven governance", () => {
       motionId: "motion-audit",
       proposerId,
       kind: "fund_audit",
+      action: "targeted_audit",
       subjectId: "patch-a",
     });
     expectCode(() => proposeGovernanceMotion(
@@ -331,6 +334,7 @@ describe("constitution-driven governance", () => {
       motionId: "motion-impossible",
       proposerId: "player-a",
       kind: "fund_audit",
+      action: "targeted_audit",
       subjectId: "patch-a",
     }, deadline, before), "INVALID_GOVERNANCE");
     expect(resolve(initial(), patchMotion("accept_patch")))

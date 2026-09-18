@@ -1,3 +1,5 @@
+import type { GovernanceAction } from "./budget.js";
+
 export const GOVERNANCE_SCHEMA_VERSION = "1.0" as const;
 export const MAX_APPEAL_STATEMENT_BYTES = 4_096;
 
@@ -27,13 +29,19 @@ export interface GovernanceOffice {
   readonly holderId: string | null;
 }
 
+export type AuditGovernanceAction = Exclude<GovernanceAction, "revert_patch">;
+
 interface MotionBase {
   readonly motionId: string;
   readonly proposerId: string;
 }
 
 export type GovernanceMotion =
-  | (MotionBase & { readonly kind: "fund_audit"; readonly subjectId: string })
+  | (MotionBase & {
+      readonly kind: "fund_audit";
+      readonly action: AuditGovernanceAction;
+      readonly subjectId: string;
+    })
   | (MotionBase & {
       readonly kind:
         | "accept_patch"
@@ -108,7 +116,7 @@ export interface PublishedGovernanceVote extends SealedGovernanceVote {
 }
 
 export type GovernanceEffect =
-  | { readonly kind: "audit_authorized"; readonly subjectId: string }
+  | { readonly kind: "audit_authorized"; readonly action: AuditGovernanceAction; readonly subjectId: string }
   | { readonly kind: "patch_status_changed"; readonly patchId: string; readonly status: PatchGovernanceStatus }
   | { readonly kind: "participant_status_changed"; readonly participantId: string; readonly status: ParticipantGovernanceStatus }
   | { readonly kind: "office_holder_changed"; readonly officeId: string; readonly holderId: string };
