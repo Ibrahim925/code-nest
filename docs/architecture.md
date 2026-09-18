@@ -315,6 +315,29 @@ proposal outcomes, normalized patch digests, integrated commit IDs, and safe
 reasons. CN-015 records this report and its artifact references in the event
 ledger when the one-round vertical slice wires the components together.
 
+## One-round fake-match orchestration v1
+
+`apps/controller/src/matches` is a feature-oriented orchestration hexagon. Its
+application service starts a durable run, provisions four participant workspaces,
+starts match-scoped runtimes, invokes the existing one-shot briefing service,
+runs one deterministic turn per participant, stops each runtime before capture,
+and verifies the reported candidate revision against the captured Git state. It
+then authorizes all four proposals in roster order for deterministic integration.
+
+The service depends on narrow lifecycle, workspace, briefing, runtime, integration,
+artifact-publication, and evidence ports. The fake end-to-end adapter translates
+the provider-neutral runtime contract into that match port; it explicitly keeps
+private runtime messages out of the public-message field. Concrete ledger and
+artifact adapters append only accepted facts after side effects succeed.
+
+The public integration artifact deliberately omits `candidatePath`, retaining the
+base, final revision, ordered outcomes, and patch digests needed for replay. The
+host path is returned only to the trusted caller. Runtime metadata travels with
+captured-work evidence, while private briefs, covert objectives, and private
+runtime messages remain absent from clean projection and serialized artifacts.
+Given the same scenario revision, roster, seed, scripted turns, and proposal order,
+the candidate revision, artifact digest, and complete event envelopes are equal.
+
 ## Failure behavior
 
 Model timeout, policy rejection, container exit, OOM, operator cancellation,

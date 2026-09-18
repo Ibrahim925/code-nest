@@ -14,19 +14,45 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-014` Station Access starting repository is the
+- **Branch/commit:** `main`; `CN-015` one-round four-agent fake match is the
   latest verified feature checkpoint.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 23 Vitest files, and 182 tests.
+  typechecks across six workspaces, 24 Vitest files, and 184 tests.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-015`, the one-round four-agent fake match. Compose
-  existing scenario, briefing, fake runtimes, participant workspaces, integration,
-  and ledger boundaries into the first replayable end-to-end vertical slice.
+- **Next priority:** begin `CN-016`, atomic shared governance credits. Add the
+  deterministic budget rules in core and an atomic controller persistence adapter
+  that rejects duplicate, concurrent, late, or unaffordable spending.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-17 (cn-015) — Run a one-round four-agent fake match
+
+- Outcome: done.
+- Did: added a match orchestration hexagon whose application service depends on
+  narrow lifecycle, workspace, briefing, runtime, evidence, artifact, and
+  integration ports. Four fake runtime adapters receive sealed role briefs, make
+  separate deterministic Station Access commits, stop before workspace capture,
+  and report candidate revisions that must equal Git's captured state. The
+  controller integrates proposals in roster order, publishes a path-free public
+  report artifact, and appends accepted runtime, work, integration, and completion
+  facts to the durable event ledger. Private runtime messages are filtered at the
+  adapter boundary, and host candidate paths never serialize into public evidence.
+- Verification run: the focused end-to-end suite passed 2 of 2 tests. The final
+  candidate passed all 6 Station Access public tests; one deliberately private
+  message carrying the covert objective remained absent from the ledger, clean
+  projection, and public artifact. Reopening SQLite reproduced the original
+  envelopes, and a second isolated match with the same inputs produced the same
+  candidate revision, integration-report digest, and trace. Final `make check`
+  passed the 350-line guard, ESLint, all six workspace typechecks, 24 test files,
+  and 184 tests.
+- Risks / follow-ups: Version 1 intentionally accepts only completed or yielded
+  fake turns that report one commit and no controller commands. Real command
+  parsing/authorization and process/container runtimes remain later features.
+  Workspaces remain available with the release candidate for evidence inspection;
+  lifecycle cleanup policy is not silently inferred by this slice.
 
 ### 2026-09-17 (cn-014) — Build the Station Access starting repository
 

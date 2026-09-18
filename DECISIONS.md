@@ -1,5 +1,23 @@
 # Design Decisions
 
+## 2026-09-17: Compose matches through a trusted orchestration hexagon
+
+- Reason: the first vertical slice must prove lifecycle, workspaces, private
+  briefing, runtimes, capture, integration, artifacts, and replay together while
+  keeping their side effects independently replaceable. A match-specific
+  application service can coordinate those existing capabilities in domain terms.
+- Rejected alternative: a test-only script that calls concrete Git, SQLite, and
+  fake-runtime helpers directly would prove a demo sequence but leave no reusable
+  control-plane boundary. Importing the provider-neutral adapter package into the
+  application service would also couple it to a wider runtime contract than one
+  round needs.
+- Constraint: runtime adapters translate into the narrow match port and expose
+  public messages separately from private output. A runtime stops before its
+  workspace is captured, its reported revision must equal the Git capture, and
+  proposals integrate only in declared roster order. Public evidence contains a
+  path-free integration report; host candidate paths remain in the trusted return
+  value and never enter the replay or public artifact.
+
 ## 2026-09-17: Track scenario sources as cloneable bare repositories
 
 - Reason: a scenario must pin a real Git commit that workspace provisioning can

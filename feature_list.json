@@ -161,9 +161,9 @@
       "milestone": "M1-observable-vertical-slice",
       "title": "One-round four-agent fake match",
       "user_visible_behavior": "Four deterministic fake agents complete one round on the Station Access repository and produce an integrated candidate plus a replayable ordered event trace.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run tests/e2e/fake-match-one-round.test.ts", "make check"],
-      "evidence": "",
+      "evidence": "The focused one-round E2E suite passed 2 of 2 tests. Four validated fake runtimes received sealed briefs, made real deterministic commits in isolated Station Access workspaces, stopped before capture, and integrated in roster order; the final candidate passed all 6 public tests. A deliberately private saboteur message remained absent from the clean replay and path-free public integration artifact. Reopening SQLite reproduced the trace exactly, and a second match from the same inputs produced the same candidate revision, artifact digest, and event envelopes. Final make check passed the 350-line guard, ESLint, six strict workspace typechecks, 24 test files, and 184 tests.",
       "notes": "First end-to-end proof before full governance or Docker."
     },
     {
