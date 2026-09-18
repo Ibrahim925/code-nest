@@ -12,6 +12,12 @@ import {
   type TurnResult,
 } from "./contract.js";
 import { parseRuntimeMetadata, parseTurnResult } from "./validation.js";
+import {
+  validateRuntimeBudget,
+  validateRuntimeObservation,
+  validateRuntimeReason,
+  validateRuntimeStartRequest,
+} from "./input-validation.js";
 
 export interface FakeRuntimeAdapterOptions {
   readonly metadata: RuntimeMetadata;
@@ -78,7 +84,7 @@ export class FakeRuntimeAdapter implements RuntimeAdapter {
         "Runtime adapter has already started.",
       );
     }
-    validateStartRequest(request);
+    validateRuntimeStartRequest(request);
     this.#transcript.push({ operation: "start", value: clone(request) });
     this.#state = "started";
     return this.#sessionId;
@@ -86,7 +92,7 @@ export class FakeRuntimeAdapter implements RuntimeAdapter {
 
   async deliver(observation: RuntimeObservation): Promise<RuntimeAck> {
     this.#requireSession();
-    validateObservation(observation);
+    validateRuntimeObservation(observation);
     if (
       observation.kind === "private_message" &&
       !this.#supports("private_message_delivery")
@@ -99,7 +105,7 @@ export class FakeRuntimeAdapter implements RuntimeAdapter {
 
   async run(budget: RuntimeTurnBudget): Promise<TurnResult> {
     this.#requireSession();
-    validateBudget(budget);
+    validateRuntimeBudget(budget);
     if (this.#state === "interrupted") {
       if (!this.#supports("resume")) {
         throw new RuntimeAdapterError(
@@ -130,7 +136,7 @@ export class FakeRuntimeAdapter implements RuntimeAdapter {
     if (this.#state === "interrupted") {
       return { accepted: false, reason: "not_running" };
     }
-    validateReason(reason);
+    validateRuntimeReason(reason);
     this.#transcript.push({ operation: "interrupt", value: reason });
     this.#state = "interrupted";
     return { accepted: true, reason: "accepted" };
@@ -141,7 +147,7 @@ export class FakeRuntimeAdapter implements RuntimeAdapter {
       return clone(this.#finalReport);
     }
     this.#requireSession();
-    validateReason(reason);
+    validateRuntimeReason(reason);
     this.#transcript.push({ operation: "stop", value: reason });
     this.#state = "stopped";
     this.#finalReport = {
@@ -220,55 +226,6 @@ function clone<T>(value: T): T {
       "INVALID_FAKE_SCRIPT",
       "Fake runtime data must be structured-cloneable.",
       error,
-    );
-  }
-}
-
-function validateStartRequest(request: RuntimeStartRequest): void {
-  if (
-    !IDENTIFIER_PATTERN.test(request.match.runId) ||
-    !IDENTIFIER_PATTERN.test(request.match.scenarioId) ||
-    !IDENTIFIER_PATTERN.test(request.participant.participantId) ||
-    request.workspace.path.length === 0
-  ) {
-    throw new RuntimeAdapterError(
-      "INVALID_ADAPTER_INPUT",
-      "Runtime start request is invalid.",
-    );
-  }
-}
-
-function validateObservation(observation: RuntimeObservation): void {
-  if (
-    !IDENTIFIER_PATTERN.test(observation.observationId) ||
-    !IDENTIFIER_PATTERN.test(observation.kind)
-  ) {
-    throw new RuntimeAdapterError(
-      "INVALID_ADAPTER_INPUT",
-      "Runtime observation is invalid.",
-    );
-  }
-}
-
-function validateBudget(budget: RuntimeTurnBudget): void {
-  if (
-    !Number.isSafeInteger(budget.maximumOutputTokens) ||
-    budget.maximumOutputTokens < 1 ||
-    !Number.isSafeInteger(budget.wallTimeMilliseconds) ||
-    budget.wallTimeMilliseconds < 1
-  ) {
-    throw new RuntimeAdapterError(
-      "INVALID_ADAPTER_INPUT",
-      "Runtime turn budget is invalid.",
-    );
-  }
-}
-
-function validateReason(reason: string): void {
-  if (!IDENTIFIER_PATTERN.test(reason)) {
-    throw new RuntimeAdapterError(
-      "INVALID_ADAPTER_INPUT",
-      "Runtime lifecycle reason is invalid.",
     );
   }
 }

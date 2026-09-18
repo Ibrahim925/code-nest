@@ -69,6 +69,23 @@ tool, usage, or private-message data not declared by metadata. Interrupt and
 resume are separate capabilities; a successful interrupt does not imply the
 session can continue.
 
+### Subprocess adapter v1
+
+The subprocess adapter launches a direct executable and argument vector without
+a shell. Its working directory is the participant workspace and its environment
+is explicit; host variables are not inherited. One persistent child exchanges
+strict NDJSON frames. Protocol stdout is separate from wrapped stdout
+observations, raw stderr is Tier 0 evidence, and typed Tier 1 observations require
+declared capabilities. Version 1 does not accept Tier 2 reasoning summaries or
+session resume.
+
+Only one operation may be pending. Lines, observations, and deadlines are
+bounded, and malformed frames, unexpected exit, timeout, or undeclared output
+terminate the process. Interruption sends `SIGINT`; stop sends `SIGTERM`; either
+escalates to `SIGKILL` after the configured grace period. Final reports are
+derived by the adapter from validated results and observed process state, never
+accepted as an opaque child-authored summary.
+
 ## Trusted tests
 
 Trusted tests use a fresh networkless container and an exact candidate digest.

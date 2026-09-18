@@ -106,6 +106,28 @@ export interface FinalRuntimeReport {
   readonly usage: RuntimeUsage | null;
 }
 
+export type RuntimeOutputKind =
+  | "command"
+  | "file_changed"
+  | "message"
+  | "status"
+  | "stderr"
+  | "stdout"
+  | "test_completed"
+  | "tool_call"
+  | "work_note";
+
+export interface RuntimeObservedOutput {
+  readonly observationId: string;
+  readonly tier: 0 | 1;
+  readonly kind: RuntimeOutputKind;
+  readonly payload: unknown;
+}
+
+export interface ObservableRuntimeAdapter extends RuntimeAdapter {
+  observations(): readonly RuntimeObservedOutput[];
+}
+
 export interface RuntimeAdapter {
   metadata(): Promise<RuntimeMetadata>;
   start(request: RuntimeStartRequest): Promise<string>;
@@ -133,11 +155,16 @@ export class RuntimeContractError extends Error {
 
 export type RuntimeAdapterErrorCode =
   | "ADAPTER_ALREADY_STARTED"
+  | "ADAPTER_BUSY"
   | "ADAPTER_NOT_STARTED"
   | "ADAPTER_STOPPED"
   | "FAKE_SCRIPT_EXHAUSTED"
   | "INVALID_ADAPTER_INPUT"
   | "INVALID_FAKE_SCRIPT"
+  | "SUBPROCESS_EXITED"
+  | "SUBPROCESS_PROTOCOL_ERROR"
+  | "SUBPROCESS_START_FAILED"
+  | "SUBPROCESS_TIMEOUT"
   | "UNSUPPORTED_OPERATION";
 
 export class RuntimeAdapterError extends Error {

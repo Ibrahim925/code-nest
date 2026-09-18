@@ -381,9 +381,9 @@
       "milestone": "M4-real-runtimes-and-isolation",
       "title": "Subprocess coding-agent adapter",
       "user_visible_behavior": "An operator can connect a command-line coding agent, see its declared metadata and Tier 0/1 observations, interrupt it, and collect a normalized final report.",
-      "status": "not_started",
-      "verification": ["corepack pnpm vitest run packages/adapters/src/subprocess.integration.test.ts", "make check"],
-      "evidence": "",
+      "status": "passing",
+      "verification": ["corepack pnpm vitest run packages/adapters/src/subprocess.integration.test.ts packages/adapters/src/contract.test.ts packages/adapters/src/fake.test.ts", "make check"],
+      "evidence": "A feature-oriented subprocess hexagon now keeps Node process primitives outside the adapter application and domain layers. One persistent child is launched directly with shell disabled, a participant workspace, and an explicit non-inherited environment, then exchanges strict versioned and correlated NDJSON frames with bounded lines, observations, and deadlines. Metadata is provider-neutral and limited to declared Tier 0/1 streaming capabilities; stderr, stdout, status, and typed observations retain their provenance. Turn results remain runtime-validated, commands remain unknown for later protocol authorization, usage is aggregated only when complete, and final reports are adapter-derived. Interrupt and stop use bounded signal escalation, while malformed frames, oversized output, missing executables, premature exits, timeouts, undeclared capabilities, and concurrent requests fail closed. The focused real-child-process suites passed 24 tests. Final make check passed the 350-line guard, ESLint, six strict workspace typechecks, 59 test files, and 362 tests.",
       "notes": "No provider-specific assumption may enter the controller."
     },
     {

@@ -404,6 +404,21 @@ authorizes them through the scoped participant capability service, and only then
 commits resulting controller events. Adapter messages, commits, usage, and tool
 summaries are evidence inputs, never direct state mutations.
 
+### Subprocess runtime adapter
+
+`packages/adapters/src/subprocess` is a feature-oriented hexagon. Its domain
+layer owns configuration and the strict NDJSON wire contract; its application
+layer owns lifecycle, request correlation, capability enforcement, observations,
+usage, interruption, and normalized reports. Only the Node outer adapter imports
+`node:child_process`; the public factory wires it to the process-neutral port.
+
+One persistent child belongs to one participant session. Stable request IDs and
+one pending operation prevent response misattribution. Process stdout is reserved
+for protocol frames, ordinary stdout and status are typed Tier 0 observations,
+stderr becomes bounded Tier 0 evidence, and declared Tier 1 observations remain
+labelled. Returned commands stay unknown until the controller parses and
+authorizes them through the protocol and capability boundaries.
+
 ## Private role briefing v1
 
 `packages/core/src/roles.ts` assigns exactly one saboteur among exactly four

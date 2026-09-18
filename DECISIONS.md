@@ -1,5 +1,19 @@
 # Design Decisions
 
+## 2026-09-18: Put command-line agents behind strict NDJSON sessions
+
+- Reason: a persistent request/response stream preserves an agent's session while
+  giving the controller explicit operation correlation and bounded observations.
+- Rejected alternative: invoking a shell for each turn expands command-injection
+  risk, loses process state, and makes interruption ambiguous. Treating arbitrary
+  stdout as both logs and results cannot produce a reliable protocol boundary.
+- Constraint: launch the configured executable directly with `shell: false`, an
+  explicit workspace, and an allow-listed environment rather than inherited host
+  variables. Strict correlated NDJSON is bounded by line, observation, and time
+  limits. Stderr is Tier 0 evidence; typed observations are limited to declared
+  Tier 0/1 capabilities. Timeout, malformed output, premature exit, or an
+  undeclared capability fails closed and terminates the child.
+
 ## 2026-09-18: Export replay as an authorized self-contained projection
 
 - Reason: portability requires the exact observer-visible event order and

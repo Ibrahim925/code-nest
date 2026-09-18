@@ -14,20 +14,42 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-034` portable deterministic replay is the
+- **Branch/commit:** `main`; `CN-035` subprocess coding-agent adapter is the
   latest verified feature checkpoint.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 58 Vitest files, and 357 tests.
+  typechecks across six workspaces, 59 Vitest files, and 362 tests.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-035`, the provider-neutral subprocess coding-agent
-  adapter. Define its process boundary, declared metadata, normalized Tier 0/1
-  observations, interruption, and final report without leaking provider-specific
-  assumptions into the controller.
+- **Next priority:** begin `CN-036`, split-runtime participant containers. Keep
+  model clients and credentials in the trusted control plane while repository and
+  shell work runs in isolated, networkless, disposable participant containers.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-18 (cn-035) — Subprocess coding-agent adapter
+
+- Outcome: done.
+- Did: added a feature-oriented subprocess hexagon with strict versioned NDJSON,
+  stable request correlation, one bounded in-flight operation, and a Node process
+  outer adapter. The process launches directly with no shell, no inherited host
+  environment, and the participant workspace as its working directory. The
+  application layer enforces declared Tier 0/1 capabilities, captures bounded
+  stderr/stdout/status and typed observations with provenance, validates every
+  response, aggregates complete usage, and creates the final report itself.
+  Interrupt and stop use bounded signal escalation; malformed or oversized output,
+  undeclared observations, missing executables, premature exit, timeout, and
+  concurrent-operation ambiguity fail closed.
+- Verification run: the focused subprocess, contract, and fake-adapter suites
+  passed 24 of 24 cases using real child processes for streaming, explicit
+  environment isolation, interruption, termination, protocol failure, process
+  failure, timeout, and request correlation. Final `make check` passed the
+  350-line guard, ESLint, all six strict workspace typechecks, 59 test files, and
+  362 tests.
+- Risks / follow-ups: stdout is intentionally reserved for protocol frames, so a
+  CLI shim must wrap ordinary stdout as an observation. CN-036 supplies the
+  split-mode isolated execution boundary behind this provider-neutral session.
 
 ### 2026-09-18 (cn-034) — Portable deterministic replay
 
