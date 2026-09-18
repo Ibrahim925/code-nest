@@ -14,20 +14,50 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-025` Station Access trusted scoring is the
+- **Branch/commit:** `main`; `CN-026` three-round completion and resolution is the
   latest verified feature checkpoint.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 36 Vitest files, and 256 tests.
+  typechecks across six workspaces, 38 Vitest files, and 267 tests.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-026`, three-round completion, scoring, and reveal.
-  Freeze the selected release candidate, combine its separate legitimate and
-  covert results with the declared outcome formulas, reveal roles only at match
-  completion, and prove deterministic three-round replay end to end.
+- **Next priority:** begin `CN-027`, run setup and operator controls. Build a
+  validated setup model for scenario, pinned source, four adapters, seed, limits,
+  disclosure policy, and constitution; then wire accessible start, pause, resume,
+  and cancel controls without letting the browser author authoritative state.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-18 (cn-026) — Complete, score, and reveal a three-round match
+
+- Outcome: done.
+- Did: added the exact Section 14 formula as a bounded pure core rule with visible
+  components and distinct failed-release, defence, and sabotage outcomes. Added a
+  three-round match-resolution hexagon with lifecycle, briefing, round execution,
+  candidate freezer, scenario scorer, and journal ports. The real Git adapter
+  rejects dirty or mismatched candidates and derives a SHA-256 identity from the
+  clean committed archive. The ledger adapter stores 19 phase transitions, three
+  work and integration results, final candidate identity, separate legitimate and
+  covert results, role reveal, component scoreboard, and completion without host
+  paths. Sensitive final facts use post-reveal visibility.
+- Verification run: the focused E2E suite passed 4 of 4 cases. Twelve fake-agent
+  sessions worked in isolated real Git repositories; four round-one fixes
+  integrated and rounds two and three carried them forward through four no-change
+  reviews each. The final candidate passed all six public tests, scored 14 of 15
+  hidden checks, and produced a successful defence with team score 137.333333 and
+  saboteur score 40. Exactly one saboteur was revealed. Sealed Clean JSON omitted
+  role and objective detail; SQLite restart reproduced all 34 events; equal runs
+  reproduced revision, archive digest, roles, scores, and history; and a dirty
+  post-freeze tree failed closed. The pure scorer suite passed 7 of 7 formula and
+  bounds cases. Final `make check` passed the 350-line guard, ESLint, all six
+  workspace typechecks, 38 test files, and 267 tests.
+- Risks / follow-ups: the fake match deliberately records no governance spend or
+  quarantine, so those formula branches are verified in pure core tests rather
+  than this defence fixture. Candidate freezing is a controller ownership and
+  content-identity boundary; CN-038 will mount that exact digest in a fresh
+  networkless evaluator. CN-034 will package the event history and artifacts into
+  a portable replay rather than merely reopening the local ledger.
 
 ### 2026-09-18 (cn-025) — Add Station Access trusted scoring
 

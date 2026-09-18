@@ -18,7 +18,9 @@ import type {
 const execFileAsync = promisify(execFile);
 const COMMIT_DATE = "2001-01-01T00:00:00Z";
 
-const WORK: Readonly<Record<string, { path: string; contents: string; summary: string }>> = {
+export const STATION_ACCESS_WORK: Readonly<
+  Record<string, { path: string; contents: string; summary: string }>
+> = {
   "player-a": {
     path: "src/policy.js",
     summary: "Allow engineers to work in Research",
@@ -162,7 +164,7 @@ class StationAccessFakeRuntime implements MatchParticipantRuntime {
   async run(budget: { maximumOutputTokens: number; wallTimeMilliseconds: number }) {
     const request = this.#startRequest;
     const brief = this.#brief;
-    const work = WORK[this.participantId];
+    const work = STATION_ACCESS_WORK[this.participantId];
     if (request === undefined || brief === undefined || work === undefined) {
       throw new Error("Fake runtime is not ready for work.");
     }

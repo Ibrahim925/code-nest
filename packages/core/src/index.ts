@@ -12,6 +12,7 @@ export function describeHarness(): HarnessStatus {
 
 export * from "./visibility";
 export * from "./match-state";
+export * from "./match-resolution.js";
 export * from "./roles";
 export * from "./budget.js";
 export * from "./evidence-packet.js";

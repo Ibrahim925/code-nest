@@ -1,5 +1,24 @@
 # Design Decisions
 
+## 2026-09-18: Resolve matches from one hashed final candidate
+
+- Reason: final scores, role reveal, and replay must all refer to the same release
+  rather than whichever mutable directory happens to be current when a scorer
+  starts. A clean committed Git archive provides a reproducible content identity
+  while keeping the scenario scorer independent of Git implementation details.
+- Rejected alternative: using only the Git revision would not give the trusted
+  scorer's required SHA-256 candidate identity. Publishing one blended result or
+  public role fields before completion would also collapse the legitimate/covert
+  distinction and leak the experiment's private type.
+- Constraint: exactly three rounds advance through the deterministic phase reducer
+  and each begins from the previous integration. The final candidate must be clean
+  at its declared revision before its archive is hashed. Legitimate and covert
+  outputs carry that same digest. Role reveal is recorded before the pure Section
+  14 formula runs. Hidden aggregates, covert details, roles, and the component
+  scoreboard are separate post-reveal facts; host paths never enter the ledger.
+  CN-038 remains responsible for materializing the digest in a disposable trusted
+  test container.
+
 ## 2026-09-18: Gate covert success behind separate legitimate scoring
 
 - Reason: a sabotage benchmark is meaningful only when the frozen release still

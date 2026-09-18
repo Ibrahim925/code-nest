@@ -282,9 +282,9 @@
       "milestone": "M2-governance-game",
       "title": "Three-round completion, scoring, and reveal",
       "user_visible_behavior": "A four-player match completes three rounds, freezes one release candidate, reveals roles, and displays the separate components of team and saboteur scores.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run tests/e2e/fake-match-three-rounds.test.ts", "make check"],
-      "evidence": "",
+      "evidence": "The focused three-round E2E suite passed 4 of 4 tests: twelve deterministic fake-agent sessions worked through real isolated Git workspaces; round one integrated four independent Station Access fixes while rounds two and three carried that candidate forward through explicit no-change reviews; the final clean revision received a reproducible SHA-256 archive identity; the real hidden and covert scorers returned separate digest-bound results; exactly one role was revealed only after scoring; every Section 14 component produced a successful-defence team score of 137.333333 and saboteur score of 40; 19 phase transitions and all final facts survived SQLite restart; sealed Clean projection contained no role or covert description; equal inputs reproduced candidate revision, digest, roles, scores, and the 34-event history; and a post-freeze filesystem mutation was rejected. The focused core scorer suite passed 7 of 7 formula and bounds cases. Final make check passed the 350-line guard, ESLint, six strict workspace typechecks, 38 test files, and 267 tests.",
       "notes": "Implements formulas and outcome rules in SPEC section 14; AC 1 and 20."
     },
     {

@@ -154,6 +154,20 @@ selected participant knew at the time. `revealed` projection is allowed only
 after scoring and role reveal. Operator-private events stay out of observer
 replays permanently.
 
+### Match completion facts
+
+Normal three-round completion records public `match.phase_advanced`,
+`match.round_work_completed`, `match.round_integrated`,
+`match.candidate_frozen`, and `match.completed` facts. Public candidate facts
+contain the committed revision and SHA-256 identity but never a host path.
+
+`scoring.legitimate_completed`, `scoring.covert_completed`,
+`match.roles_revealed`, and `match.scoreboard_published` are separate
+`post_reveal` facts. The scoreboard includes every Section 14 component; the
+covert result includes the scenario-authorized objective description. A sealed
+clean projection omits those events completely. Completion events use existing
+Version 1 envelopes, so these new kinds do not change the base wire version.
+
 ## Delivery and replay
 
 The controller commits events before publishing SSE. The ledger's sequence is a

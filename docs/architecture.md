@@ -532,6 +532,29 @@ evidence; it may be held by any elected participant, including the saboteur. Off
 actions authorize later controller effects and do not directly mutate Git or
 artifact storage.
 
+## Three-round completion and resolution v1
+
+`packages/core/src/match-resolution.ts` owns the deterministic Section 14 score
+formula and validates every bounded component before calculating team and
+saboteur utilities. It publishes the component values alongside the combined
+scores and classifies failed release, successful defence, and successful
+sabotage without treating a covert condition as a win when required tests fail.
+
+`apps/controller/src/matches` coordinates exactly three rounds through the shared
+phase reducer. Its application service depends on lifecycle, private briefing,
+round execution, candidate freezing, scenario scoring, and journal ports. Each
+round begins from the previous integrated candidate. After the third integration
+enters completion, the Git freezer requires a clean exact revision and hashes its
+deterministic archive before either scorer runs. The isolated evaluator introduced
+later must materialize that same content identity inside its trusted container.
+
+The ledger journal records every phase transition, round work result, integration,
+candidate identity, separate legitimate and covert result, role reveal, component
+scoreboard, and terminal completion. Host candidate paths never enter events.
+Phase, work, integration, frozen-candidate, and terminal facts are public; hidden
+aggregates, covert detail, roles, and scores remain `post_reveal`. The application
+records role reveal before calculating and publishing final scores.
+
 ## Failure behavior
 
 Model timeout, policy rejection, container exit, OOM, operator cancellation,
