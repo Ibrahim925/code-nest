@@ -436,7 +436,7 @@
       "milestone": "M4-real-runtimes-and-isolation",
       "title": "Direct reference model-loop adapter",
       "user_visible_behavior": "A simple direct model-driven participant can complete turns through the same adapter contract, with provider usage and optional reasoning summaries labelled by provenance.",
-      "status": "not_started",
+      "status": "in_progress",
       "verification": ["corepack pnpm vitest run packages/adapters/src/reference-loop.test.ts", "make check"],
       "evidence": "",
       "notes": "Use a deterministic provider stub in automated tests; never require private chain-of-thought."

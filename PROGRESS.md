@@ -30,6 +30,24 @@ actually verified.
 
 ## Session Records
 
+### 2026-09-18 (cn-040, in progress) — Direct reference model loop
+
+- Outcome: compatible implementation verified; shared Tier 2 observation contract
+  extension awaits explicit compatibility approval.
+- Did: added a provider-neutral reference-loop hexagon with strict provider
+  response parsing, deterministic provider and clock ports, bounded turn and token
+  budgets, lifecycle ordering, private delivery, interruption/resume, defensive
+  cloning, usage aggregation, Tier 0/1 observable commands/messages/status, and
+  concrete provider usage/reasoning-summary observations with explicit provenance.
+  Private chain-of-thought fields, undeclared summaries, non-cloneable output,
+  budget overruns, provider failures, and deadlines fail safely.
+- Verification run: four focused deterministic-provider cases passed. Current
+  `make check` passed the 350-line guard, ESLint, all six strict workspace
+  typechecks, 66 test files, and 385 tests.
+- Remaining: add Tier 2 and `provider_reasoning_summary` to the common runtime
+  observation contract, then document and complete CN-040. This is an additive
+  compatibility change and is intentionally not assumed without approval.
+
 ### 2026-09-18 (cn-039) — Adversarial isolation, redaction, and cleanup
 
 - Outcome: done.
