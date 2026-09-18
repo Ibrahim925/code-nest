@@ -370,9 +370,9 @@
       "milestone": "M3-live-observatory",
       "title": "Portable deterministic replay",
       "user_visible_behavior": "A completed or cancelled run exports a portable bundle that reconstructs the synchronized timeline, artifacts, beliefs, governance, reveal, and metrics without a model, Docker, provider, or network call.",
-      "status": "not_started",
-      "verification": ["corepack pnpm vitest run packages/core/src/replay.test.ts apps/web/src/replay/replay.test.tsx", "make check"],
-      "evidence": "",
+      "status": "passing",
+      "verification": ["corepack pnpm vitest run packages/protocol/src/replay-bundle.test.ts packages/core/src/replay.test.ts apps/controller/src/replay/replay.integration.test.ts apps/web/src/replay/replay.test.tsx", "make check"],
+      "evidence": "The focused replay contract, pure core projector, real SQLite/artifact export, and browser suites passed 16 of 16 cases. A controller replay hexagon requires a configured completed or cancelled run, derives its durable observer perspective server-side, omits operator-private events and raw ledger sequences, renumbers only visible deliveries, embeds every referenced authorized artifact, and fails rather than emitting a partial bundle. The additive Version 1 bundle parser rejects unknown fields, unsupported versions, gaps, cross-run events, duplicate identities, terminal mismatch, inconsistent observer eligibility, and missing or unreferenced artifacts. Core replay deterministically reconstructs event prefixes, revealed roles, private belief trajectories, multiclass Brier calibration, scorer payloads, and resource totals. The offline browser reader reuses the live lane, Workstream, Town Hall, and evidence projectors; imported artifacts are independently SHA-256 verified before inert inspection. The setup screen imports a local bundle without authority or network access, while terminal live runs expose a header-authenticated download. Desktop and 390x844 in-app review verified timeline stepping, pre-reveal Pending state, stacked analysis, and zero horizontal overflow. Production Vite bundling passed. Final make check passed the 350-line guard, ESLint, six strict workspace typechecks, 58 test files, and 357 tests.",
       "notes": "Public bundles omit secrets rather than storing merely hidden fields; AC 18 and 21."
     },
     {

@@ -7,6 +7,8 @@ import { projectObserverMode } from "../observer/application/project-observer-mo
 import { initialObserverMode } from "../observer/domain/modes.js";
 import { HttpObserverModeClient } from "../observer/http/observer-mode-client.js";
 import { ObserverModePanel } from "../observer/ObserverModePanel.js";
+import { ReplayExportPanel } from "../replay/ReplayExportPanel.js";
+import { HttpReplayClient } from "../replay/http/replay-client.js";
 import type { RunMutation } from "../run-setup/client.js";
 import type { RunControlView, RunSetupConfiguration } from "../run-setup/domain.js";
 import { RunControls } from "../run-setup/RunControls.js";
@@ -77,6 +79,10 @@ export function LiveObservatory({
   );
   const observerClient = useMemo(
     () => new HttpObserverModeClient({ baseUrl, token: bearerToken }),
+    [baseUrl, bearerToken],
+  );
+  const replayClient = useMemo(
+    () => new HttpReplayClient({ baseUrl, bearerToken }),
     [baseUrl, bearerToken],
   );
 
@@ -164,6 +170,15 @@ export function LiveObservatory({
           onUnblind={async () => {
             setObserverMode(await observerClient.unblind(run.runId));
           }}
+        />
+
+        <ReplayExportPanel
+          runId={run.runId}
+          ready={
+            run.status === "cancelled" ||
+            lanes.lanes.every(({ activity: laneActivity }) => laneActivity === "finished")
+          }
+          client={replayClient}
         />
 
         {controlError !== null && <p className="request-error" role="alert">{controlError}</p>}

@@ -246,6 +246,28 @@ Do not use wall-clock reads, random values, network calls, or model calls while
 replaying. If migration is required, preserve the original bytes and record the
 migrator version.
 
+### Portable replay bundle Version 1
+
+The replay bundle is a separate additive contract; it does not reinterpret the
+event-envelope or SSE delivery versions. Its fixed root contains `schemaVersion`,
+`projectorVersion`, `runId`, one terminal completion/cancellation reference, the
+durable observer perspective and benchmark eligibility, contiguous authorized
+deliveries, and embedded artifacts. Unknown root or nested fields are rejected.
+
+Export removes the private ledger `sequence` and assigns `deliverySequence` from
+one through the number of visible events. Every delivered event must belong to
+the bundle run, event IDs must be unique, and the named terminal event must have
+the matching `match.completed` or `run.cancelled` kind. Clean is benchmark
+eligible; explicit unblinding is ineligible; post-match reveal preserves any
+earlier ineligibility.
+
+Each referenced artifact appears exactly once with digest, byte count, original
+media type, redacted preview, visibility, `base64` encoding, and exact bytes.
+Unreferenced and missing artifacts invalidate the bundle. The importer validates
+structure before projection and rechecks bytes against SHA-256 before inspection.
+Bearer tokens, provider credentials, host paths, source sequences, and
+operator-private events are never replay fields.
+
 ## Evolution checklist
 
 - Add a new version when semantics change; do not reinterpret historical data.

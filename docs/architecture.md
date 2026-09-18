@@ -119,6 +119,24 @@ operator-private credentials, host paths, and infrastructure diagnostics remain
 excluded. A change in durable mode rebuilds browser projections from the stream
 start so newly authorized historical events are not skipped by an old cursor.
 
+## Portable replay boundary
+
+`apps/controller/src/replay` owns export as a feature-oriented hexagon. Its
+application service reads the ledger and artifacts through one source port,
+requires a configured terminal run, applies the existing visibility projector,
+and creates an audience-contiguous Version 1 bundle. The ledger/artifact adapter
+is the only layer that knows SQLite or filesystem-backed evidence; the HTTP
+adapter handles authorization and forced download metadata.
+
+Bundles never contain raw ledger sequences or operator-private events. Every
+artifact digest referenced by an exported event must have one embedded authorized
+record or export fails. There is no partial-success bundle. The browser imports
+the file locally, validates the whole contract, reuses the live lane, Workstream,
+Town Hall, and evidence projectors, and verifies artifact SHA-256 on demand. Core
+owns deterministic reveal, belief-calibration, resource, and scorer projection.
+Moving the timeline cursor recomputes state from the same prefix rather than
+reversing mutable component state.
+
 ## Event ledger v1
 
 `apps/controller/src/ledger` owns the first durable store. It uses the SQLite

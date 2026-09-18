@@ -164,6 +164,10 @@ The system is rectilinear. Sheets have square corners; inputs and buttons use a 
   uses a verified-green top rule; unblinded uses hold red plus explicit benchmark
   language; post-match reveal uses cobalt. The irreversible confirmation expands
   in place and names consequences before showing the destructive action.
+- **Replay record:** a self-contained protocol sheet with an always-visible
+  offline/perspective header, one native timeline scrubber, the same lane and
+  evidence grammar as live viewing, and paired belief/metric ledgers. On phones,
+  controls stack in chronological order and retain text labels for every state.
 
 ### Inputs / Fields
 

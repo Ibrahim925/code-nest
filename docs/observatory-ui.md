@@ -36,6 +36,27 @@ unattended benchmark aggregates. After success, a persistent `Unblinded
 researcher · Benchmark ineligible` banner replaces the control. Post-match reveal
 has a separate label and preserves any earlier ineligibility.
 
+## Portable replay
+
+A completed or cancelled run exposes one `Save replay bundle` action next to its
+observer state. Before termination the same area says why export is unavailable.
+The start surface can open a local Version 1 bundle without asking for an
+operator token. Import failures name an inconsistent bundle and never attempt a
+network recovery.
+
+The replay header permanently names `Offline deterministic replay`, perspective,
+benchmark eligibility, projector version, terminal state, and embedded-evidence
+count. One range control plus previous/next buttons selects an audience-visible
+event prefix. Lanes, chronology, Town Hall, Workstream, evidence, beliefs, reveal,
+and metrics all derive from that same prefix. Belief reports remain submissions,
+not ground truth; calibration appears only after an authorized role reveal.
+
+Embedded artifacts use the same inert evidence inspector as live viewing and are
+SHA-256 verified in the browser. No replay interaction may call the controller,
+Docker, a model, a provider, or the network. Wide layouts keep timeline and
+analysis records side by side where useful; phones preserve document order and
+provide full-width controls without horizontal scrolling.
+
 Never label text as an agent's internal thought. Use “work note,” “submitted
 rationale,” or a provider-specific reasoning-summary label with provenance.
 

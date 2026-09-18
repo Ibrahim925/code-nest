@@ -14,20 +14,43 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-033` observer modes and audited unblinding is the
+- **Branch/commit:** `main`; `CN-034` portable deterministic replay is the
   latest verified feature checkpoint.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 54 Vitest files, and 341 tests.
+  typechecks across six workspaces, 58 Vitest files, and 357 tests.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-034`, portable deterministic replay. Export a
-  completed or cancelled run with its authorized event projection and immutable
-  artifacts, then reconstruct synchronized discussion, governance, beliefs,
-  repository evidence, reveal, and metrics without live services.
+- **Next priority:** begin `CN-035`, the provider-neutral subprocess coding-agent
+  adapter. Define its process boundary, declared metadata, normalized Tier 0/1
+  observations, interruption, and final report without leaking provider-specific
+  assumptions into the controller.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-18 (cn-034) — Portable deterministic replay
+
+- Outcome: done.
+- Did: added an additive strict Version 1 replay-bundle contract, deterministic
+  core replay projection, and a controller export hexagon over existing ledger
+  and artifact ports. Export is terminal-only and perspective-specific; it omits
+  raw ledger order and operator-private facts, embeds every referenced authorized
+  artifact, and fails closed on missing evidence. Added local browser import,
+  authenticated download, offline artifact verification, prefix scrubbing, and
+  reused live lane, Workstream, Town Hall, and inspector projectors. Reveal,
+  private beliefs, Brier calibration, scorer results, and resource totals rebuild
+  from the same selected event prefix without external services.
+- Verification run: four focused suites passed 16 of 16 contract, consistency,
+  visibility, artifact, deterministic projection, calibration, transport, and
+  presentation cases. Production Vite bundling passed. Desktop and 390x844
+  in-app review verified full and pre-reveal states, stacked phone controls and
+  analysis, and zero horizontal overflow. Final `make check` passed the 350-line
+  guard, ESLint, all six strict workspace typechecks, 58 test files, and 357 tests.
+- Risks / follow-ups: Version 1 embeds authorized artifacts as base64 for simple
+  one-file portability and caps interactive browser inspection at 2 MiB per
+  artifact; larger evidence remains integrity-addressed in the bundle. CN-046
+  owns virtualization for synthetic 10,000-event replays.
 
 ### 2026-09-18 (cn-033) — Observer modes and audited unblinding
 

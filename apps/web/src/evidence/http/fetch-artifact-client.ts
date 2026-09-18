@@ -3,6 +3,7 @@ import {
   type ArtifactEvidence,
   type ArtifactEvidenceClient,
 } from "../domain/artifact-evidence.js";
+import { verifiedArtifactDigest } from "../application/verify-artifact.js";
 
 const MAXIMUM_INSPECTABLE_BYTES = 2 * 1_024 * 1_024;
 const MEDIA_TYPE = /^[A-Za-z0-9][A-Za-z0-9!#$&^_.+-]{0,126}\/[A-Za-z0-9][A-Za-z0-9!#$&^_.+-]{0,126}$/;
@@ -33,15 +34,6 @@ function decodePreview(value: string | null): string {
       "The controller returned invalid artifact metadata.",
     );
   }
-}
-
-async function verifiedDigest(bytes: Uint8Array): Promise<`sha256:${string}`> {
-  const stableBytes = new Uint8Array(bytes);
-  const buffer = await crypto.subtle.digest("SHA-256", stableBytes.buffer);
-  const hex = [...new Uint8Array(buffer)]
-    .map((value) => value.toString(16).padStart(2, "0"))
-    .join("");
-  return `sha256:${hex}`;
 }
 
 export interface FetchArtifactClientOptions {
@@ -115,7 +107,10 @@ export class FetchArtifactClient implements ArtifactEvidenceClient {
       );
     }
     const bytes = new Uint8Array(await response.arrayBuffer());
-    if (bytes.byteLength !== byteCount || await verifiedDigest(bytes) !== request.digest) {
+    if (
+      bytes.byteLength !== byteCount ||
+      await verifiedArtifactDigest(bytes) !== request.digest
+    ) {
       throw new ArtifactClientError(
         "ARTIFACT_INTEGRITY_FAILED",
         "Downloaded artifact evidence failed integrity verification.",

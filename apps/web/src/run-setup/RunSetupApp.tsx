@@ -1,6 +1,9 @@
 import { useMemo, useState } from "react";
 
 import { LiveObservatory } from "../observatory/LiveObservatory.js";
+import type { ReplayBundle } from "@code-nest/protocol";
+import { ReplayImportControl } from "../replay/ReplayImportControl.js";
+import { ReplayViewer } from "../replay/ReplayViewer.js";
 import { DEFAULT_RUN_SETUP, SETUP_CATALOG } from "./catalog.js";
 import {
   OperatorClientError,
@@ -36,12 +39,17 @@ export function RunSetupApp({
   const [run, setRun] = useState<RunControlView | null>(null);
   const [pendingAction, setPendingAction] = useState<"start" | RunMutation | null>(null);
   const [requestError, setRequestError] = useState<string | null>(null);
+  const [replay, setReplay] = useState<ReplayBundle | null>(null);
   const validation = useMemo(
     () => validateRunSetup(configuration, SETUP_CATALOG),
     [configuration],
   );
   const locked = run !== null || pendingAction !== null;
   const ready = validation.ok && operatorToken.trim().length > 0;
+
+  if (replay !== null) {
+    return <ReplayViewer bundle={replay} onClose={() => setReplay(null)} />;
+  }
 
   const start = async () => {
     if (!validation.ok || !ready) return;
@@ -187,6 +195,8 @@ export function RunSetupApp({
               ? "No run has started."
               : `${pendingAction} request in progress.`}
           </p>
+
+          <ReplayImportControl onLoad={setReplay} />
         </aside>
       </main>
     </div>

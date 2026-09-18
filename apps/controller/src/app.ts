@@ -14,6 +14,9 @@ import { EventLedger } from "./ledger/ledger.js";
 import { EventLedgerObserverModeStore } from "./observer/adapters/event-ledger-observer-mode-store.js";
 import { ObserverModeService } from "./observer/application/observer-mode.js";
 import { registerObserverModeRoutes } from "./observer/http/modes.js";
+import { LedgerReplaySource } from "./replay/adapters/ledger-replay-source.js";
+import { ExportReplayService } from "./replay/application/export-replay.js";
+import { registerReplayRoutes } from "./replay/http/replay.js";
 import { EventLedgerRunStore } from "./runs/adapters/event-ledger-run-store.js";
 import { RunLifecycleService } from "./runs/application/run-lifecycle.js";
 import { registerRunRoutes } from "./runs/http/routes.js";
@@ -92,6 +95,9 @@ export function buildApp(options: BuildAppOptions = {}): FastifyInstance {
     observerModes,
   });
   registerObserverModeRoutes(app, observerModes, { observerToken, operatorToken });
+  registerReplayRoutes(app, new ExportReplayService(
+    new LedgerReplaySource(ledger, artifactRoot),
+  ), { observerToken, operatorToken, observerModes });
   registerRunRoutes(app, runService, operatorToken, (runId, sourceCommandId) => {
     const digest = createHash("sha256").update(sourceCommandId).digest("hex").slice(0, 24);
     observerModes.unblind(runId, `configured-unblind-${digest}`);

@@ -1,5 +1,19 @@
 # Design Decisions
 
+## 2026-09-18: Export replay as an authorized self-contained projection
+
+- Reason: portability requires the exact observer-visible event order and
+  immutable evidence bytes to survive without the controller database, artifact
+  directory, Docker, a model provider, or a network connection.
+- Rejected alternative: copying the raw ledger would expose omitted-event gaps,
+  source sequences, and operator-private facts. A replay that fetches artifacts
+  later is only a bookmark into the original machine, not a portable record.
+- Constraint: the server derives one durable observer perspective, renumbers its
+  complete events contiguously, embeds every referenced authorized artifact, and
+  refuses active or incomplete runs. Versioned import rejects extra fields,
+  cross-run events, gaps, terminal mismatches, and missing artifacts. Browser
+  inspection re-verifies embedded SHA-256 bytes before display.
+
 ## 2026-09-18: Make browser projection purpose explicit
 
 - Reason: the local operator credential controls run mutations, but the same
