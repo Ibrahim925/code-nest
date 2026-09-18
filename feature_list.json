@@ -194,9 +194,9 @@
       "milestone": "M2-governance-game",
       "title": "Round evidence packet",
       "user_visible_behavior": "At the evidence phase, players receive commits, normalized diffs, authorship, conflicts, trusted results, expenditures, cited claims, and unfulfilled commitments without an automated suspicion verdict.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run packages/core/src/evidence-packet.test.ts", "make check"],
-      "evidence": "",
+      "evidence": "The focused pure-core suite passed 5 of 5 tests: it assembled commits, normalized patch digests, conflicts, line authorship, trusted investigation results, shared-credit expenditures, claims with audience-visible citation validity, and outstanding commitments; omitted sealed participant-private and covert facts from a clean packet; admitted private results only to their recipient; produced byte-for-byte equal output from reversed source order; and rejected malformed payloads, invalid or foreign event envelopes, duplicate ledger sequences, invalid rounds, and oversized sources. The output contains stable event IDs but no ledger sequence or suspicion verdict. Final make check passed the 350-line guard, ESLint, six strict workspace typechecks, 28 test files, and 203 tests.",
       "notes": "Facts only; SPEC sections 12.3 and 17."
     },
     {

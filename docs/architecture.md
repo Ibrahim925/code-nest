@@ -377,6 +377,30 @@ observers cannot infer participant-private result content. The public budget eve
 still shows that the team spent shared credits. Stored receipts and authorizer
 output are runtime-validated before use; malformed visibility fails closed.
 
+## Round evidence packet v1
+
+`packages/core/src/evidence-packet.ts` is a pure read-model projector over accepted
+event envelopes. It validates the requested run and round, validates every source
+envelope, rejects foreign-run or duplicate-sequence input, and applies the shared
+visibility projector before reading payloads. Known evidence payloads are parsed
+from `unknown`; unrelated visible event kinds remain available as citation targets
+but do not create invented facts.
+
+The packet groups attributed work and line provenance, normalized patch digests,
+integration conflicts, trusted investigation results, recorded expenditures,
+participant claims, citation status, and unfulfilled commitments. It uses source
+sequence only for deterministic internal ordering. Consumers receive stable event
+IDs and timestamps, never ledger sequence numbers, so omitting sealed events does
+not expose their positions. A citation is valid only when its complete target event
+is visible to the packet audience; hidden and absent targets are both `missing`.
+
+Projection is capped at 1,000 source events, 256 facts per section, and 256 KiB of
+serialized output. Exceeding a bound is an explicit error rather than silent
+truncation. Evidence grades describe provenance—recorded, attributed, trusted, or
+claimed—but the schema deliberately has no suspicion, role, or verdict field.
+Private beliefs and Town Hall arguments consume this factual boundary instead of
+adding inference to it.
+
 ## Failure behavior
 
 Model timeout, policy rejection, container exit, OOM, operator cancellation,

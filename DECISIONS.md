@@ -1,5 +1,22 @@
 # Design Decisions
 
+## 2026-09-17: Project evidence as facts without exposing ledger positions
+
+- Reason: players need one reproducible basis for beliefs and debate, but source
+  sequence gaps reveal hidden activity and an inferred suspicion score would turn
+  the controller into an unaccountable judge. Stable event IDs support citations
+  without exposing omitted positions.
+- Rejected alternative: sending raw round events leaks ledger sequences and makes
+  each consumer reconstruct evidence payloads. Silently truncating oversized
+  packets would make different players reason from incomplete facts without an
+  explicit failure.
+- Constraint: the pure core projector validates known evidence payloads, applies
+  the existing whole-event visibility rule before extraction, sorts privately by
+  sequence, and emits factual grades only: recorded, attributed, trusted, or
+  claimed. Hidden citation targets appear as missing, never as existence proofs.
+  Source, section, and byte ceilings fail closed. Suspicion belongs only to the
+  participant-authored private belief feature.
+
 ## 2026-09-17: Let authorization own investigation-result visibility
 
 - Reason: the participant requesting a trusted check must not be able to choose

@@ -14,19 +14,45 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-017` trusted-check and audit requests is the
+- **Branch/commit:** `main`; `CN-018` round evidence packet is the
   latest verified feature checkpoint.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 27 Vitest files, and 198 tests.
+  typechecks across six workspaces, 28 Vitest files, and 203 tests.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-018`, the round evidence packet. Project a bounded,
-  deterministic summary of accepted work, messages, test/audit results, costs,
-  and provenance for belief and Town Hall phases without leaking sealed facts.
+- **Next priority:** begin `CN-019`, private suspicion distributions. Validate an
+  active participant's private 100-point allocation over exactly the other three
+  participants, retain its strongest evidence citations, and prove clean viewers
+  cannot see beliefs until role reveal.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-17 (cn-018) — Build the round evidence packet
+
+- Outcome: done.
+- Did: added a pure deterministic evidence projector in `packages/core`. It
+  validates source envelopes and known evidence payloads, applies the existing
+  audience visibility boundary, privately orders facts by ledger sequence, and
+  emits stable event IDs without source positions. The packet groups submitted
+  commits, normalized patch digests, conflicts, line authorship, trusted results,
+  credit expenditures, cited claims, and outstanding public commitments. Every
+  fact carries its evidence grade where applicable; the schema contains no
+  suspicion, verdict, or role inference. Explicit source, per-section, and byte
+  limits fail closed instead of silently truncating evidence.
+- Verification run: the focused pure-core suite passed 5 of 5 tests covering the
+  complete factual packet, sealed-data omission, recipient-private evidence,
+  input-order determinism, malformed known payloads, invalid or foreign event
+  envelopes, duplicate ledger positions, invalid rounds, and source ceilings.
+  Final `make check` passed the 350-line guard, ESLint, all six workspace
+  typechecks, 28 test files, and 203 tests.
+- Risks / follow-ups: Version 1 recognizes the event kinds currently produced by
+  the one-round, budget, and investigation slices; later command producers must
+  extend the packet parser and tests deliberately. The 256 KiB hard ceiling and
+  256 facts per evidence section preserve bounded projection; callers must split
+  larger research runs rather than accepting silent evidence loss. CN-019 and
+  CN-020 may cite only packet-visible event IDs.
 
 ### 2026-09-17 (cn-017) — Add trusted-check and audit requests
 
