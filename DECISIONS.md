@@ -1,5 +1,25 @@
 # Design Decisions
 
+## 2026-09-18: Sign a safe projection from disposable trusted evaluators
+
+- Reason: trusted tests need the exact frozen candidate and private evaluator,
+  but participants must receive only scenario-authorized facts. A report that
+  serializes the evaluator's raw checks and hides fields later is already a
+  leakage risk.
+- Rejected alternative: testing a mutable worktree can score bytes other than the
+  recorded candidate. Mounting hidden tests into participant containers exposes
+  their source. Returning raw stdout, stderr, names, paths, timings, or traces and
+  relying on the caller to redact them makes every caller part of the security
+  boundary.
+- Constraint: archive one clean declared Git revision, verify its SHA-256 plus the
+  single-file evaluator digest before Docker, and stage both as private read-only
+  mounts. Every job gets a fresh exact-image, non-root, networkless, read-only,
+  capability-free, resource-bounded container whose applied policy is inspected.
+  The application accepts one strict evaluator protocol, derives outcome and
+  counts itself, constructs either a public-check or aggregate-only report, and
+  HMAC-signs only that safe projection with a controller-held key. Cleanup removes
+  the container and private staging directory on every path.
+
 ## 2026-09-18: Route contained agents through a dual-homed credential broker
 
 - Reason: some coding-agent CLIs must run beside their tools, but giving that

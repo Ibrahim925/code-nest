@@ -141,10 +141,23 @@ in reverse order; normal stop removes the participant, broker, and both networks
 
 ## Trusted tests
 
-Trusted tests use a fresh networkless container and an exact candidate digest.
-Participants receive only the scenario-authorized result. Hidden test names,
-paths, source, stack traces, timings, and detailed failures never enter a
-participant-visible payload.
+Each trusted job archives one clean declared Git revision, verifies that archive
+against the frozen candidate SHA-256, and verifies the private single-file
+evaluator against its declared SHA-256. Private copies are mounted read-only into
+a fresh exact-image container; the candidate extracts into bounded tmpfs. The
+container is non-root, network none, read-only-root, private IPC/cgroup namespaced,
+capability-free, no-new-privileges, built-in-seccomp, device-free, unexposed,
+non-restarting, and bounded by CPU, memory/swap, processes, file size, output, and
+wall time. Docker inspection must prove the whole policy before evaluation.
+
+The evaluator emits one strict bounded JSON result tied to the candidate digest.
+The controller derives outcome and counts. Public reports may include only checks
+the evaluator explicitly marks public; aggregate reports have no check collection
+at all. Both projections record candidate revision/digest, evaluator image/digest,
+and are HMAC-signed only after projection with a controller-held key. Raw stdout,
+stderr, hidden identifiers, summaries, paths, source, traces, timings, host paths,
+container IDs, and the signing key never enter the returned report. The container
+and private staging directory are removed before success or failure returns.
 
 ## Verification expectations
 

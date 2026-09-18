@@ -14,20 +14,44 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-037` contained runtime and credential broker is the
+- **Branch/commit:** `main`; `CN-038` disposable trusted-test containers is the
   latest verified feature checkpoint.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 63 Vitest files, and 375 tests, including the
-  real contained-runtime, credential, TLS, and Docker network boundaries.
+  typechecks across six workspaces, 64 Vitest files, and 377 tests, including the
+  real trusted-test, participant, credential, TLS, and Docker network boundaries.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-038`, disposable trusted-test containers. Run public
-  and hidden evaluators in fresh networkless containers against one exact
-  candidate digest while releasing only scenario-authorized result fields.
+- **Next priority:** begin `CN-039`, the adversarial isolation, redaction, and
+  cleanup suite. Exercise private mounts, hidden tests, secrets, Docker socket,
+  peer and network denial, enforced exhaustion, cancellation, and persistence.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-18 (cn-038) — Disposable trusted-test containers
+
+- Outcome: done.
+- Did: added a trusted-CI hexagon with pure input, observed-policy, evaluator
+  protocol, and safe report projection rules; an application runner and engine
+  port; and a Git/Docker adapter. Every job archives one clean declared revision,
+  verifies candidate and evaluator SHA-256 identities, stages private read-only
+  copies, and runs in a fresh exact-image, non-root, networkless, read-only,
+  capability-free, seccomp-constrained, namespace-private, resource-bounded
+  container. Docker's applied state is inspected before the evaluator runs. The
+  controller derives results, returns public checks or aggregate-only fields, and
+  HMAC-signs only the safe projection with a key that never enters Docker.
+- Verification run: two focused real-Docker cases passed. They covered separate
+  public and hidden jobs, exact revision/digest binding, network/host-secret/
+  gateway-token/Docker-socket absence, safe projection and signatures, hidden
+  identifier/summary/path omission, dirty candidate rejection, unpinned image and
+  escaped evaluator rejection, and zero leftover managed containers. Final
+  `make check` passed the 350-line guard, ESLint, all six strict workspace
+  typechecks, 64 test files, and 377 tests.
+- Risks / follow-ups: Version 1 accepts a bounded single-file evaluator bundle and
+  the same 16 MiB Git-archive ceiling as current candidate freezing. Larger
+  scenario bundles need a content-addressed streaming format. CN-039 now broadens
+  adversarial isolation, exhaustion, redaction, and persistence coverage.
 
 ### 2026-09-18 (cn-037) — Contained runtime and credential broker
 

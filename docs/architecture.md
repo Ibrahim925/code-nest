@@ -67,6 +67,21 @@ audit ports. Node HTTP/HTTPS and the broker process are adapters. Participant
 containers know only a short gateway grant and internal address; long-lived
 provider credentials never cross into the participant hexagon.
 
+## Trusted CI boundary
+
+`apps/controller/src/trusted-ci` owns disposable evaluator execution as its own
+hexagon. The domain validates job identity, exact material and image digests,
+resource limits, observed isolation, the evaluator output protocol, and the two
+permitted report projections. It cannot represent hidden check identifiers or
+summaries in an aggregate report.
+
+The application runner coordinates one job through a container-engine port,
+derives pass/fail from validated checks, signs only the safe report, and performs
+cleanup before returning. The Docker adapter alone archives Git, stages private
+material, constructs and inspects containers, and executes the fixed evaluator
+entry point. It returns observations and bounded bytes rather than Docker or Git
+objects.
+
 ## State flow
 
 1. A typed command reaches the controller with an idempotency key.

@@ -39,15 +39,16 @@ async function engineHost() {
 
 if (
   typeof images.splitWorker !== "string" ||
-  typeof images.credentialBroker !== "string"
+  typeof images.credentialBroker !== "string" ||
+  typeof images.trustedEvaluator !== "string"
 ) {
-  throw new Error("docker/images.json must declare splitWorker and credentialBroker.");
+  throw new Error("docker/images.json must declare splitWorker, credentialBroker, and trustedEvaluator.");
 }
 
 const temporaryConfig = await mkdtemp(join(tmpdir(), "code-nest-docker-config-"));
 try {
   const host = await engineHost();
-  for (const image of [images.splitWorker, images.credentialBroker]) {
+  for (const image of new Set([images.splitWorker, images.credentialBroker, images.trustedEvaluator])) {
     await execute(
       "docker",
       ["--config", temporaryConfig, "--host", host, "pull", image],

@@ -414,9 +414,9 @@
       "milestone": "M4-real-runtimes-and-isolation",
       "title": "Disposable trusted-test containers",
       "user_visible_behavior": "Public and hidden trusted tests run in fresh networkless containers against an exact candidate digest and reveal only their scenario-authorized result fields.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run apps/controller/src/trusted-ci/runner.integration.test.ts", "make check"],
-      "evidence": "",
+      "evidence": "A feature-oriented trusted-CI hexagon now separates strict job/report and observed-policy rules, an application runner and container-engine port, and the Git/Docker outer adapter. Each job re-archives one clean declared revision, verifies the exact candidate and private evaluator SHA-256 digests, stages private read-only copies, and creates a fresh exact-image container. Applied state must prove non-root identity, network none, read-only root, private IPC/cgroup namespaces, all capabilities dropped, no-new-privileges, built-in seccomp, no devices, ports, restart, or forbidden environment names, two exact read-only mounts, bounded tmpfs, and CPU, memory/swap, process, file-size, output, and wall-time limits. The application accepts one strict bounded evaluator result tied to the candidate digest, derives outcome/counts itself, constructs either public-check or aggregate-only output, and HMAC-signs only that safe projection with a controller-held key. Raw stdout/stderr, hidden identifiers/summaries, paths, source, traces, timings, host paths, container IDs, and signing material cannot enter the returned report. Two real-Docker cases passed, covering fresh public and hidden jobs, network/credential/socket absence, exact digest and revision binding, signatures, safe projections, dirty material, unsafe paths/images, and zero leftover managed containers. Final make check passed the 350-line guard, ESLint, six strict workspace typechecks, 64 test files, and 377 tests.",
       "notes": "Hidden test names, paths, sources, timings, and traces never reach participants; AC 9."
     },
     {

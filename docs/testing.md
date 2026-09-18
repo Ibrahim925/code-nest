@@ -38,6 +38,11 @@ Inject clocks, random seeds, IDs, and external effects. A completed replay must
 render and score without a model, Docker, provider, or network call. Store
 fixtures with explicit protocol versions and stable event order.
 
+Test files run one at a time because real Git, subprocess, SQLite, and Docker
+integration suites share finite host resources. Tests inside a file remain
+sequential unless they explicitly verify concurrency. This trades a small amount
+of suite speed for stable deadlines and cleanup on both laptops and CI workers.
+
 ## Security cases
 
 Every visibility or capability feature needs positive and negative tests.
