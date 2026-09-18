@@ -1,6 +1,6 @@
 import type {
   RuntimeObservation,
-  RuntimeObservedOutput,
+  RuntimeStandardObservedOutput,
   RuntimeStartRequest,
   RuntimeTurnBudget,
 } from "../../contract.js";
@@ -32,7 +32,7 @@ export type SubprocessFrame =
       readonly wireVersion: typeof SUBPROCESS_WIRE_VERSION;
       readonly requestId: string;
       readonly type: "observation";
-      readonly payload: Omit<RuntimeObservedOutput, "tier">;
+      readonly payload: Omit<RuntimeStandardObservedOutput, "tier">;
     };
 
 const IDENTIFIER = /^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/;
@@ -97,7 +97,7 @@ export function parseSubprocessFrame(line: string): SubprocessFrame {
     ok: true,
     payload: {
       observationId: payload.observationId,
-      kind: payload.kind as RuntimeObservedOutput["kind"],
+      kind: payload.kind as RuntimeStandardObservedOutput["kind"],
       payload: payload.payload,
     },
   } as SubprocessFrame;

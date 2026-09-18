@@ -94,21 +94,26 @@ describe("direct reference model loop", () => {
       { tier: 1, kind: "command" },
       { tier: 1, kind: "message" },
       { tier: 0, kind: "status" },
+      { tier: 2, kind: "provider_usage", provenance: "provider_reported" },
+      { tier: 2, kind: "provider_reasoning_summary", provenance: "provider_supplied" },
     ]);
     expect(adapter.nativeObservations()).toEqual([
       {
         observationId: "turn-1-usage",
+        tier: 2,
         kind: "provider_usage",
         provenance: "provider_reported",
-        turnIndex: 1,
-        usage: { inputTokens: 12, outputTokens: 7, wallTimeMilliseconds: 25 },
+        payload: {
+          turnIndex: 1,
+          usage: { inputTokens: 12, outputTokens: 7, wallTimeMilliseconds: 25 },
+        },
       },
       {
         observationId: "turn-1-summary",
+        tier: 2,
         kind: "provider_reasoning_summary",
         provenance: "provider_supplied",
-        turnIndex: 1,
-        text: "Provider-supplied plan summary.",
+        payload: { turnIndex: 1, text: "Provider-supplied plan summary." },
       },
     ]);
     await expect(adapter.stop("match_complete")).resolves.toMatchObject({

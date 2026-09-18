@@ -9,6 +9,7 @@ import {
   parseRuntimeMetadata,
   parseTurnResult,
 } from "./validation";
+import { parseRuntimeObservedOutput } from "./observation-validation";
 
 const metadata: RuntimeMetadata = {
   adapterName: "fake",
@@ -94,6 +95,53 @@ describe("runtime adapter contract", () => {
     } as const;
 
     expect(parseTurnResult(result)).toEqual(result);
+  });
+
+  it("parses Tier-2 provider observations with explicit provenance", () => {
+    const observation = {
+      observationId: "turn-1-summary",
+      tier: 2,
+      kind: "provider_reasoning_summary",
+      provenance: "provider_supplied",
+      payload: { turnIndex: 1, text: "Provider-supplied summary." },
+    } as const;
+
+    expect(parseRuntimeObservedOutput(observation)).toEqual(observation);
+  });
+
+  it.each([
+    {
+      name: "a Tier-2 summary without provenance",
+      value: {
+        observationId: "turn-1-summary",
+        tier: 2,
+        kind: "provider_reasoning_summary",
+        payload: { turnIndex: 1, text: "Unlabelled summary." },
+      },
+    },
+    {
+      name: "a provider summary below Tier 2",
+      value: {
+        observationId: "turn-1-summary",
+        tier: 1,
+        kind: "provider_reasoning_summary",
+        payload: { turnIndex: 1, text: "Wrong tier." },
+      },
+    },
+    {
+      name: "private chain-of-thought",
+      value: {
+        observationId: "turn-1-private",
+        tier: 2,
+        kind: "private_chain_of_thought",
+        provenance: "provider_supplied",
+        payload: { turnIndex: 1, text: "Never accepted." },
+      },
+    },
+  ])("rejects $name as an observable output", ({ value }) => {
+    expect(() => parseRuntimeObservedOutput(value)).toThrowError(
+      RuntimeContractError,
+    );
   });
 
   it.each([

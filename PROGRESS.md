@@ -14,39 +14,41 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-039` adversarial isolation, redaction, and cleanup is the
-  latest verified feature checkpoint.
+- **Branch/commit:** `main`; `CN-040` direct reference model loop is the latest
+  verified feature checkpoint.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 65 Vitest files, and 381 tests, including the
-  real adversarial isolation, cleanup, redaction, trusted-test, credential, TLS,
-  and Docker network boundaries.
+  typechecks across six workspaces, 66 Vitest files, and 389 tests, including the
+  deterministic direct-provider loop and the real adversarial isolation,
+  cleanup, redaction, trusted-test, credential, TLS, and Docker boundaries.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-040`, the direct reference model-loop adapter. Add
-  a provider-neutral control-plane loop with deterministic provider tests,
-  measured usage, and provenance-labelled optional reasoning summaries.
+- **Next priority:** begin `CN-041`, the heterogeneous four-agent match. Compose
+  a three-round Station Access run from at least two adapter implementations and
+  prove comparable runtime metadata, including split and contained execution.
 - **Blockers:** none.
 
 ## Session Records
 
-### 2026-09-18 (cn-040, in progress) — Direct reference model loop
+### 2026-09-18 (cn-040) — Direct reference model loop
 
-- Outcome: compatible implementation verified; shared Tier 2 observation contract
-  extension awaits explicit compatibility approval.
+- Outcome: done.
 - Did: added a provider-neutral reference-loop hexagon with strict provider
   response parsing, deterministic provider and clock ports, bounded turn and token
   budgets, lifecycle ordering, private delivery, interruption/resume, defensive
   cloning, usage aggregation, Tier 0/1 observable commands/messages/status, and
-  concrete provider usage/reasoning-summary observations with explicit provenance.
+  common Tier 2 provider usage/reasoning-summary observations with exact required
+  provenance and runtime parsing.
   Private chain-of-thought fields, undeclared summaries, non-cloneable output,
   budget overruns, provider failures, and deadlines fail safely.
-- Verification run: four focused deterministic-provider cases passed. Current
-  `make check` passed the 350-line guard, ESLint, all six strict workspace
-  typechecks, 66 test files, and 385 tests.
-- Remaining: add Tier 2 and `provider_reasoning_summary` to the common runtime
-  observation contract, then document and complete CN-040. This is an additive
-  compatibility change and is intentionally not assumed without approval.
+- Verification run: eight focused deterministic-provider and shared-contract
+  cases passed within the 20-test adapter selection. Final `make check` passed
+  the 350-line guard, ESLint, all six strict workspace typechecks, 66 test files,
+  and 389 tests. The first restricted run could not access local Docker or bind
+  loopback; the authorized full run passed every real integration test.
+- Risks / follow-ups: this feature supplies the provider-neutral port and
+  deterministic stub, not a vendor SDK. CN-041 composes this adapter with the
+  isolated execution adapters in a complete heterogeneous match.
 
 ### 2026-09-18 (cn-039) — Adversarial isolation, redaction, and cleanup
 

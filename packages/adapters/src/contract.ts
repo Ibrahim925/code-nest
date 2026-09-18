@@ -106,7 +106,7 @@ export interface FinalRuntimeReport {
   readonly usage: RuntimeUsage | null;
 }
 
-export type RuntimeOutputKind =
+export type RuntimeStandardOutputKind =
   | "command"
   | "file_changed"
   | "message"
@@ -117,12 +117,46 @@ export type RuntimeOutputKind =
   | "tool_call"
   | "work_note";
 
-export interface RuntimeObservedOutput {
+export type RuntimeProviderOutputKind =
+  | "provider_reasoning_summary"
+  | "provider_usage";
+
+export type RuntimeOutputKind =
+  | RuntimeStandardOutputKind
+  | RuntimeProviderOutputKind;
+
+export interface RuntimeStandardObservedOutput {
   readonly observationId: string;
   readonly tier: 0 | 1;
-  readonly kind: RuntimeOutputKind;
+  readonly kind: RuntimeStandardOutputKind;
   readonly payload: unknown;
 }
+
+export type RuntimeProviderObservedOutput =
+  | {
+      readonly observationId: string;
+      readonly tier: 2;
+      readonly kind: "provider_reasoning_summary";
+      readonly provenance: "provider_supplied";
+      readonly payload: {
+        readonly turnIndex: number;
+        readonly text: string;
+      };
+    }
+  | {
+      readonly observationId: string;
+      readonly tier: 2;
+      readonly kind: "provider_usage";
+      readonly provenance: "provider_reported";
+      readonly payload: {
+        readonly turnIndex: number;
+        readonly usage: RuntimeUsage;
+      };
+    };
+
+export type RuntimeObservedOutput =
+  | RuntimeStandardObservedOutput
+  | RuntimeProviderObservedOutput;
 
 export interface ObservableRuntimeAdapter extends RuntimeAdapter {
   observations(): readonly RuntimeObservedOutput[];
@@ -139,6 +173,7 @@ export interface RuntimeAdapter {
 
 export type RuntimeContractErrorCode =
   | "INVALID_CAPABILITY_REQUEST"
+  | "INVALID_RUNTIME_OBSERVATION"
   | "INVALID_RUNTIME_METADATA"
   | "INVALID_TURN_RESULT";
 

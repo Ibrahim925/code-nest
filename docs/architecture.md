@@ -465,6 +465,20 @@ stderr becomes bounded Tier 0 evidence, and declared Tier 1 observations remain
 labelled. Returned commands stay unknown until the controller parses and
 authorizes them through the protocol and capability boundaries.
 
+### Direct reference model loop
+
+`packages/adapters/src/reference-loop` is a separate feature-oriented hexagon.
+The provider-neutral domain port and strict response/configuration rules do not
+depend on a provider SDK. Its application service owns session lifecycle, private
+deliveries, deterministic turn timing, token budgets, interruption, usage, and
+observable output. Provider implementations remain outer adapters.
+
+Tier 0/1 and Tier 2 records share the common runtime observation stream. The
+Tier 2 union admits only `provider_usage` labelled `provider_reported` and
+`provider_reasoning_summary` labelled `provider_supplied`; runtime parsing also
+enforces that pairing. This keeps the optional summary comparable without
+presenting it as private chain-of-thought or trusted controller evidence.
+
 ## Split-runtime container boundary
 
 `apps/controller/src/containers` is a feature-oriented hexagon. The domain layer

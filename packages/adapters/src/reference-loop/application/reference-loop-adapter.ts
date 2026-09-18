@@ -6,6 +6,7 @@ import {
   type RuntimeMetadata,
   type RuntimeObservation,
   type RuntimeObservedOutput,
+  type RuntimeProviderObservedOutput,
   type RuntimeStartRequest,
   type RuntimeTurnBudget,
   type RuntimeUsage,
@@ -22,21 +23,7 @@ import { parseReferenceProviderResponse } from "../domain/provider-contract.js";
 
 type State = "idle" | "ready" | "stopped";
 
-export type ReferenceNativeObservation =
-  | {
-    readonly observationId: string;
-    readonly kind: "provider_usage";
-    readonly provenance: "provider_reported";
-    readonly turnIndex: number;
-    readonly usage: RuntimeUsage;
-  }
-  | {
-    readonly observationId: string;
-    readonly kind: "provider_reasoning_summary";
-    readonly provenance: "provider_supplied";
-    readonly turnIndex: number;
-    readonly text: string;
-  };
+export type ReferenceNativeObservation = RuntimeProviderObservedOutput;
 
 const MAX_OBSERVATIONS = 1_000;
 
@@ -44,7 +31,6 @@ export class ReferenceLoopAdapter implements ObservableRuntimeAdapter {
   readonly #options: NormalizedReferenceLoopOptions;
   readonly #inbox: RuntimeObservation[] = [];
   readonly #observed: RuntimeObservedOutput[] = [];
-  readonly #native: ReferenceNativeObservation[] = [];
   #state: State = "idle";
   #startRequest: RuntimeStartRequest | undefined;
   #activeAbort: AbortController | undefined;
@@ -171,12 +157,16 @@ export class ReferenceLoopAdapter implements ObservableRuntimeAdapter {
   }
 
   observations(): readonly RuntimeObservedOutput[] { return structuredClone(this.#observed); }
-  nativeObservations(): readonly ReferenceNativeObservation[] { return structuredClone(this.#native); }
+  nativeObservations(): readonly ReferenceNativeObservation[] {
+    return structuredClone(this.#observed.filter(
+      (item): item is ReferenceNativeObservation => item.tier === 2,
+    ));
+  }
 
   #recordTurn(turn: TurnResult, turnIndex: number, summary: string | null): void {
-    const observedCount = turn.commands.length + turn.messages.length + 1;
-    const nativeCount = (turn.usage === null ? 0 : 1) + (summary === null ? 0 : 1);
-    if (this.#observed.length + observedCount > MAX_OBSERVATIONS || this.#native.length + nativeCount > MAX_OBSERVATIONS) {
+    const observedCount = turn.commands.length + turn.messages.length + 1 +
+      (turn.usage === null ? 0 : 1) + (summary === null ? 0 : 1);
+    if (this.#observed.length + observedCount > MAX_OBSERVATIONS) {
       throw new RuntimeAdapterError("INVALID_ADAPTER_INPUT", "Reference provider exceeded the observation boundary.");
     }
     for (const [index, command] of turn.commands.entries()) {
@@ -188,13 +178,14 @@ export class ReferenceLoopAdapter implements ObservableRuntimeAdapter {
     this.#observed.push({
       observationId: `turn-${turnIndex}-status`, tier: 0, kind: "status", payload: { status: turn.status },
     });
-    if (turn.usage !== null) this.#native.push({
-      observationId: `turn-${turnIndex}-usage`, kind: "provider_usage", provenance: "provider_reported",
-      turnIndex, usage: { ...turn.usage },
+    if (turn.usage !== null) this.#observed.push({
+      observationId: `turn-${turnIndex}-usage`, tier: 2, kind: "provider_usage",
+      provenance: "provider_reported", payload: { turnIndex, usage: { ...turn.usage } },
     });
-    if (summary !== null) this.#native.push({
-      observationId: `turn-${turnIndex}-summary`, kind: "provider_reasoning_summary",
-      provenance: "provider_supplied", turnIndex, text: summary,
+    if (summary !== null) this.#observed.push({
+      observationId: `turn-${turnIndex}-summary`, tier: 2,
+      kind: "provider_reasoning_summary", provenance: "provider_supplied",
+      payload: { turnIndex, text: summary },
     });
   }
 

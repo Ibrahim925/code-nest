@@ -54,6 +54,13 @@ explicit `available` and `unavailable` lists. Tier 0 cannot declare typed tool
 events or work notes; provider reasoning summaries require Tier 2. The contract
 has no private-chain-of-thought capability.
 
+Observable output is one discriminated stream. Tier 0/1 records use only the
+standard runtime kinds. Tier 2 accepts only provider-reported usage and optional
+provider-supplied reasoning summaries, with those provenance labels required by
+both the TypeScript contract and runtime parser. A provider summary is evidence
+about what the provider chose to report; it is never treated as verified private
+reasoning or controller truth.
+
 Start binds a run, scenario, participant, and workspace to one session. Turn
 results contain only bounded messages, raw command candidates, exact commit
 revisions, an optional tool summary, optional measured usage, and a declared
@@ -68,6 +75,22 @@ reported usage, enforces start/stop ordering, and rejects scripts that expose
 tool, usage, or private-message data not declared by metadata. Interrupt and
 resume are separate capabilities; a successful interrupt does not imply the
 session can continue.
+
+### Direct reference model-loop adapter
+
+The reference loop is a feature-oriented hexagon inside `packages/adapters`.
+Its domain owns provider-neutral request and response contracts plus strict
+configuration; its application owns lifecycle, inbox delivery, turn deadlines,
+token budgets, interruption, usage aggregation, and observation production. A
+small provider port is the only model dependency, so concrete SDKs remain outer
+adapters rather than controller or game-rule dependencies.
+
+Provider responses are exact-key validated and defensively cloned before state
+changes. Commands stay untrusted. Usage becomes Tier 2 `provider_usage` with
+`provider_reported` provenance. A configured optional summary becomes Tier 2
+`provider_reasoning_summary` with `provider_supplied` provenance. Undeclared
+summaries, private-chain-of-thought fields, non-cloneable output, budget overruns,
+provider failures, and deadlines fail closed.
 
 ### Subprocess adapter v1
 

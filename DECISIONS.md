@@ -1,5 +1,19 @@
 # Design Decisions
 
+## 2026-09-18: Make Tier 2 a provenance-bearing runtime observation
+
+- Reason: direct model loops can report usage and an optional provider-authored
+  reasoning summary, and downstream comparison needs those records in the same
+  adapter-neutral stream as other observations.
+- Rejected alternative: a concrete adapter-only side channel makes the
+  controller depend on implementation type. Treating summaries as ordinary Tier
+  1 output loses their weaker provenance. Exposing private chain-of-thought is
+  neither required nor a trustworthy ground-truth signal.
+- Constraint: the additive Tier 2 union accepts only provider-reported usage and
+  provider-supplied summaries with exact mandatory provenance labels and strict
+  runtime parsing. Standard subprocess observations remain Tier 0/1. Commands
+  remain unknown until protocol parsing and authorization.
+
 ## 2026-09-18: Redact configured secrets at the ledger write boundary
 
 - Reason: every public producer remembering to scrub runtime output is not a

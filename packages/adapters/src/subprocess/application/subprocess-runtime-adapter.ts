@@ -6,6 +6,7 @@ import {
   type RuntimeMetadata,
   type RuntimeObservation,
   type RuntimeObservedOutput,
+  type RuntimeStandardObservedOutput,
   type RuntimeStartRequest,
   type RuntimeTurnBudget,
   type RuntimeUsage,
@@ -249,7 +250,7 @@ export class SubprocessRuntimeAdapter implements ObservableRuntimeAdapter {
     }
   }
 
-  #recordObservation(output: Omit<RuntimeObservedOutput, "tier">): void {
+  #recordObservation(output: Omit<RuntimeStandardObservedOutput, "tier">): void {
     const typed = !["status", "stderr", "stdout"].includes(output.kind);
     if (
       (typed && this.#metadata.observabilityTier < 1) ||
