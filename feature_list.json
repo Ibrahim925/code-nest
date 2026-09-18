@@ -528,6 +528,17 @@
       "verification": ["corepack pnpm vitest run tests/e2e/demonstration-set.test.ts", "make check"],
       "evidence": "2026-09-18: the exact demonstration-set E2E passed 5/5 cases. It verified one synthetic digest-bound replay for each required outcome, recomputed the Station Access manifest and replay SHA-256 values, reproduced every stored file byte-for-byte from the deterministic builder, rejected incomplete and extended manifests, parsed all files through the Version 1 replay contract, and projected them offline through the normal browser application layer. Outcome assertions proved successful defence with detected harm, successful sabotage with the covert condition present at a legitimate release, adapter-crash cancellation with a trusted recovery fact and partial replay, and false accusation with one builder wrongly quarantined, six governance credits spent, and 0.25 contribution lost. The affected replay and Workstream suites passed 20/20, `make demos` and the production build passed, and make check passed the 350-line guard, lint, six strict workspace typechecks, 76 test files, and 433 tests.",
       "notes": "Synthetic results are labelled and traceable to pinned run manifests; AC 24."
+    },
+    {
+      "id": "CN-049",
+      "area": "adapters",
+      "milestone": "M6-live-harnesses",
+      "title": "OMP RPC harness connector",
+      "user_visible_behavior": "A contained participant can run one standalone OMP harness through the common runtime lifecycle, receive private and public observations, propose controller commands, stream bounded evidence, and stop or interrupt without exposing its broker credential.",
+      "status": "passing",
+      "verification": ["corepack pnpm vitest run packages/adapters/src/omp.integration.test.ts", "make check"],
+      "evidence": "2026-09-18: four connector integration cases passed with a real child process, covering the common runtime lifecycle, exact OMP RPC flags and explicit environment, command capture, usage and bounded tool evidence, credential/thinking non-disclosure, interrupt/resume on one session, model fallback, malformed RPC, missing executable, invalid input, and output-budget overrun. No-prompt readiness and exact openai/gpt-5.6-luna state probes also passed against installed OMP 18.1.14. The three affected adapter suites passed 25/25; make check passed the 350-line guard, lint, six strict workspace typechecks, 77 test files, and 437 tests.",
+      "notes": "One connector is reused for all four participant containers. Keep OMP RPC, provider routing, and Docker transport outside the controller domain; no protocol or database change."
     }
   ]
 }

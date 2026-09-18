@@ -14,23 +14,46 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-048` reproducible demonstrations completes the
-  48-feature Version 1 implementation.
-  verified feature checkpoint.
+- **Branch/commit:** `main`; `CN-049` adds the verified OMP RPC connector as the
+  first post-Version-1 live-harness extension.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 76 Vitest files, and 433 tests. The final set
-  includes four digest-bound offline demonstrations, recovery/restart and
+  typechecks across six workspaces, 77 Vitest files, and 437 tests. The set
+  includes the OMP RPC lifecycle and isolation contract, four digest-bound
+  offline demonstrations, recovery/restart and
   serialized-leakage inspection, the 10,000-event/four-stream stress path,
   accessibility, Constitution Lab, matched trials, all three scenarios,
   heterogeneous match, direct-provider loop, and real adversarial isolation,
   cleanup, redaction, trusted-test, credential, TLS, and Docker boundaries.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** none; all 48 planned features are verified passing.
+- **Next priority:** wire the verified connector into the contained participant
+  image and four-runtime match launcher when that deployment layer is approved.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-18 (cn-049) — OMP RPC harness connector
+
+- Outcome: done; 49 of 49 recorded features pass.
+- Did: added a feature-oriented OMP adapter with separate configuration, prompt,
+  RPC parsing, session, and runtime-lifecycle modules. One instance drives one
+  persistent OMP process inside one participant container. It verifies the exact
+  provider/model, registers a single untrusted command-submission host tool,
+  maps bounded tool evidence and usage, supports interrupt/resume, passes only an
+  explicit environment, and discards thinking, tool payloads, and raw stderr.
+- Verification run: four connector integration cases passed with a real child
+  process, covering lifecycle mapping, flags and environment isolation, command
+  capture, usage, bounded evidence, credential/thinking non-disclosure,
+  interrupt/resume, model fallback, malformed RPC, missing executable, invalid
+  input, and budget overrun. The installed OMP 18.1.14 also passed no-prompt RPC
+  readiness and exact `openai/gpt-5.6-luna` state probes. The three affected
+  adapter suites passed 25 of 25 tests. Final `make check` passed the 350-line
+  guard, ESLint, all six strict workspace typechecks, 77 test files, and 437
+  tests.
+- Remaining: the connector is complete. A contained OMP image, broker route,
+  four-runtime launch composition, and live match remain separate deployment
+  work.
 
 ### 2026-09-18 (cn-048) — Four reproducible demonstration outcomes
 

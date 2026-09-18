@@ -1,5 +1,20 @@
 # Design Decisions
 
+## 2026-09-18: Connect OMP through RPC, one process per contained participant
+
+- Reason: OMP already has a correlated headless protocol for prompts, aborts,
+  tool events, host tools, and usage. Translating that protocol at the adapter
+  edge keeps model and runtime details out of the controller.
+- Rejected alternative: parsing OMP's terminal UI would be brittle and could
+  mistake prose for a command. One shared OMP process with internal subagents
+  would also collapse the four workspace, role, credential, and resource
+  boundaries that define a Code Nest match.
+- Constraint: every participant gets a separate OMP process in its own contained
+  runtime. The connector never persists sessions, exposes raw thinking, inherits
+  host environment variables, or accepts OMP tool calls as trusted commands.
+  Autonomous write approval is permitted only behind the container policy and
+  the provider credential is a short-lived broker grant.
+
 ## 2026-09-18: Ship generated replay files as demonstrations, not claims
 
 - Reason: the final examples must be inspectable on any supported machine and

@@ -92,6 +92,37 @@ changes. Commands stay untrusted. Usage becomes Tier 2 `provider_usage` with
 summaries, private-chain-of-thought fields, non-cloneable output, budget overruns,
 provider failures, and deadlines fail closed.
 
+### OMP RPC connector
+
+The OMP connector translates the common runtime lifecycle into OMP's headless
+JSON-RPC interface. It waits for OMP's readiness frame, verifies the selected
+provider and model through `get_state`, registers one host tool for proposed
+Code Nest commands, and then drives one persistent OMP process per participant.
+The same connector class is instantiated four times; the participants do not
+share an OMP process, session, home, or workspace.
+
+OMP receives controller observations only when the application begins a turn.
+Its `code_nest_submit_command` calls are captured as untrusted command values
+and still pass through normal protocol parsing and participant authorization.
+Tool start/end events become bounded Tier 1 evidence. The final assistant text
+is a work note, not a public message or trusted fact. Thinking blocks, tool
+arguments, tool results, extension UI frames, and raw stderr text are discarded.
+
+The launch uses an explicit environment and passes no credential in arguments.
+Session persistence, discovered extensions, discovered skills, title changes,
+PTY execution, and OMP subagents are disabled. OMP's autonomous write approval
+is acceptable only inside the contained participant boundary described below;
+do not use this configuration as a host-side coding agent. For OpenAI, the key
+visible to OMP must be the participant's short-lived broker grant and
+`OPENAI_BASE_URL` must point at its private broker route, never directly at a
+long-lived provider credential.
+
+RPC lines, delivered observations, submitted commands, recorded evidence,
+startup, command responses, turns, output tokens, and shutdown are bounded.
+Malformed frames, model fallback, counter rollback, timeout, over-budget output,
+unexpected exit, and incomplete cleanup fail closed. Interrupt uses OMP's RPC
+abort command and keeps the process available for a later declared resume.
+
 ### Subprocess adapter v1
 
 The subprocess adapter launches a direct executable and argument vector without
