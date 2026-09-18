@@ -326,9 +326,9 @@
       "milestone": "M3-live-observatory",
       "title": "Observable work and artifact views",
       "user_visible_behavior": "A viewer can inspect labelled work notes, commands, terminal output, file changes, tests, usage, and artifacts without any claim of raw internal thought.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run apps/web/src/observatory/activity-feed.test.tsx", "make check"],
-      "evidence": "",
+      "evidence": "The focused activity-feed suite passed 9 of 9 tests. A pure projector turns authorized deliveries into causal work-note, provider-summary, command, terminal, file-change, local-test, message, commit, usage, and artifact records while preserving actor, phase, delivery sequence, resource cost, and source event. Agent work notes, provider summaries, and local tests are explicitly labelled self-reports with provenance; runtime facts are observed, controller captures attributed, and artifact references trusted. ANSI and OSC terminal hyperlinks are removed, previews and terminal tails are bounded, absolute/traversal/oversized filenames are rejected, and hostile Markdown, HTML, SVG, script, and authored links render only as escaped plain text. Artifact bodies never enter the feed; validated SHA-256 digests remain collapsed load-on-demand records. The responsive Workstream supports merged chronology, participant filtering, and per-agent lanes; in-app desktop and 390px inspection showed zero horizontal overflow and keyboard-addressable view switching. Vite production build passed. Final make check passed the 350-line guard, ESLint, six strict workspace typechecks, 47 test files, and 308 tests.",
       "notes": "Sanitize ANSI, Markdown, SVG, filenames, and untrusted text; AC 17."
     },
     {

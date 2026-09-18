@@ -50,6 +50,23 @@ container is healthy. A health label appears only after an authorized
 container-health event. Wide screens show four equal lanes, medium screens show
 two by two, and phones use one column without changing chronological meaning.
 
+## Observable Workstream
+
+The Workstream defaults to merged chronology and can switch to four participant
+lanes or filter one actor. Every card names its actor, round/phase, causal event,
+verification class, and provenance. Work notes and provider summaries say
+`self-report`; local tests say `untrusted self-report`; runtime commands and
+output say `observed`; captured commits say `attributed`; control-plane artifact
+references say `trusted`.
+
+Terminal and command bodies use a bounded plain-text code surface. Other text
+keeps whitespace but receives no Markdown or HTML interpretation. ANSI controls
+and terminal hyperlinks are removed before projection. Unsafe filenames do not
+produce cards. SVG and all other artifact content remain collapsed behind a
+digest-only `load on demand` record until the evidence inspector authorizes and
+sanitizes retrieval. Phones retain the merged chronology by default and stack
+per-agent lanes if that alternate view is chosen.
+
 ## Accessibility
 
 Core live and replay flows target WCAG 2.2 AA. Status never depends on color.

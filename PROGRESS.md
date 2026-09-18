@@ -14,20 +14,41 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-029` four concurrent agent lanes is the
+- **Branch/commit:** `main`; `CN-030` observable work and artifact views is the
   latest verified feature checkpoint.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 46 Vitest files, and 299 tests.
+  typechecks across six workspaces, 47 Vitest files, and 308 tests.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-030`, observable work and artifact views. Project
-  authorized work notes, commands, terminal output, file changes, tests, usage,
-  messages, and artifact references into a chronological or per-lane workstream
-  while sanitizing every untrusted presentation boundary.
+- **Next priority:** begin `CN-031`, the repository and evidence inspector. Add
+  authorized, load-on-demand artifact retrieval and let a selected citation or
+  Workstream event open its exact commit, diff, command output, test report,
+  candidate revision, visibility, causality, and digest context.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-18 (cn-030) — Observable work and artifact views
+
+- Outcome: done.
+- Did: added a Workstream domain and pure event projector beside the lane
+  projection. It creates chronological or per-agent cards for sourced work notes,
+  provider summaries, commands, terminal output, relative file changes, local
+  tests, messages, controller-attributed commits, measured usage, resource costs,
+  and digest-only artifact references. The sanitization boundary removes ANSI and
+  terminal hyperlink controls, bounds previews and tails, rejects unsafe paths,
+  and leaves Markdown, HTML, SVG, and links as escaped plain text. React never
+  receives trusted HTML and artifact content never travels inline.
+- Verification run: the focused suite passed 9 of 9 hostile-input, provenance,
+  projection, duplicate, artifact, and presentation cases. Desktop and 390px
+  in-app inspection verified readable evidence hierarchy, chronology/per-agent
+  switching, stacked phone cards, and zero horizontal overflow. Production Vite
+  bundling passed. Final `make check` passed the 350-line guard, ESLint, all six
+  strict workspace typechecks, 47 test files, and 308 tests.
+- Risks / follow-ups: CN-030 intentionally exposes artifact identities and safe
+  previews only. CN-031 adds the authenticated controller read route and evidence
+  inspector for exact content. CN-046 owns virtualization at 10,000 events.
 
 ### 2026-09-18 (cn-029) — Four concurrent agent lanes
 

@@ -1,5 +1,20 @@
 # Design Decisions
 
+## 2026-09-18: Project observable work as escaped plain-text evidence
+
+- Reason: runtime output, filenames, Markdown, messages, and artifact metadata
+  are participant-controlled evidence. They must remain inspectable without
+  becoming executable browser content or being mistaken for trusted thought.
+- Rejected alternative: rendering agent Markdown or SVG, honoring authored
+  links, or stripping only in React would create an injection path and make
+  replay depend on presentation code. Treating local tests and work notes as
+  verified facts would also overstate their provenance.
+- Constraint: the pure projector accepts only authorized delivered events,
+  removes ANSI/terminal controls, bounds plain-text previews, rejects unsafe
+  paths, labels self-report/observed/attributed/trusted evidence, and retains the
+  causal event ID. React never receives HTML. Artifacts remain validated digest
+  references and load on demand; CN-031 owns content inspection.
+
 ## 2026-09-18: Derive stable participant lanes from authorized facts
 
 - Reason: concurrent event arrival must not reorder participants or turn absent

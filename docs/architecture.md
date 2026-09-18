@@ -255,6 +255,31 @@ capabilities remain `Capabilities pending` or an explicit count rather than
 invented observations. Lane order never follows event arrival order. Unknown,
 malformed, foreign-participant, and repeated delivery updates cannot add or
 reorder lanes.
+
+## Observable workstream v1
+
+The Workstream is a second pure projection under `apps/web/src/observatory`.
+Its domain stores labelled activity items; its application layer translates
+authorized deliveries and sanitizes untrusted display data; React renders only
+the resulting plain-text model. The live composition sends each accepted
+delivery independently to the lane and Workstream reducers, so neither depends
+on the other's presentation state.
+
+Recognized facts cover agent-authored work notes, provider summaries with full
+provenance, commands, bounded terminal tails, relative file changes, local test
+self-reports, public messages, controller-attributed commits, adapter-measured
+usage, resource costs, and artifact digests. One source event may produce several
+items, but every item retains its source event ID and delivery sequence. Exact
+repeated or malformed deliveries cannot duplicate visible evidence.
+
+The sanitizer removes terminal control sequences, rejects absolute, traversal,
+empty-segment, oversized, and control-bearing filenames, normalizes text, and
+bounds previews. Markdown, HTML, SVG, and agent-authored link syntax remain
+plain text and are escaped by React; no `dangerouslySetInnerHTML` path exists.
+Artifact bodies never ride the event stream or render inline. The Workstream
+shows validated SHA-256 references as load-on-demand records; CN-031 owns the
+authorized artifact fetch and exact evidence inspector.
+
 This split preserves deterministic client ordering without revealing gaps made
 by covert, participant-private, post-reveal, or operator-private events.
 

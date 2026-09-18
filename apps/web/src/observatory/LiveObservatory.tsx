@@ -6,10 +6,15 @@ import type { RunMutation } from "../run-setup/client.js";
 import type { RunControlView, RunSetupConfiguration } from "../run-setup/domain.js";
 import { RunControls } from "../run-setup/RunControls.js";
 import { AgentLanes } from "./AgentLanes.js";
+import { ActivityFeed } from "./ActivityFeed.js";
 import {
   createAgentLaneState,
   projectAgentLanes,
 } from "./application/project-agent-lanes.js";
+import {
+  createActivityFeedState,
+  projectActivityFeed,
+} from "./application/project-activity-feed.js";
 
 export interface LiveObservatoryProps {
   readonly baseUrl: string;
@@ -45,6 +50,7 @@ export function LiveObservatory({
     [configuration.adapters],
   );
   const [lanes, setLanes] = useState(() => createAgentLaneState(participantSeeds));
+  const [activity, setActivity] = useState(createActivityFeedState);
   const [connection, setConnection] = useState<LiveConnectionState>({
     status: "connecting",
     attempt: 1,
@@ -54,12 +60,14 @@ export function LiveObservatory({
   useEffect(() => {
     const cancellation = new AbortController();
     setLanes(createAgentLaneState(participantSeeds));
+    setActivity(createActivityFeedState());
     const client = createLiveEventClient({ baseUrl });
     void client.follow(
       { runId: run.runId, bearerToken, signal: cancellation.signal },
       {
         onDelivery(delivery) {
           setLanes((current) => projectAgentLanes(current, delivery));
+          setActivity((current) => projectActivityFeed(current, delivery));
         },
         onState: setConnection,
       },
@@ -108,11 +116,10 @@ export function LiveObservatory({
 
         {controlError !== null && <p className="request-error" role="alert">{controlError}</p>}
         <AgentLanes state={lanes} />
-
-        <aside className="next-surface" aria-label="Observatory scope note">
-          <span>Next surface</span>
-          <p>Observable commands, files, tests, messages, and artifacts join these stable lanes in CN-030.</p>
-        </aside>
+        <ActivityFeed
+          state={activity}
+          participantIds={lanes.lanes.map(({ participantId }) => participantId)}
+        />
       </main>
     </div>
   );

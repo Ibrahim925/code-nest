@@ -7,6 +7,7 @@ import "./run-setup/run-setup.css";
 import "./styles.css";
 import "./observatory/observatory.css";
 import "./observatory/observatory-responsive.css";
+import "./observatory/activity-feed.css";
 
 const controllerUrl = import.meta.env.VITE_CONTROLLER_URL ?? "/api";
 

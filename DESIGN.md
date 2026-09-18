@@ -147,6 +147,11 @@ The system is rectilinear. Sheets have square corners; inputs and buttons use a 
 - **Protocol sheet:** paper background, square corners, one ambient shadow, cobalt heading block.
 - **Readiness record:** same paper material, sticky beside the protocol on wide screens.
 - **Ledger:** dark top rule followed by thin neutral row dividers.
+- **Workstream card:** white evidence record with one thin cobalt source rule,
+  factual title, monospace event context, text-labelled verification, and a
+  collapsed digest ledger for load-on-demand artifacts.
+- **Terminal surface:** bounded navy plain-text block inside an evidence card;
+  collapsed or scrollable output never expands the page without limit.
 
 ### Inputs / Fields
 
