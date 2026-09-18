@@ -216,9 +216,9 @@
       "milestone": "M2-governance-game",
       "title": "Bounded Town Hall and evidence citations",
       "user_visible_behavior": "Players complete evidence/accusation and defence/rebuttal passes, with each citation labelled valid, mismatched, or missing against the ledger.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run packages/core/src/town-hall.test.ts", "make check"],
-      "evidence": "",
+      "evidence": "The focused pure-core suite passed 6 of 6 tests: every active participant received one ordered turn in the evidence/accusation pass and one in the defence/rebuttal pass; explicit yields advanced without fabricating text; completion rejected later turns; messages were nonblank and capped at 4096 UTF-8 bytes; citations were unique and capped at eight; speaker-visible exact event-kind matches were valid, visible kind mismatches were mismatched, and both hidden and absent event IDs were missing without exposing actual kind metadata. Exact turn retries were idempotent, changed ID reuse conflicted, stale speakers and passes failed, malformed inputs failed, and identical input replay produced identical state. Final make check passed the 350-line guard, ESLint, six strict workspace typechecks, 31 test files, and 219 tests.",
       "notes": "Free-form text is allowed; state changes remain typed."
     },
     {

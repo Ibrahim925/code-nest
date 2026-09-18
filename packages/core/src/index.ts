@@ -16,3 +16,4 @@ export * from "./roles";
 export * from "./budget.js";
 export * from "./evidence-packet.js";
 export * from "./beliefs.js";
+export * from "./town-hall.js";

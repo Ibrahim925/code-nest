@@ -14,20 +14,43 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-019` private suspicion distributions is the
+- **Branch/commit:** `main`; `CN-020` bounded Town Hall is the
   latest verified feature checkpoint.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 30 Vitest files, and 213 tests.
+  typechecks across six workspaces, 31 Vitest files, and 219 tests.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-020`, bounded Town Hall and evidence citations.
-  Model the evidence/accusation and defence/rebuttal passes with deterministic
-  speaking limits, then classify each cited event as valid, mismatched, or missing
-  without judging the argument.
+- **Next priority:** begin `CN-021`, motions, ballots, sanctions, and appeals.
+  Model constitution-authorized governance actions, sealed ballots and closure,
+  quarantine and revert effects, appeal rights, and office replacement as pure
+  deterministic rules before adding durable adapters.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-17 (cn-020) — Add bounded Town Hall discussion
+
+- Outcome: done.
+- Did: added a pure deterministic two-pass Town Hall state machine. Each active
+  participant receives one ordered evidence/accusation turn and one ordered
+  defence/rebuttal turn, with explicit yield as a typed action. Free-form messages
+  are nonblank and capped at 4,096 UTF-8 bytes; each message may cite at most eight
+  unique stable event IDs. Citation validation consumes only the speaker-visible
+  evidence index: matching declared kind is `valid`, a visible different kind is
+  `mismatched`, and absent or hidden evidence is uniformly `missing`. Exact turn
+  retries are idempotent and changed reuse conflicts.
+- Verification run: the focused pure-core suite passed 6 of 6 cases covering both
+  passes, speaker order, yields, completion, valid/mismatched/missing citations,
+  no hidden actual-kind metadata, byte and citation limits, stale and malformed
+  input, duplicate/conflicting turns, and deterministic replay. Final `make check`
+  passed the 350-line guard, ESLint, all six workspace typechecks, 31 test files,
+  and 219 tests.
+- Risks / follow-ups: Version 1 deliberately grants one message opportunity per
+  active participant per pass; a future constitution that changes the allowance
+  needs a versioned configuration field. The controller must build the evidence
+  index with the existing sealed participant projector. CN-021 owns motions and
+  ballots; Town Hall text cannot mutate governance state directly.
 
 ### 2026-09-17 (cn-019) — Add private suspicion distributions
 

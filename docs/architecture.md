@@ -423,6 +423,25 @@ the recorded report even after the phase moves forward. The shared projector
 keeps it out of other participants and Clean spectator replay while sealed, then
 admits it to research replay after reveal. Public ballots remain separate events.
 
+## Bounded Town Hall v1
+
+`packages/core/src/town-hall.ts` owns a pure two-pass discussion state machine.
+The active roster is also the immutable speaking order. Every participant receives
+one evidence/accusation turn followed by one defence/rebuttal turn; an explicit
+yield consumes the opportunity without inventing speech. Typed state exposes the
+current pass, speaker, and remaining allowance. After the final rebuttal turn the
+discussion is terminal. Stable turn IDs make exact replay idempotent and reject
+changed reuse.
+
+Messages preserve their free-form text but must be nonblank and at most 4,096
+UTF-8 bytes. A message may cite up to eight unique event IDs and declare the event
+kind it claims to reference. The caller supplies an index built only from events
+visible to that speaker at that time. An exact ID/kind match is `valid`; a visible
+ID with a different kind is `mismatched`; anything unavailable is `missing`.
+Results never include the actual kind behind a mismatch, and hidden and absent
+IDs are indistinguishable. Town Hall output is discussion evidence only; motions,
+ballots, and sanctions cross the separate typed governance boundary.
+
 ## Failure behavior
 
 Model timeout, policy rejection, container exit, OOM, operator cancellation,

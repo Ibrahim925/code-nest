@@ -1,5 +1,21 @@
 # Design Decisions
 
+## 2026-09-17: Classify Town Hall citations from speaker-visible evidence only
+
+- Reason: discussion needs checkable references, but looking up citations against
+  the complete ledger would reveal that a hidden event exists. A prefiltered index
+  lets pure discussion rules distinguish a visible type mismatch while treating
+  hidden and absent IDs identically.
+- Rejected alternative: marking every existing ledger ID valid ignores whether the
+  speaker could see it and enables hidden-data probing. Letting free-form text
+  directly propose motions or sanctions would also bypass typed governance rules.
+- Constraint: each active participant receives one ordered opportunity in each of
+  two passes and may explicitly yield. Messages are bounded UTF-8 text with at most
+  eight unique citations. `valid` means the visible event ID and declared kind
+  match; `mismatched` means a visible ID has another kind; `missing` covers both
+  unavailable and nonexistent IDs without returning the actual kind. Turns use
+  stable IDs for exact retry and conflict detection.
+
 ## 2026-09-17: Keep private beliefs separate from public governance choices
 
 - Reason: a belief report measures what a participant privately thought before
