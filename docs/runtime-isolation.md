@@ -182,6 +182,21 @@ stderr, hidden identifiers, summaries, paths, source, traces, timings, host path
 container IDs, and the signing key never enter the returned report. The container
 and private staging directory are removed before success or failure returns.
 
+## Recovery outcomes
+
+Runtime boundaries report bounded structured failure signals to the recovery
+domain. An unexpected non-OOM exit, an inspected OOM kill, a model deadline, an
+observed policy mismatch, and incomplete removal are different outcomes. The
+public ledger fact contains only the fixed safe classification; raw stderr,
+container identifiers, engine errors, provider bodies, and host paths remain out
+of the event. A retry is never implicit: the outcome says when a declared retry
+is required, and the later retry uses its own audited command identity.
+
+After controller reconstruction, the coordinator reads the last committed
+sequence and records one idempotent restart outcome. Participant capability
+grants still fail closed and must be reissued; recovery does not revive an old
+credential or silently resume an adapter that lacks resume support.
+
 ## Verification expectations
 
 Isolation tests must attempt forbidden reads, mounts, network destinations,

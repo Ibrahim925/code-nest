@@ -1,5 +1,19 @@
 # Design Decisions
 
+## 2026-09-18: Persist recovery outcomes from a closed safe vocabulary
+
+- Reason: exception text may contain prompts, credentials, host paths, covert
+  details, or provider output. Recovery still needs a durable, distinguishable
+  record that survives reconstruction and can be shown to an observer.
+- Rejected alternative: persisting raw thrown errors creates a leakage channel.
+  One generic `failed` reason hides whether the cause was an OOM, timeout, crash,
+  rejected input, policy failure, cleanup failure, intervention, or cancellation.
+- Constraint: the recovery domain accepts only bounded structured signals and
+  emits fixed safe summaries. Every record requires a run-scoped idempotency key;
+  exact retries return the original event and changed reuse fails. Public outcome
+  events contain no arbitrary error text, host path, credential, covert role, or
+  hidden-test detail. Protected artifacts retain their existing visibility class.
+
 ## 2026-09-18: Window rendered events without truncating match history
 
 - Reason: a 10,000-event match must remain fully inspectable, but placing every

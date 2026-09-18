@@ -97,6 +97,21 @@ is not rewritten. Arbitrary artifact bytes remain the responsibility of their
 typed collection adapter because safely rewriting binary formats is not a ledger
 concern.
 
+## Recovery outcome boundary
+
+`apps/controller/src/recovery` owns the safe transition from exceptional runtime
+signals to inspectable facts. Its pure domain classifies adapter exit, OOM,
+timeout, invalid input, controller reconstruction, manual intervention,
+cancellation, policy violation, and failed cleanup. It emits fixed summaries and
+cannot accept a thrown error, provider response, or arbitrary diagnostic string.
+
+The application service requires run and command identity and writes through a
+`RecoveryJournal` port. The event-ledger adapter confirms the run exists, appends
+one public `recovery.outcome_recorded` fact, returns the original receipt for an
+exact retry, and rejects an idempotency key reused for another outcome. The live
+and replay Workstream projects these facts as controller-trusted evidence. Rich
+diagnostics remain separately protected artifacts and never enter this payload.
+
 ## State flow
 
 1. A typed command reaches the controller with an idempotency key.

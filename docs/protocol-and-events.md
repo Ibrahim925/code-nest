@@ -82,6 +82,15 @@ specific `kind` belongs to the command or event registry layered on top of this
 base envelope. A new kind does not change the base version, but a new control
 field, renamed field, changed meaning, or relaxed visibility rule does.
 
+`recovery.outcome_recorded` is an additive Version 1 event kind with a strict
+controller-owned payload: schema version, one enumerated reason and status, a
+fixed safe summary, optional participant identity, optional last durable
+sequence, and whether a declared retry is required. It never serializes a thrown
+error or runtime diagnostic. Crash, OOM, model timeout, rejected input,
+controller restart, intervention, cancellation, isolation failure, and cleanup
+failure remain distinct. Its causation ID is the required recovery idempotency
+key, so reconstruction cannot silently repeat a state-changing recovery action.
+
 ## Run setup v1
 
 `@code-nest/protocol` publishes a strict `RunSetupConfigurationSchema` and parser

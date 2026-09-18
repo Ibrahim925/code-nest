@@ -195,6 +195,26 @@ describe("authorized activity feed projection", () => {
     ]);
   });
 
+  it("renders controller recovery outcomes as inspectable trusted facts", () => {
+    const state = projectAll([delivery(1, "recovery.outcome_recorded", {
+      schemaVersion: "1.0",
+      reason: "out_of_memory",
+      status: "failed",
+      summary: "Participant runtime exceeded its memory limit.",
+      participantId: "player-b",
+      lastDurableSequence: null,
+      retryRequired: true,
+    })]);
+    expect(state.items).toEqual([expect.objectContaining({
+      category: "recovery",
+      title: "Recovery · out of memory",
+      participantId: "player-b",
+      verification: "trusted",
+      provenance: "Controller recovery coordinator",
+    })]);
+    expect(state.items[0]?.body?.text).toContain("Declared retry required");
+  });
+
   it("ignores repeated and malformed deliveries without duplicating evidence", () => {
     const initial = projectActivityFeed(
       createActivityFeedState(),

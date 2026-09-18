@@ -513,9 +513,9 @@
       "milestone": "M5-research-and-demo-package",
       "title": "Recovery and information-leakage hardening",
       "user_visible_behavior": "Adapter crash, controller restart, OOM, timeout, invalid input, manual intervention, and cancellation produce distinct inspectable outcomes without duplicating actions or leaking protected information.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run tests/e2e/recovery-and-leakage.test.ts", "make check"],
-      "evidence": "",
+      "evidence": "2026-09-18: the cross-system E2E passed with nine distinct safe outcomes for adapter crash, OOM, model timeout, invalid input, controller restart, manual intervention, operator cancellation, policy violation, and cleanup failure. Reopening the same SQLite ledger twice recovered the durable run, returned the original event for an exact recovery retry, rejected changed idempotency-key reuse, preserved gap-free sequences, and then recorded cancellation. A planted secret was checked in raw SQLite rows, invalid HTTP responses, authorized and denied artifact reads, Workstream projection, and Clean replay bytes: pre-persistence redaction removed it from events, the covert artifact returned the same 404 as absence, and Clean export omitted its digest and bytes while preserving contiguous delivery order. Three focused suites passed 14/14, the production build passed, and make check passed the 350-line guard, lint, six strict workspace typechecks, 75 test files, and 428 tests.",
       "notes": "Inspect serialized API responses, persisted events, artifacts, and replay bundles; SPEC section 24."
     },
     {

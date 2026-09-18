@@ -14,21 +14,46 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-046` accessibility and event-scale quality is the latest
+- **Branch/commit:** `main`; `CN-047` recovery and leakage hardening is the latest
   verified feature checkpoint.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 73 Vitest files, and 423 tests, including the
-  10,000-event/four-stream stress path, accessibility contract, Constitution
-  Lab, matched constitution runner, Greenhouse Scheduler, Snake tutorial,
-  heterogeneous match, direct-provider loop, and real adversarial isolation,
-  cleanup, redaction, trusted-test, credential, TLS, and Docker boundaries.
+  typechecks across six workspaces, 75 Vitest files, and 428 tests, including
+  recovery/restart and serialized-leakage inspection, the 10,000-event/four-
+  stream stress path, accessibility contract, Constitution Lab, matched runner,
+  all three scenarios, heterogeneous match, direct-provider loop, and real
+  adversarial isolation, cleanup, redaction, trusted-test, credential, TLS, and
+  Docker boundaries.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-047`, recovery and leakage hardening.
+- **Next priority:** begin `CN-048`, four reproducible demonstration outcomes.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-18 (cn-047) — Recovery and information-leakage hardening
+
+- Outcome: done.
+- Did: added a recovery hexagon whose pure domain maps bounded runtime signals
+  to distinct fixed safe outcomes for adapter crash, OOM, model timeout, invalid
+  input, controller restart, manual intervention, cancellation, policy violation,
+  and cleanup failure. Its application use case requires run and command
+  identities; the SQLite-ledger adapter rejects unknown runs, deduplicates exact
+  retries across reconstruction, and rejects changed key reuse. Live and replay
+  Workstream projection exposes those facts as trusted evidence without accepting
+  arbitrary exception text.
+- Verification run: the cross-system E2E passed after opening the same SQLite
+  database across two controller reconstructions. It proved nine distinct
+  outcomes, gap-free persistence, one exact retry with no duplicate event,
+  changed-retry rejection, lifecycle recovery from the durable run state, and
+  operator cancellation. Raw SQLite rows, invalid HTTP responses, authorized
+  artifact reads, denied covert artifact reads, and Clean replay serialization
+  were inspected with a planted secret; the secret appeared nowhere outside its
+  protected artifact bytes, and the Clean bundle omitted that artifact entirely.
+  Three focused suites passed 14 of 14 checks, the production Vite build passed,
+  and final `make check` passed the 350-line guard, ESLint, all six strict
+  workspace typechecks, 75 test files, and 428 tests.
+- Remaining: one feature.
 
 ### 2026-09-18 (cn-046) — Accessible 10,000-event Observatory
 

@@ -8,6 +8,7 @@ export type ActivityCategory =
   | "message"
   | "commit"
   | "usage"
+  | "recovery"
   | "artifact";
 
 export type VerificationLabel =

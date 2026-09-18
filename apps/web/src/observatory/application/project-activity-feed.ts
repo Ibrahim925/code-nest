@@ -201,6 +201,22 @@ function drafts(kind: string, payload: UnknownRecord): readonly ItemDraft[] {
       "Participant-submitted message · self-report", participantId,
     )];
   }
+  if (kind === "recovery.outcome_recorded") {
+    const reason = shortText(payload.reason, 80);
+    const status = shortText(payload.status, 40);
+    const summary = sanitizeUntrustedText(payload.summary, 300);
+    if (reason === null || status === null || summary === null ||
+      typeof payload.retryRequired !== "boolean") return [];
+    const retry = payload.retryRequired ? "Declared retry required" : "No automatic retry";
+    return [factualItem(
+      `Recovery · ${reason.replaceAll("_", " ")}`,
+      "recovery",
+      sanitizeUntrustedText(`${summary.text}\n${status} · ${retry}`, 500),
+      "trusted",
+      "Controller recovery coordinator",
+      identifier(payload.participantId),
+    )];
+  }
   return [];
 }
 
