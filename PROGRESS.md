@@ -14,20 +14,47 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-020` bounded Town Hall is the
+- **Branch/commit:** `main`; `CN-021` constitution-driven governance is the
   latest verified feature checkpoint.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 31 Vitest files, and 219 tests.
+  typechecks across six workspaces, 32 Vitest files, and 231 tests.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-021`, motions, ballots, sanctions, and appeals.
-  Model constitution-authorized governance actions, sealed ballots and closure,
-  quarantine and revert effects, appeal rights, and office replacement as pure
-  deterministic rules before adding durable adapters.
+- **Next priority:** begin `CN-022`, the Open Merge constitution preset. Supply
+  immutable rule data that automatically accepts valid submitted patches, forbids
+  participant quarantine, and retains paid audit and revert options through the
+  shared governance engine.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-18 (cn-021) — Add constitution-driven governance rules
+
+- Outcome: done.
+- Did: added a pure generic governance engine split into contracts,
+  proposal/voting rules, and ballot closure/effects. Constitution data selects who
+  may propose, the immutable active electorate, and either a fixed approval count
+  or simple majority. Motions cover audit funding, patch accept/delay/reject/
+  quarantine/revert, participant quarantine and one sanction-linked appeal, and
+  office replacement. Votes remain sealed in trusted state; public projection
+  exposes only submission count until deterministic closure publishes every vote.
+  Missing deadline votes become visibly unsubmitted abstentions. Passed motions
+  apply typed effects; rejected motions preserve state. Stable IDs make exact vote
+  and close retries idempotent and changed reuse fail closed.
+- Verification run: the focused suite passed 12 of 12 behavioral cases, including
+  non-author electorates, fixed and majority thresholds, early and deadline close,
+  explicit and implicit abstention, every patch disposition, both quarantine
+  types, appeal rights and exhaustion, audit authorization, office replacement,
+  sealed public projection, malformed rules, unauthorized actions, conflicts, and
+  deterministic replay. Final `make check` passed the 350-line guard, ESLint, all
+  six workspace typechecks, 32 test files, and 231 tests.
+- Risks / follow-ups: this feature defines rule evaluation and effects, not the
+  three presets; CN-022 through CN-024 provide reviewed immutable rule data.
+  Governance persistence and command transport must store motion, private vote,
+  ballot closure, and effect as separate visibility-correct events. Audit and
+  revert effects still require their existing budget/side-effect ports before
+  controller execution; a passed ballot is authorization, not proof of execution.
 
 ### 2026-09-17 (cn-020) — Add bounded Town Hall discussion
 

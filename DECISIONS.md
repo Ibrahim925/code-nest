@@ -1,5 +1,23 @@
 # Design Decisions
 
+## 2026-09-18: Evaluate governance from rule data and snapshot each electorate
+
+- Reason: three constitutions share motion and ballot mechanics but differ in who
+  may act and how many approvals are required. Rule data keeps one deterministic
+  engine and prevents constitution-name branches from drifting. Snapshotting the
+  electorate when a motion opens prevents a concurrent sanction from changing its
+  threshold or eligible voters midway through the ballot.
+- Rejected alternative: a separate state machine per constitution would duplicate
+  sealing, deadline, abstention, retry, and effect rules. Publishing choices as
+  votes arrive would bias later voters and violate sealed-ballot semantics.
+- Constraint: one ballot is open at a time. Trusted state retains sealed choices;
+  public projection exposes only submitted count until closure. Closure occurs
+  after every eligible voter submits or at the injected deadline, when absences
+  become labelled unsubmitted abstentions. Passed motions return typed effects;
+  budgeted or external effects remain authorization until their application ports
+  succeed. An appeal names one passed quarantine sanction, has one bounded target
+  statement, excludes the quarantined target from voting, and cannot be repeated.
+
 ## 2026-09-17: Classify Town Hall citations from speaker-visible evidence only
 
 - Reason: discussion needs checkable references, but looking up citations against

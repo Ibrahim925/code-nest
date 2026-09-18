@@ -442,6 +442,34 @@ Results never include the actual kind behind a mismatch, and hidden and absent
 IDs are indistinguishable. Town Hall output is discussion evidence only; motions,
 ballots, and sanctions cross the separate typed governance boundary.
 
+## Constitution-driven governance v1
+
+The governance core is split by behavioral ownership. `governance-types.ts`
+defines motions, rules, ballots, effects, and state; `governance.ts` validates
+state, opens authorized motions, snapshots electorates, and accepts sealed votes;
+`governance-ballot.ts` closes ballots, publishes choices, and applies passed
+effects. None imports a controller, clock, database, or constitution preset.
+
+A motion rule selects an active participant, the sanctioned target, or a named
+office holder as proposer; selects all active voters, active non-authors, or active
+voters excluding the target; and specifies a fixed approval count or simple
+majority. The electorate and threshold are fixed when the ballot opens. One ballot
+is open at a time. Exact votes retry after the deadline without changing state;
+changed votes conflict. An early close requires every eligible submission; a
+deadline close turns each absence into an unsubmitted abstention.
+
+Open-ballot public projection includes the motion, electorate, threshold,
+deadline, and number submitted but never choices. Closure publishes all choices
+and a passed or rejected result separately from private beliefs. Passed effects
+cover audit authorization, patch disposition, participant status, and office
+holder changes. External work such as spending credits, executing an audit, or
+reverting Git remains pending until its controller port succeeds.
+
+A participant appeal references the exact passed quarantine motion and includes a
+bounded statement. Its constitution rule must grant proposal authority to the
+quarantined target; only active players enter the appeal electorate. A sanction
+can be appealed once, including when that appeal is rejected.
+
 ## Failure behavior
 
 Model timeout, policy rejection, container exit, OOM, operator cancellation,

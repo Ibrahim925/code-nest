@@ -227,9 +227,9 @@
       "milestone": "M2-governance-game",
       "title": "Motions, ballots, sanctions, and appeals",
       "user_visible_behavior": "Players can propose allowed motions, vote or abstain, quarantine work or participants, appeal, revert, and replace an office holder under constitution rules.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run packages/core/src/governance.test.ts", "make check"],
-      "evidence": "",
+      "evidence": "The focused pure-core governance suite passed 12 of 12 tests: data-driven proposer, electorate, and threshold rules authorized motions without branching on constitution names; patch acceptance, delay, rejection, quarantine and revert effects applied only after passed ballots; participant quarantine removed the target from the electorate; one target-authored appeal linked to the exact passed sanction could restore activity while the appellant could not vote; audit authorization and office replacement produced typed effects; open-ballot public projection exposed only submission count; completed ballots published approve, reject, explicit-abstain, and deadline-generated unsubmitted-abstain records; exact votes and closure retried idempotently; changed votes, late votes, duplicate/open motions, unauthorized proposers, disallowed motions, impossible thresholds, malformed state, and early closure failed deterministically. Final make check passed the 350-line guard, ESLint, six strict workspace typechecks, 32 test files, and 231 tests.",
       "notes": "Ballots close deterministically and publish votes separately from private beliefs; AC 12."
     },
     {
