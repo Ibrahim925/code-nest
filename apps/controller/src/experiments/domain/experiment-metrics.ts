@@ -21,6 +21,24 @@ export const EXPERIMENT_METRIC_KEYS = Object.freeze([
 
 export type ExperimentMetricKey = (typeof EXPERIMENT_METRIC_KEYS)[number];
 
+export type ExperimentPhase =
+  | "belief"
+  | "briefing"
+  | "completion"
+  | "evidence"
+  | "governance"
+  | "integration"
+  | "town_hall"
+  | "work";
+
+export interface ExperimentPhasePoint {
+  readonly round: number;
+  readonly phase: ExperimentPhase;
+  readonly evidenceEvents: number;
+  readonly governanceCreditsSpent: number;
+  readonly decisionCount: number;
+}
+
 export interface ExperimentObservation {
   readonly delivery: {
     readonly legitimateSuccess: boolean;
@@ -38,6 +56,7 @@ export interface ExperimentObservation {
     readonly creditsSpent: number;
     readonly falseQuarantine: boolean;
   };
+  readonly phaseTrace: readonly ExperimentPhasePoint[];
 }
 
 export type ExperimentMetricSummary = Readonly<Record<ExperimentMetricKey, MetricSummary>>;
@@ -59,7 +78,15 @@ export function validateExperimentObservation(observation: ExperimentObservation
       !bounded(observation.belief.calibrationBrier, 0, 2)) ||
     !Number.isFinite(observation.governance.teamUtility) ||
     !bounded(observation.governance.creditsSpent, 0, Infinity) ||
-    typeof observation.governance.falseQuarantine !== "boolean"
+    typeof observation.governance.falseQuarantine !== "boolean" ||
+    !Array.isArray(observation.phaseTrace) || observation.phaseTrace.length === 0 ||
+    observation.phaseTrace.some((point) =>
+      !Number.isSafeInteger(point.round) || point.round < 1 || point.round > 3 ||
+      !["belief", "briefing", "completion", "evidence", "governance", "integration", "town_hall", "work"]
+        .includes(point.phase) ||
+      !Number.isSafeInteger(point.evidenceEvents) || point.evidenceEvents < 0 ||
+      !bounded(point.governanceCreditsSpent, 0, Infinity) ||
+      !Number.isSafeInteger(point.decisionCount) || point.decisionCount < 0)
   ) {
     throw new ConstitutionExperimentError(
       "INVALID_TRIAL_OBSERVATION",

@@ -29,6 +29,7 @@ function copyObservation(observation: ExperimentObservation): ExperimentObservat
     security: Object.freeze({ ...observation.security }),
     belief: Object.freeze({ ...observation.belief }),
     governance: Object.freeze({ ...observation.governance }),
+    phaseTrace: Object.freeze(observation.phaseTrace.map((point) => Object.freeze({ ...point }))),
   });
 }
 

@@ -1,5 +1,20 @@
 # Design Decisions
 
+## 2026-09-18: Put distributions before stories in Constitution Lab
+
+- Reason: individual matches are vivid but stochastic. Researchers need the
+  repetition count, uncertainty, failures, and missing observations before an
+  anecdote can shape their reading of the experiment.
+- Rejected alternative: a row of headline score cards hides intervals and makes
+  three conditions look definitive. One combined runtime label would also erase
+  the split/contained security boundary. A chart without a data table would make
+  exact values harder to inspect with assistive technology.
+- Constraint: the comparison ledger leads with all three distributions and a
+  labelled security-productivity frontier. Every metric includes a 95% interval,
+  observed count, and missing count. Runtime and method provenance stays visible.
+  Same-seed run inspection comes afterward and aligns evidence, spending, and
+  decisions by round and phase. Local imported files never leave the browser.
+
 ## 2026-09-18: Compare constitutions with matched trials and explicit missingness
 
 - Reason: model output varies between runs, so one match cannot support an

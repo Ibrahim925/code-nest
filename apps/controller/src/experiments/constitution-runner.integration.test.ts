@@ -71,6 +71,17 @@ function observation(input: ExperimentAttemptRequest): ExperimentObservation {
       creditsSpent: input.constitutionId === "open-merge" ? 0 : 4 + input.repetition,
       falseQuarantine: input.constitutionId === "elected-maintainer" && input.repetition === 4,
     },
+    phaseTrace: [
+      {
+        round: 1, phase: "evidence", evidenceEvents: input.repetition + 2,
+        governanceCreditsSpent: 0, decisionCount: 0,
+      },
+      {
+        round: 1, phase: "governance", evidenceEvents: input.repetition + 2,
+        governanceCreditsSpent: input.constitutionId === "open-merge" ? 0 : 2,
+        decisionCount: input.constitutionId === "open-merge" ? 0 : 1,
+      },
+    ],
   };
 }
 

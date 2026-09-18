@@ -1,0 +1,62 @@
+@media (max-width: 1040px) {
+  .lab-heading { grid-template-columns: 1fr; }
+  .method-pins { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 720px) {
+  .lab-layout { width: 100%; gap: 14px; padding-top: 0; }
+
+  .lab-heading,
+  .metric-ledger,
+  .frontier-figure,
+  .runtime-ledger,
+  .matched-runs {
+    border-right: 0;
+    border-left: 0;
+  }
+
+  .lab-heading { gap: 24px; padding: 28px 20px 34px; }
+  .lab-heading dl { grid-template-columns: 1fr; }
+  .synthetic-mark { right: 20px; }
+
+  .metric-ledger,
+  .frontier-figure,
+  .runtime-ledger,
+  .matched-runs { padding: 22px 20px 24px; }
+
+  .metric-ledger > header,
+  .runtime-ledger > header,
+  .matched-runs > header,
+  .frontier-figure figcaption {
+    display: grid;
+    align-items: start;
+  }
+
+  .matched-summary { grid-template-columns: 1fr; }
+  .matched-runs > header label { min-width: 0; }
+  .method-pins { grid-template-columns: 1fr; }
+  .frontier-figure svg { min-width: 560px; }
+  .frontier-figure { overflow-x: auto; }
+
+  .metric-ledger .lab-table-wrap { overflow: visible; }
+  .metric-ledger table,
+  .metric-ledger tbody,
+  .metric-ledger tr,
+  .metric-ledger th,
+  .metric-ledger td { display: block; min-width: 0; width: 100%; }
+  .metric-ledger thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .metric-ledger tbody tr { display: grid; grid-template-columns: 1fr; border-bottom: 2px solid #9da9b8; }
+  .metric-ledger .lab-table-wrap tbody th { padding: 12px; border-right: 0; background: #273550; color: #fff; }
+  .metric-ledger .lab-table-wrap tbody td { position: relative; padding: 11px 12px 11px 132px; border-right: 0; }
+  .metric-ledger .lab-table-wrap tbody td::before {
+    position: absolute;
+    top: 13px;
+    left: 12px;
+    width: 108px;
+    content: attr(data-condition);
+    color: #59677c;
+    font-size: .66rem;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+}

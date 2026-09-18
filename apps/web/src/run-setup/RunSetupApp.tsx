@@ -1,5 +1,8 @@
 import { useMemo, useState } from "react";
 
+import { ComparisonImportControl } from "../constitution-lab/ComparisonImportControl.js";
+import { ConstitutionLab } from "../constitution-lab/ConstitutionLab.js";
+import type { LabComparison } from "../constitution-lab/domain/comparison.js";
 import { LiveObservatory } from "../observatory/LiveObservatory.js";
 import type { ReplayBundle } from "@code-nest/protocol";
 import { ReplayImportControl } from "../replay/ReplayImportControl.js";
@@ -40,6 +43,7 @@ export function RunSetupApp({
   const [pendingAction, setPendingAction] = useState<"start" | RunMutation | null>(null);
   const [requestError, setRequestError] = useState<string | null>(null);
   const [replay, setReplay] = useState<ReplayBundle | null>(null);
+  const [comparison, setComparison] = useState<LabComparison | null>(null);
   const validation = useMemo(
     () => validateRunSetup(configuration, SETUP_CATALOG),
     [configuration],
@@ -49,6 +53,10 @@ export function RunSetupApp({
 
   if (replay !== null) {
     return <ReplayViewer bundle={replay} onClose={() => setReplay(null)} />;
+  }
+
+  if (comparison !== null) {
+    return <ConstitutionLab comparison={comparison} onClose={() => setComparison(null)} />;
   }
 
   const start = async () => {
@@ -197,6 +205,7 @@ export function RunSetupApp({
           </p>
 
           <ReplayImportControl onLoad={setReplay} />
+          <ComparisonImportControl onLoad={setComparison} />
         </aside>
       </main>
     </div>

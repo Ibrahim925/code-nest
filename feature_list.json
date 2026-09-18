@@ -491,9 +491,9 @@
       "milestone": "M5-research-and-demo-package",
       "title": "Constitution Lab comparison UI",
       "user_visible_behavior": "A researcher can compare outcomes across constitutions, models, and runtimes without hiding uncertainty, failures, execution modes, observability tiers, or missing values.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run apps/web/src/constitution-lab/comparison.test.tsx", "make check"],
-      "evidence": "",
+      "evidence": "2026-09-18: comparison.test.tsx passed 5/5 cases and the linked experiment runner passed 5/5, covering aggregate-first distributions, 95% intervals, missing/failure counts, accessible chart/table parity, runtime-mode and observability disclosure, local import validation, and phase-aligned matched runs; the Vite production build and bounded desktop/mobile visual review passed; make check passed the 350-line guard, lint, all workspace typechecks, 71 test files, and 414 tests.",
       "notes": "Never pool split and contained modes silently."
     },
     {

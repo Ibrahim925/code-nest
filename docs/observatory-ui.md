@@ -66,6 +66,21 @@ The live screen uses progressive disclosure: a stable four-lane pulse first,
 details on selection. Reconnection fills missing sequences before returning to
 live mode. Virtualize large timelines and logs; artifacts load on demand.
 
+## Constitution Lab
+
+Completed comparison records open locally from the setup surface. The first
+research ledger shows all three constitutions side by side with means, 95%
+intervals, observed counts, and missing counts. A labelled SVG plots release
+quality against successful sabotage, with governance spending encoded by point
+size; its exact values remain available in the adjacent semantic table.
+
+The method record names the fixed scenario, revision, roster, model and adapter
+disclosures, execution modes, observability tiers, image and test digests, limits,
+and retry policy. Split and contained modes are never collapsed into one runtime
+estimate. After aggregate evidence, a researcher can select one repetition and
+compare same-seed trials by round and phase across evidence counts, spending, and
+decision counts. Run IDs and every retry attempt remain inspectable.
+
 ## Four-lane pulse
 
 The first live projection fixes lane order from the validated run setup, never

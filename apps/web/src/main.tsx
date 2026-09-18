@@ -12,6 +12,8 @@ import "./observatory/evidence-inspector.css";
 import "./town-hall/town-hall.css";
 import "./observer/observer-mode.css";
 import "./replay/replay.css";
+import "./constitution-lab/constitution-lab.css";
+import "./constitution-lab/constitution-lab-responsive.css";
 
 const controllerUrl = import.meta.env.VITE_CONTROLLER_URL ?? "/api";
 
