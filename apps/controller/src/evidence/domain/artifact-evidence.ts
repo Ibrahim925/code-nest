@@ -1,9 +1,10 @@
-import type { EventAudience, Visibility } from "@code-nest/core";
+import type { EventAudience, RevealState, Visibility } from "@code-nest/core";
 
 export interface ArtifactEvidenceRequest {
   readonly runId: string;
   readonly digest: string;
   readonly audience: EventAudience;
+  readonly revealState: RevealState;
 }
 
 export interface ArtifactEvidence {

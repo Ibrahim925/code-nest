@@ -21,7 +21,7 @@ export class ArtifactStoreEvidenceReader implements ArtifactEvidenceReader {
         runId: request.runId,
         digest: request.digest,
         audience: request.audience,
-        revealState: "sealed",
+        revealState: request.revealState,
       });
       if (artifact === undefined) return undefined;
       return {

@@ -57,6 +57,7 @@ describe("authenticated fetch SSE transport", () => {
     expect(requests[0]?.init?.headers).toMatchObject({
       authorization: "Bearer observer-secret",
       "last-event-id": "event-1",
+      "x-code-nest-observer-view": "1",
     });
     expect(frames).toEqual([
       { id: "event-2", event: "code-nest-event", data: "delivery" },

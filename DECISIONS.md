@@ -1,5 +1,22 @@
 # Design Decisions
 
+## 2026-09-18: Make browser projection purpose explicit
+
+- Reason: the local operator credential controls run mutations, but the same
+  browser must not silently receive operator-private infrastructure events. The
+  Observatory needs the run's durable clean, unblinded, or revealed research
+  perspective independently of the credential's maximum authority.
+- Rejected alternative: treating every operator-authenticated SSE or artifact
+  request as an operator view leaks private and infrastructure evidence into the
+  normal UI. Keeping observer mode only in browser state lets a reload or crafted
+  request bypass the audit mark. Query-string mode and credentials would leak via
+  URLs.
+- Constraint: browser evidence requests carry a fixed observer-purpose header;
+  the controller derives actual mode and reveal state from the ledger. Direct
+  operator clients that omit the header retain infrastructure access. Unblinding
+  is operator-only, bodyless, idempotent, public, permanent, and sets benchmark
+  eligibility false. Post-match reveal never exposes operator-private data.
+
 ## 2026-09-18: Project Town Hall from authorized facts, not component state
 
 - Reason: discussion, sealed-ballot progress, published votes, sanctions, costs,

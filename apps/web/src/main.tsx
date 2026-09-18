@@ -10,6 +10,7 @@ import "./observatory/observatory-responsive.css";
 import "./observatory/activity-feed.css";
 import "./observatory/evidence-inspector.css";
 import "./town-hall/town-hall.css";
+import "./observer/observer-mode.css";
 
 const controllerUrl = import.meta.env.VITE_CONTROLLER_URL ?? "/api";
 

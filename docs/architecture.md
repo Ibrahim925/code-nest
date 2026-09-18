@@ -98,6 +98,27 @@ submitted. A passed ballot records authority; a separate effect event or existin
 governance spend event records controller-confirmed execution or cost. Citations
 select matching authorized Workstream evidence by stable event ID.
 
+## Observer mode boundary
+
+`apps/controller/src/observer` is a feature-oriented hexagon over the existing
+event ledger. Its pure domain projection derives Clean, unblinded, and post-match
+reveal state. The application service exposes queries plus one idempotent unblind
+command; the ledger adapter appends the public `observer_unblinded` audit fact.
+No mutable mode table or database migration is required.
+
+Authentication authority and presentation perspective are separate. Browser SSE
+and artifact requests identify themselves as Observatory reads in a header, then
+the controller derives audience and reveal state from durable run events. Thus an
+operator credential can still mutate a local run without granting the browser an
+operator-private evidence projection. Direct infrastructure clients omit that
+purpose header when they deliberately need operator access.
+
+Unblinding permanently sets benchmark eligibility false. Post-match role reveal
+unlocks participant-private, covert, and post-reveal research facts, but
+operator-private credentials, host paths, and infrastructure diagnostics remain
+excluded. A change in durable mode rebuilds browser projections from the stream
+start so newly authorized historical events are not skipped by an old cursor.
+
 ## Event ledger v1
 
 `apps/controller/src/ledger` owns the first durable store. It uses the SQLite

@@ -1,10 +1,14 @@
 import { timingSafeEqual } from "node:crypto";
 
-import type { EventAudience } from "@code-nest/core";
+import type { EventAudience, RevealState } from "@code-nest/core";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 import type { ArtifactEvidenceUseCases } from "../application/read-artifact-evidence.js";
 import { ArtifactEvidenceError } from "../domain/artifact-evidence.js";
+import {
+  ObserverModeError,
+  type ObserverModeUseCases,
+} from "../../observer/application/observer-mode.js";
 
 const IDENTIFIER = /^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/;
 const DIGEST = /^sha256:[a-f0-9]{64}$/;
@@ -12,6 +16,11 @@ const DIGEST = /^sha256:[a-f0-9]{64}$/;
 interface ArtifactRouteOptions {
   readonly operatorToken: string;
   readonly observerToken: string;
+  readonly observerModes: ObserverModeUseCases;
+}
+
+interface ArtifactAuthority {
+  readonly kind: "operator" | "observer";
 }
 
 function errorResponse(code: string, message: string) {
@@ -36,13 +45,31 @@ function tokensMatch(actual: string | undefined, expected: string): boolean {
 function authenticate(
   request: FastifyRequest,
   options: ArtifactRouteOptions,
-): EventAudience | undefined {
+): ArtifactAuthority | undefined {
   const bearer = presentedBearer(request);
   if (tokensMatch(bearer, options.operatorToken)) return { kind: "operator" };
-  if (tokensMatch(bearer, options.observerToken)) {
-    return { kind: "observer", mode: "clean" };
-  }
+  if (tokensMatch(bearer, options.observerToken)) return { kind: "observer" };
   return undefined;
+}
+
+function projection(
+  request: FastifyRequest,
+  authority: ArtifactAuthority,
+  runId: string,
+  options: ArtifactRouteOptions,
+): { audience: EventAudience; revealState: RevealState } {
+  const observerView = request.headers["x-code-nest-observer-view"] === "1";
+  if (authority.kind === "operator" && !observerView) {
+    return { audience: { kind: "operator" }, revealState: "sealed" };
+  }
+  try {
+    return options.observerModes.artifactAudience(runId);
+  } catch (error: unknown) {
+    if (error instanceof ObserverModeError && error.code === "RUN_NOT_FOUND") {
+      return { audience: { kind: "observer", mode: "clean" }, revealState: "sealed" };
+    }
+    throw error;
+  }
 }
 
 function sendFailure(reply: FastifyReply, error: unknown): FastifyReply {
@@ -71,8 +98,8 @@ export function registerArtifactRoutes(
   app.get<{ Params: { runId: string; digest: string } }>(
     "/runs/:runId/artifacts/:digest",
     async (request, reply) => {
-      const audience = authenticate(request, options);
-      if (audience === undefined) {
+      const authority = authenticate(request, options);
+      if (authority === undefined) {
         return reply.code(401).send(errorResponse(
           "UNAUTHORIZED",
           "Valid artifact authorization is required.",
@@ -86,7 +113,8 @@ export function registerArtifactRoutes(
         ));
       }
       try {
-        const artifact = await service.read({ runId, digest, audience });
+        const { audience, revealState } = projection(request, authority, runId, options);
+        const artifact = await service.read({ runId, digest, audience, revealState });
         if (artifact === undefined) {
           return reply.code(404).send(errorResponse(
             "ARTIFACT_NOT_FOUND",

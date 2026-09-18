@@ -28,6 +28,14 @@ Unblinded researcher mode is an audited intervention that changes benchmark
 eligibility. Post-match reveal unlocks covert roles, objectives, and eligible
 private beliefs only after the match ends.
 
+The active mode is always visible directly below the run bar. Clean spectator
+says both `Benchmark eligible` and that only public evidence is projected.
+Unblinding requires a two-step control whose confirmation names the permanent
+public audit event, newly visible private research evidence, and exclusion from
+unattended benchmark aggregates. After success, a persistent `Unblinded
+researcher · Benchmark ineligible` banner replaces the control. Post-match reveal
+has a separate label and preserves any earlier ineligibility.
+
 Never label text as an agent's internal thought. Use “work note,” “submitted
 rationale,” or a provider-specific reasoning-summary label with provenance.
 

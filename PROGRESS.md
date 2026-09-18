@@ -14,20 +14,47 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-032` Town Hall and governance surface is the
+- **Branch/commit:** `main`; `CN-033` observer modes and audited unblinding is the
   latest verified feature checkpoint.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 51 Vitest files, and 329 tests.
+  typechecks across six workspaces, 54 Vitest files, and 341 tests.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-033`, observer modes and audited unblinding. Keep
-  Clean spectator output sealed, require an explicit audited intervention for
-  unblinded viewing, expose the current perspective throughout the Observatory,
-  and make benchmark ineligibility permanent after intervention.
+- **Next priority:** begin `CN-034`, portable deterministic replay. Export a
+  completed or cancelled run with its authorized event projection and immutable
+  artifacts, then reconstruct synchronized discussion, governance, beliefs,
+  repository evidence, reveal, and metrics without live services.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-18 (cn-033) — Observer modes and audited unblinding
+
+- Outcome: done.
+- Did: added a controller observer-mode hexagon whose pure domain projection
+  derives Clean, unblinded, and post-match state from existing ledger events. The
+  operator-only bodyless unblind command appends one idempotent public
+  `observer_unblinded` fact and permanently removes benchmark eligibility;
+  initially unblinded run setup emits the same explicit fact. Browser event and
+  artifact requests now declare Observatory purpose, separating presentation
+  perspective from the operator credential used for local controls. The server,
+  not the browser, derives visibility and reveal state. Mode changes restart the
+  projection from the beginning so newly authorized history is included. Added a
+  two-step UI warning and persistent Clean, unblinded, reveal, and eligibility
+  labels.
+- Verification run: four focused suites passed 15 of 15 cases across real SQLite
+  persistence, exact retries, rejected mutations, private artifact access,
+  browser stream cursors, initial disclosure, post-match reveal, client
+  credential handling, projection, and warning copy. Existing SSE and artifact
+  suites remained green. Desktop and 390px in-app review verified Clean,
+  irreversible confirmation, and unblinded banners with zero horizontal overflow.
+  Production Vite bundling passed. Final `make check` passed the 350-line guard,
+  ESLint, all six strict workspace typechecks, 54 test files, and 341 tests.
+- Risks / follow-ups: direct operator clients intentionally retain infrastructure
+  access when they omit the Observatory-purpose header; the shipped browser always
+  sets it. CN-034 exports perspective-specific replay bundles, while CN-044 adds
+  broader human-intervention contamination beyond unblinding.
 
 ### 2026-09-18 (cn-032) — Town Hall and governance surface
 

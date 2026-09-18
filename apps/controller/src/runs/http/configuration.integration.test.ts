@@ -128,4 +128,38 @@ describe("configured run creation", () => {
     ledger.close();
     await app.close();
   });
+
+  it("adds one explicit permanent audit event for an initially unblinded run", async () => {
+    const databasePath = await createDatabasePath();
+    const app = buildApp(appOptions(databasePath));
+    const unblinded = {
+      ...configuration,
+      disclosurePolicy: "researcher-unblinded" as const,
+    };
+    const request = {
+      method: "POST" as const,
+      url: "/runs",
+      headers: lifecycleHeaders("configured-unblinded-create"),
+      payload: { runId: unblinded.runId, configuration: unblinded },
+    };
+
+    expect((await app.inject(request)).statusCode).toBe(201);
+    expect((await app.inject(request)).statusCode).toBe(201);
+    const mode = await app.inject({
+      method: "GET",
+      url: `/runs/${unblinded.runId}/observer-mode`,
+      headers: lifecycleHeaders("unused-get-key"),
+    });
+    expect(mode.json()).toMatchObject({
+      mode: "unblinded",
+      benchmarkEligible: false,
+    });
+    const ledger = EventLedger.open(databasePath);
+    expect(ledger.listEvents(unblinded.runId).map(({ kind }) => kind)).toEqual([
+      "run.created",
+      "observer_unblinded",
+    ]);
+    ledger.close();
+    await app.close();
+  });
 });

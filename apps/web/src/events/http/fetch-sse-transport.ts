@@ -65,6 +65,7 @@ export class FetchSseTransport implements EventStreamTransport {
             accept: "text/event-stream",
             authorization: `Bearer ${request.bearerToken}`,
             "cache-control": "no-cache",
+            "x-code-nest-observer-view": "1",
             ...(request.lastEventId === undefined
               ? {}
               : { "last-event-id": request.lastEventId }),

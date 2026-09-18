@@ -175,6 +175,15 @@ selected participant knew at the time. `revealed` projection is allowed only
 after scoring and role reveal. Operator-private events stay out of observer
 replays permanently.
 
+Observer unblinding is the public `observer_unblinded` event. Its strict payload
+states `mode: unblinded`, `benchmarkEligible: false`, and the fixed
+`operator_unblinding` intervention class; it contains no credential or private
+evidence. The operator-only HTTP command is bodyless and idempotent. Browser read
+routes derive their projection from this durable event rather than accepting an
+audience or reveal state from the request. A later `match.roles_revealed` event
+changes the research perspective to post-match reveal but never restores
+benchmark eligibility or reveals `operator_private` events.
+
 ### Match completion facts
 
 Normal three-round completion records public `match.phase_advanced`,

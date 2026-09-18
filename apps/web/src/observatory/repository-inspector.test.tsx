@@ -60,9 +60,11 @@ describe("authenticated artifact client", () => {
   it("keeps authority out of the URL and verifies exact downloaded bytes", async () => {
     let requestedUrl = "";
     let requestedAuthorization = "";
+    let requestedObserverView = "";
     const fetcher: typeof fetch = async (input, init) => {
       requestedUrl = String(input);
       requestedAuthorization = new Headers(init?.headers).get("authorization") ?? "";
+      requestedObserverView = new Headers(init?.headers).get("x-code-nest-observer-view") ?? "";
       return response();
     };
     const client = new FetchArtifactClient({
@@ -80,6 +82,7 @@ describe("authenticated artifact client", () => {
     expect(requestedUrl).toContain("/runs/run-031/artifacts/sha256%3A");
     expect(requestedUrl).not.toContain("private-observer-token");
     expect(requestedAuthorization).toBe("Bearer private-observer-token");
+    expect(requestedObserverView).toBe("1");
     expect(result).toMatchObject({
       digest: DIGEST,
       byteCount: 15,

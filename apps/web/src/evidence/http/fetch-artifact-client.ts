@@ -71,6 +71,7 @@ export class FetchArtifactClient implements ArtifactEvidenceClient {
           headers: {
             accept: "application/octet-stream",
             authorization: `Bearer ${this.options.bearerToken}`,
+            "x-code-nest-observer-view": "1",
           },
           signal: request.signal,
         },

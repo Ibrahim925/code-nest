@@ -359,9 +359,9 @@
       "milestone": "M3-live-observatory",
       "title": "Observer modes and audited unblinding",
       "user_visible_behavior": "Clean spectators remain blind, researchers may explicitly unblind with a permanent audit mark and benchmark-ineligibility warning, and completed matches support post-match reveal.",
-      "status": "not_started",
-      "verification": ["corepack pnpm vitest run apps/web/src/observer/modes.test.tsx apps/controller/src/observer/modes.integration.test.ts", "make check"],
-      "evidence": "",
+      "status": "passing",
+      "verification": ["corepack pnpm vitest run apps/web/src/observer/modes.test.tsx apps/controller/src/observer/modes.integration.test.ts apps/controller/src/observer/browser-projection.integration.test.ts apps/controller/src/runs/http/configuration.integration.test.ts", "make check"],
+      "evidence": "The focused observer UI, real-ledger mode, browser stream projection, and configured-run suites passed 15 of 15 cases. A controller observer-mode hexagon derives Clean, unblinded, and post-match reveal state from the append-only ledger; operator-only bodyless unblinding appends one idempotent public observer_unblinded event, permanently sets benchmark eligibility false, survives restart, and is also emitted when an unblinded disclosure policy is selected at creation. Browser SSE and artifact adapters mark requests as Observatory reads, so the controller uses durable observer perspective even when the same in-memory operator credential controls the run; direct operator infrastructure reads remain separate. Clean reads cannot resolve participant-private/covert evidence, unblinded reads can, post-match reveal unlocks permitted research evidence without exposing operator-private data, and newly visible history is rebuilt from stream start. The UI distinguishes Clean spectator, Unblinded researcher, and Post-match reveal, with a two-step permanent-audit and benchmark-disqualification warning. Desktop and 390px inspection verified the Clean, confirmation, and unblinded states with zero horizontal overflow. Production Vite bundling passed. Final make check passed the 350-line guard, ESLint, six strict workspace typechecks, 54 test files, and 341 tests.",
       "notes": "AC 15 and 16."
     },
     {

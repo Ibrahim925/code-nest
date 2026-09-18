@@ -1,6 +1,6 @@
 import { timingSafeEqual } from "node:crypto";
 
-import type { EventAudience, EventProjectionContext } from "@code-nest/core";
+import type { EventProjectionContext } from "@code-nest/core";
 import type { EventDelivery } from "@code-nest/protocol";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
@@ -11,6 +11,10 @@ import type {
   EventStreamUseCases,
 } from "../application/ports/event-stream.js";
 import { EventStreamSourceError } from "../application/ports/event-stream-source.js";
+import {
+  ObserverModeError,
+  type ObserverModeUseCases,
+} from "../../observer/application/observer-mode.js";
 
 const IDENTIFIER_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/;
 const HEARTBEAT_MILLISECONDS = 15_000;
@@ -25,7 +29,10 @@ interface ErrorResponse {
 export interface SseRouteOptions {
   readonly operatorToken: string;
   readonly observerToken: string;
+  readonly observerModes: ObserverModeUseCases;
 }
+
+type StreamAuthority = "operator" | "observer";
 
 function errorResponse(code: string, message: string): ErrorResponse {
   return { error: { code, message } };
@@ -57,16 +64,26 @@ function tokensMatch(actual: string | undefined, expected: string): boolean {
   );
 }
 
-function authenticateAudience(
+function authenticateAuthority(
   request: FastifyRequest,
   options: SseRouteOptions,
-): EventAudience | undefined {
+): StreamAuthority | undefined {
   const token = bearerToken(request);
-  if (tokensMatch(token, options.operatorToken)) return { kind: "operator" };
-  if (tokensMatch(token, options.observerToken)) {
-    return { kind: "observer", mode: "clean" };
-  }
+  if (tokensMatch(token, options.operatorToken)) return "operator";
+  if (tokensMatch(token, options.observerToken)) return "observer";
   return undefined;
+}
+
+function projectionContext(
+  request: FastifyRequest,
+  options: SseRouteOptions,
+  authority: StreamAuthority,
+  runId: string,
+): EventProjectionContext {
+  if (authority === "operator" && request.headers["x-code-nest-observer-view"] !== "1") {
+    return { runId, revealState: "sealed", audience: { kind: "operator" } };
+  }
+  return options.observerModes.projection(runId);
 }
 
 function sendStreamError(reply: FastifyReply, error: unknown): FastifyReply {
@@ -119,8 +136,8 @@ export function registerSseRoutes(
   app.get<{ Params: { runId: string } }>(
     "/runs/:runId/events",
     (request, reply) => {
-      const audience = authenticateAudience(request, options);
-      if (audience === undefined) {
+      const authority = authenticateAuthority(request, options);
+      if (authority === undefined) {
         return reply
           .code(401)
           .send(
@@ -148,15 +165,18 @@ export function registerSseRoutes(
           );
       }
 
-      const context: EventProjectionContext = {
-        runId,
-        revealState: "sealed",
-        audience,
-      };
       let cursor: EventStreamCursor;
+      let context: EventProjectionContext;
       try {
+        context = projectionContext(request, options, authority, runId);
         cursor = service.resolveCursor(context, lastEventId);
       } catch (error: unknown) {
+        if (error instanceof ObserverModeError) {
+          return reply.code(error.code === "RUN_NOT_FOUND" ? 404 : 500).send(errorResponse(
+            error.code,
+            error.message,
+          ));
+        }
         return sendStreamError(reply, error);
       }
 

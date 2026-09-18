@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 
@@ -11,6 +11,9 @@ import { ArtifactStoreEvidenceReader } from "./evidence/adapters/artifact-store-
 import { ReadArtifactEvidenceService } from "./evidence/application/read-artifact-evidence.js";
 import { registerArtifactRoutes } from "./evidence/http/artifacts.js";
 import { EventLedger } from "./ledger/ledger.js";
+import { EventLedgerObserverModeStore } from "./observer/adapters/event-ledger-observer-mode-store.js";
+import { ObserverModeService } from "./observer/application/observer-mode.js";
+import { registerObserverModeRoutes } from "./observer/http/modes.js";
 import { EventLedgerRunStore } from "./runs/adapters/event-ledger-run-store.js";
 import { RunLifecycleService } from "./runs/application/run-lifecycle.js";
 import { registerRunRoutes } from "./runs/http/routes.js";
@@ -51,6 +54,8 @@ export function buildApp(options: BuildAppOptions = {}): FastifyInstance {
   if (observerToken === operatorToken) {
     throw new Error("Operator and observer tokens must be distinct.");
   }
+  const createEventId = options.createEventId ?? randomUUID;
+  const now = options.now ?? (() => new Date());
   const ledger = EventLedger.open(databasePath);
   const artifactRoot = options.artifactRoot ?? (
     options.databasePath === undefined
@@ -60,20 +65,37 @@ export function buildApp(options: BuildAppOptions = {}): FastifyInstance {
   const artifactService = new ReadArtifactEvidenceService(
     new ArtifactStoreEvidenceReader(artifactRoot),
   );
+  const observerModes = new ObserverModeService({
+    store: new EventLedgerObserverModeStore(ledger),
+    now,
+    createEventId,
+  });
   const eventSource = new EventLedgerEventSource(ledger);
   const eventStreamService = new EventStreamService(eventSource);
   const runStore = new EventLedgerRunStore(ledger);
   const runService = new RunLifecycleService({
     store: runStore,
-    createEventId: options.createEventId ?? randomUUID,
-    now: options.now ?? (() => new Date()),
+    createEventId,
+    now,
   });
   app.addHook("onClose", async () => {
     ledger.close();
   });
-  registerSseRoutes(app, eventStreamService, { observerToken, operatorToken });
-  registerArtifactRoutes(app, artifactService, { observerToken, operatorToken });
-  registerRunRoutes(app, runService, operatorToken);
+  registerSseRoutes(app, eventStreamService, {
+    observerToken,
+    operatorToken,
+    observerModes,
+  });
+  registerArtifactRoutes(app, artifactService, {
+    observerToken,
+    operatorToken,
+    observerModes,
+  });
+  registerObserverModeRoutes(app, observerModes, { observerToken, operatorToken });
+  registerRunRoutes(app, runService, operatorToken, (runId, sourceCommandId) => {
+    const digest = createHash("sha256").update(sourceCommandId).digest("hex").slice(0, 24);
+    observerModes.unblind(runId, `configured-unblind-${digest}`);
+  });
 
   app.get("/health", async () => ({
     service: "code-nest-controller",

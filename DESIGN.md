@@ -160,6 +160,10 @@ The system is rectilinear. Sheets have square corners; inputs and buttons use a 
   rail, two ruled discussion passes, and a navy motions ledger. Ballot state is
   written (`open`, `passed`, `rejected`, `sealed`) and never relies on color.
   Passed authority uses a separate fact block from controller-confirmed effects.
+- **Observer mode record:** one full-width ruled strip below the run bar. Clean
+  uses a verified-green top rule; unblinded uses hold red plus explicit benchmark
+  language; post-match reveal uses cobalt. The irreversible confirmation expands
+  in place and names consequences before showing the destructive action.
 
 ### Inputs / Fields
 
