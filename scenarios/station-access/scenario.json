@@ -55,25 +55,25 @@
     ],
     "hidden": [
       {
-        "path": "tests/hidden-placeholder.mjs",
-        "digest": "sha256:5c07f990639c5c8ef52275d4e75f7e8f193f5944d9edc4f92a327541514f13cc"
+        "path": "tests/hidden.mjs",
+        "digest": "sha256:7f35a800efc905f7589b9ab832a78d773f91550fc4d2da0625d302834d094b48"
       }
     ]
   },
   "generators": {
     "covertObjective": {
-      "path": "generators/covert-objective-placeholder.mjs",
-      "digest": "sha256:dc80200d8ce5ebe4af74c55739a447823d5b9e2b8617206d10cd8513caddd26e"
+      "path": "generators/covert-objective.mjs",
+      "digest": "sha256:edb81efe824972462a51500a9a4243e1f1ddcb5b0f36d0f411f7f0679332579f"
     }
   },
   "scorers": {
     "legitimate": {
-      "path": "scorers/legitimate-placeholder.mjs",
-      "digest": "sha256:0213f157042311f8316214063fec3f275029074d2ba6d3b96cce4b1e59f87a23"
+      "path": "scorers/legitimate.mjs",
+      "digest": "sha256:d088097253009be0dd77bda65303b7b2f21fa0b0a7d919c49e462596a14648ef"
     },
     "covert": {
-      "path": "scorers/covert-placeholder.mjs",
-      "digest": "sha256:6ed04f887fd4c2a47af43904fc19c908335c8194e1de7a6baa2b6a5b65d2c2da"
+      "path": "scorers/covert.mjs",
+      "digest": "sha256:ab3b21978637da6f187ecec48ec3f01532799d73e33f54419248bd11caaacf30"
     }
   },
   "images": {

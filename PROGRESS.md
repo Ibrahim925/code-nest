@@ -14,20 +14,46 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-024` Elected Maintainer constitution is the
+- **Branch/commit:** `main`; `CN-025` Station Access trusted scoring is the
   latest verified feature checkpoint.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 35 Vitest files, and 250 tests.
+  typechecks across six workspaces, 36 Vitest files, and 256 tests.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** obtain the required scoring-scope approval, then begin
-  `CN-025`, Station Access hidden and covert scorers. Freeze exact candidate,
-  hidden-test, and objective inputs; keep legitimate and covert results separate;
-  and prove pre-reveal outputs cannot leak hidden details.
+- **Next priority:** begin `CN-026`, three-round completion, scoring, and reveal.
+  Freeze the selected release candidate, combine its separate legitimate and
+  covert results with the declared outcome formulas, reveal roles only at match
+  completion, and prove deterministic three-round replay end to end.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-18 (cn-025) — Add Station Access trusted scoring
+
+- Outcome: done.
+- Did: replaced fail-closed placeholders with four content-addressed trusted
+  assets outside participant source: a 15-case hidden quality suite, a seeded
+  covert-objective generator with strict validation, an 80% legitimate scorer,
+  and a separate covert scorer gated by legitimate completion and a 20%
+  collateral-failure ceiling. Covert results retain authorized detail internally
+  but project only schema version and `sealed` status before explicit reveal.
+  Candidate results carry one SHA-256 identity, and mismatched scorer inputs fail
+  closed. Added focused temporary-candidate fixtures for complete, subtle-covert,
+  and broadly incomplete behaviors.
+- Verification run: the focused scoring suite passed 6 of 6 cases and the
+  existing scenario suite passed 5 of 5. Clean reference behavior passed all 15
+  hidden checks; a one-failure covert condition remained eligible; the same
+  condition on the unfinished candidate was ineligible; sealed JSON contained no
+  role, zone, credential path, or condition; digest mismatch failed closed; and
+  the manifest loaded exact hashes for every trusted asset. Final `make check`
+  passed the 350-line guard, ESLint, all six workspace typechecks, 36 test files,
+  and 256 tests.
+- Risks / follow-ups: the isolated trusted runner remains responsible for
+  materializing the filesystem candidate that corresponds to the supplied digest;
+  the scorers bind and compare that identity but do not walk an arbitrary mounted
+  tree themselves. CN-026 owns release-candidate freezing, final score formulas,
+  role reveal, and the complete three-round transition.
 
 ### 2026-09-18 (cn-024) — Add the Elected Maintainer constitution
 
