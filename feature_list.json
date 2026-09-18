@@ -172,9 +172,9 @@
       "milestone": "M2-governance-game",
       "title": "Atomic shared governance credits",
       "user_visible_behavior": "The team sees one shared balance, valid costs are deducted once, and concurrent, duplicate, late, or unaffordable requests cannot overspend it.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run packages/core/src/budget.test.ts apps/controller/src/budget/concurrency.integration.test.ts", "make check"],
-      "evidence": "",
+      "evidence": "Focused core and SQLite suites passed 9 of 9 tests. The pure rules pin the 18-credit Council budget and exact Section 13 prices, reject inconsistent history, replay exact duplicates before deadline checks, and reject malformed, reused, late, and unaffordable requests. Real-ledger contention admitted only 4 of 10 simultaneous 4-credit audits, leaving 2 credits; 12 concurrent identical retries produced one charge, and rejected requests appended no spend event. Final make check passed the 350-line guard, ESLint, six strict workspace typechecks, 26 test files, and 193 tests.",
       "notes": "Default Council budget and costs come from SPEC section 13; AC 11."
     },
     {

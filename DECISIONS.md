@@ -1,5 +1,21 @@
 # Design Decisions
 
+## 2026-09-17: Derive governance credits from synchronous ledger events
+
+- Reason: the controller is the sole match-state writer, and the default budget
+  permits at most 18 successful purchases. A synchronous read–decide–append
+  operation cannot interleave in the controller event loop, while the existing
+  SQLite ledger atomically deduplicates each command and persists its resulting
+  balance without another mutable state table.
+- Rejected alternative: a `budget_balance` table would duplicate event-derived
+  state and require an approved schema migration plus atomic dual writes. An
+  in-memory balance would lose restart recovery and could not support replay.
+- Constraint: one controller process owns all writes. Spend decisions contain no
+  `await` between reading history and appending the accepted event. Exact retries
+  return their original record before deadline evaluation; changed reuse, late,
+  malformed, and unaffordable requests append nothing. A future multi-writer
+  controller requires a transactional compare-and-append store or schema change.
+
 ## 2026-09-17: Compose matches through a trusted orchestration hexagon
 
 - Reason: the first vertical slice must prove lifecycle, workspaces, private

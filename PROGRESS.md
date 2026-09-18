@@ -14,19 +14,44 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-015` one-round four-agent fake match is the
+- **Branch/commit:** `main`; `CN-016` atomic shared governance credits is the
   latest verified feature checkpoint.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 24 Vitest files, and 184 tests.
+  typechecks across six workspaces, 26 Vitest files, and 193 tests.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-016`, atomic shared governance credits. Add the
-  deterministic budget rules in core and an atomic controller persistence adapter
-  that rejects duplicate, concurrent, late, or unaffordable spending.
+- **Next priority:** begin `CN-017`, trusted-check and audit requests. Authorize
+  permitted investigation actions, spend shared credits exactly once, execute a
+  deterministic fake job, and project only the audience-appropriate result.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-17 (cn-016) — Add atomic shared governance credits
+
+- Outcome: done.
+- Did: added pure shared-budget rules with the 18-credit Council default and exact
+  Section 13 costs for public CI, provenance inspection, targeted audit, full audit,
+  and revert. Spend identity includes command, round, action, subject, and deadline.
+  Exact retries replay the original receipt without charging again; changed reuse,
+  malformed input, phase-late work, and unaffordable requests fail without mutation.
+  Added a budget application port and synchronous event-ledger adapter that derives
+  the balance on restart, validates every historical deduction, records cost in the
+  public event and resource-cost field, and uses the existing command receipt for
+  durable deduplication without a database migration.
+- Verification run: focused pure and real-SQLite suites passed 9 of 9 tests. Ten
+  simultaneous four-credit requests produced four successful spends and six
+  insufficient-credit failures, leaving 2 credits. Twelve concurrent identical
+  retries produced one charge, and the receipt still replayed at the deadline.
+  Malformed, late, reused, and missing-run cases appended no spend. Final `make
+  check` passed the 350-line guard, ESLint, all six workspace typechecks, 26 test
+  files, and 193 tests.
+- Risks / follow-ups: atomic read–decide–append relies on the documented Version 1
+  single-process, synchronous controller writer. A future multi-writer controller
+  needs transactional compare-and-append storage. CN-017 supplies authorization
+  and fake trusted-job execution around the budget; this feature prices and records
+  accepted spending only.
 
 ### 2026-09-17 (cn-015) — Run a one-round four-agent fake match
 

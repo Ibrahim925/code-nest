@@ -338,6 +338,24 @@ runtime messages remain absent from clean projection and serialized artifacts.
 Given the same scenario revision, roster, seed, scripted turns, and proposal order,
 the candidate revision, artifact digest, and complete event envelopes are equal.
 
+## Shared governance budget v1
+
+`packages/core/src/budget.ts` owns the fixed Council balance and Section 13 price
+table. Its pure decision accepts a validated round, action, subject, command ID,
+and phase deadline. It checks exact retries before time, so a delayed network retry
+returns the original receipt without another charge. Reusing that command ID for
+a different action, round, subject, or deadline is a conflict. New requests at or
+after the deadline and costs above the shared remainder are rejected.
+
+`apps/controller/src/budget` wraps those rules in a feature-oriented persistence
+hexagon. The event-ledger adapter folds public `governance.credits_spent` events,
+validates every historical cost and resulting balance, decides, and appends without
+yielding control. The controller's single-writer rule therefore serializes incoming
+requests, while SQLite provides command deduplication and durable append atomicity.
+The event records the cost in both its typed payload and `resourceCost`; no separate
+balance table or database migration exists. Multiple controller writers would need
+a stronger transactional store before this invariant could hold.
+
 ## Failure behavior
 
 Model timeout, policy rejection, container exit, OOM, operator cancellation,
