@@ -14,20 +14,42 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-021` constitution-driven governance is the
+- **Branch/commit:** `main`; `CN-022` Open Merge constitution is the
   latest verified feature checkpoint.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 32 Vitest files, and 231 tests.
+  typechecks across six workspaces, 33 Vitest files, and 236 tests.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-022`, the Open Merge constitution preset. Supply
-  immutable rule data that automatically accepts valid submitted patches, forbids
-  participant quarantine, and retains paid audit and revert options through the
-  shared governance engine.
+- **Next priority:** begin `CN-023`, the Council constitution preset. Encode one
+  vote per active player, two non-author endorsements for patch acceptance, three
+  approvals for participant quarantine in the four-player default, majority audit
+  authorization, shared-credit spending, and one non-voting target appeal.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-18 (cn-022) — Add the Open Merge constitution
+
+- Outcome: done.
+- Did: introduced a small shared constitution-preset contract and encoded Open
+  Merge as deeply immutable policy data. It grants automatic authority for
+  caller-validated submitted patches, exposes every existing priced review,
+  audit, and revert action as a direct shared-budget purchase, and defines no
+  ballots, offices, participant quarantine, or appeal. The pure integration
+  authorization preserves state patch order, marks only named submitted patches
+  accepted for the mechanical integrator, and does not mutate source state.
+- Verification run: the focused suite passed 5 of 5 cases covering automatic
+  authorization, recorded ordering, direct paid actions, forbidden quarantine,
+  absent ballots/offices/appeals, input immutability, deterministic replay, and
+  fail-closed unknown, duplicate, malformed, non-submitted, or ballot-conflicted
+  input. Final `make check` passed the 350-line guard, ESLint, all six workspace
+  typechecks, 33 test files, and 236 tests.
+- Risks / follow-ups: `validSubmittedPatchIds` is an authorization input from the
+  existing validated proposal/integration boundary; Open Merge does not itself
+  inspect Git. `accepted` means constitution-authorized, not mechanically applied.
+  The integrator remains responsible for explicit conflict and no-change results.
+  CN-023 and CN-024 reuse the preset contract with ballot and office authority.
 
 ### 2026-09-18 (cn-021) — Add constitution-driven governance rules
 

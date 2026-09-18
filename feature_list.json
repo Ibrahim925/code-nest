@@ -238,9 +238,9 @@
       "milestone": "M2-governance-game",
       "title": "Open Merge constitution",
       "user_visible_behavior": "Under Open Merge, valid submitted patches integrate automatically while the team retains paid review and revert options.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run packages/core/src/constitutions/open-merge.test.ts", "make check"],
-      "evidence": "",
+      "evidence": "The focused Open Merge suite passed 5 of 5 tests: the immutable preset automatically authorized all caller-validated submitted patches in recorded state order without mutating its input; retained trusted public CI, provenance, targeted audit, full audit, and revert as direct shared-budget purchases; defined no offices, ballots, participant quarantine, or appeal authority; rejected participant-quarantine motions through the common governance engine; and failed closed for unknown, duplicate, malformed, non-submitted, or open-ballot-conflicted patch input. Equal state and valid-patch inputs produced equal authorization output. Final make check passed the 350-line guard, ESLint, six strict workspace typechecks, 33 test files, and 236 tests.",
       "notes": "First governance baseline from SPEC section 16.1."
     },
     {

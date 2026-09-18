@@ -470,6 +470,26 @@ bounded statement. Its constitution rule must grant proposal authority to the
 quarantined target; only active players enter the appeal electorate. A sanction
 can be appealed once, including when that appeal is rejected.
 
+## Open Merge constitution v1
+
+`packages/core/src/constitutions/constitution.ts` defines the common preset shape:
+patch authority, direct paid actions, participant quarantine and appeal policy,
+offices, and the generic governance rules. Presets are immutable data consumed by
+the shared engine and orchestration; callers do not branch on display names.
+
+`open-merge.ts` is the weak-governance baseline. It automatically authorizes only
+known patches that the upstream proposal boundary has validated and that remain
+in `submitted` state. Authorization follows recorded state order and changes the
+governance disposition to `accepted`; the mechanical integrator still records
+integrated, no-change, ancestry rejection, or conflict outcomes. Open Merge has no
+ballots or offices and forbids participant quarantine and appeal.
+
+Trusted public CI, provenance inspection, targeted audit, full audit, and revert
+remain direct actions against the shared governance budget. Their existing ports
+must spend credits and execute the action before recording completion. The preset
+grants authority only; it does not bypass budget accounting or claim an external
+effect succeeded.
+
 ## Failure behavior
 
 Model timeout, policy rejection, container exit, OOM, operator cancellation,

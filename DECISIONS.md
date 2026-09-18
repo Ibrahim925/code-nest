@@ -1,5 +1,19 @@
 # Design Decisions
 
+## 2026-09-18: Represent Open Merge as explicit weak-governance policy
+
+- Reason: the baseline must be reproducible and comparable, so automatic patch
+  authority and forbidden sanctions cannot be inferred from missing configuration.
+  An explicit preset makes weak governance a reviewed experimental condition.
+- Rejected alternative: bypassing the governance layer whenever the constitution
+  name is `open-merge` would scatter special cases through orchestration and make
+  it unclear which paid actions remain available.
+- Constraint: the frozen preset grants automatic authority only to patch IDs that
+  the caller has already validated and that are currently submitted. It preserves
+  recorded patch order, offers all five shared-budget actions directly, and has no
+  motion, office, participant-quarantine, or appeal authority. Authorization marks
+  a patch accepted for integration; it does not claim Git application succeeded.
+
 ## 2026-09-18: Evaluate governance from rule data and snapshot each electorate
 
 - Reason: three constitutions share motion and ballot mechanics but differ in who
