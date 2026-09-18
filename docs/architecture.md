@@ -356,6 +356,27 @@ The event records the cost in both its typed payload and `resourceCost`; no sepa
 balance table or database migration exists. Multiple controller writers would need
 a stronger transactional store before this invariant could hold.
 
+## Trusted investigation requests v1
+
+`apps/controller/src/investigation` coordinates public CI, provenance inspection,
+targeted audits, and full patch audits through authorization, shared-budget,
+executor, artifact, and journal ports. The application service contains no
+constitution branch: its authorizer supplies an approved ID and validated result
+visibility. Only then does the service spend the matching Section 13 cost.
+
+Budget and executor IDs are deterministic hashes of the participant command ID.
+An exact completed retry returns its saved receipt before authorization, spending,
+or execution. A failed job records a visibility-scoped terminal fact without its
+internal error and is not rerun. Credits remain spent because trusted work was
+attempted. The current fake executor caches successful stable job IDs; disposable
+trusted-test execution replaces that adapter later.
+
+Result bytes live in the artifact store with authorization-selected visibility.
+The terminal event cites their digest and carries the same visibility, so clean
+observers cannot infer participant-private result content. The public budget event
+still shows that the team spent shared credits. Stored receipts and authorizer
+output are runtime-validated before use; malformed visibility fails closed.
+
 ## Failure behavior
 
 Model timeout, policy rejection, container exit, OOM, operator cancellation,

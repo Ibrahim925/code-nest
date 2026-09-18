@@ -1,5 +1,20 @@
 # Design Decisions
 
+## 2026-09-17: Let authorization own investigation-result visibility
+
+- Reason: the participant requesting a trusted check must not be able to choose
+  who sees its result. Constitution and governance evidence determine both whether
+  the purchase is authorized and the narrowest visibility for its output.
+- Rejected alternative: taking visibility from the request would let an untrusted
+  participant publish private audit evidence or hide a result that should be
+  public. Hard-coding Council rules in the investigation service would pre-empt
+  the constitution features.
+- Constraint: an authorizer port returns a validated authorization ID and
+  visibility before credits are spent. Results and terminal events inherit that
+  visibility; the shared spend event remains public. Stable derived budget and job
+  IDs make exact retries charge and execute once. Executor error details remain in
+  the internal exception cause, never the durable failure receipt.
+
 ## 2026-09-17: Derive governance credits from synchronous ledger events
 
 - Reason: the controller is the sole match-state writer, and the default budget

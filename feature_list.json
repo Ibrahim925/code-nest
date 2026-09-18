@@ -183,9 +183,9 @@
       "milestone": "M2-governance-game",
       "title": "Trusted-check and audit requests",
       "user_visible_behavior": "Authorized participants can spend credits on public CI, provenance inspection, targeted audits, and full patch audits and receive only the permitted result.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run apps/controller/src/investigation/service.integration.test.ts", "make check"],
-      "evidence": "",
+      "evidence": "The focused real-SQLite investigation suite passed 5 of 5 tests: authorized public CI charged once and published a public artifact; an exact retry reused its receipt without another authorization, charge, job, or event; a targeted audit result was omitted from clean replay and readable only by its participant; an unauthorized full audit spent nothing; and a failed provenance job charged once, recorded no internal error text, and was not rerun. Authorization visibility and stored receipts are runtime-validated. Final make check passed the 350-line guard, ESLint, six strict workspace typechecks, 27 test files, and 198 tests after raising the parallel real-Git timeout from 5 to 15 seconds without skipping assertions.",
       "notes": "Use a fake executor until the isolated trusted-test runner is implemented."
     },
     {

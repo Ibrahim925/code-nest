@@ -14,19 +14,46 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-016` atomic shared governance credits is the
+- **Branch/commit:** `main`; `CN-017` trusted-check and audit requests is the
   latest verified feature checkpoint.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 26 Vitest files, and 193 tests.
+  typechecks across six workspaces, 27 Vitest files, and 198 tests.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-017`, trusted-check and audit requests. Authorize
-  permitted investigation actions, spend shared credits exactly once, execute a
-  deterministic fake job, and project only the audience-appropriate result.
+- **Next priority:** begin `CN-018`, the round evidence packet. Project a bounded,
+  deterministic summary of accepted work, messages, test/audit results, costs,
+  and provenance for belief and Town Hall phases without leaking sealed facts.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-17 (cn-017) — Add trusted-check and audit requests
+
+- Outcome: done.
+- Did: added an investigation hexagon for trusted public CI, provenance checks,
+  targeted audits, and full audits. A constitution-neutral authorizer controls
+  permission and result visibility; participants cannot self-select either. The
+  service derives stable spend and job IDs, charges the shared budget once, runs a
+  deterministic fake executor, stores bounded result bytes under the authorized
+  visibility, and journals a matching terminal receipt. Exact completion retries
+  bypass authorization and execution, while safe failure receipts prevent failed
+  jobs from silently rerunning. Authorizations and reconstructed ledger receipts
+  are runtime-validated before they can affect visibility.
+- Verification run: the focused real-SQLite suite passed 5 of 5 workflows. Public
+  CI produced a clean-visible artifact; an exact retry added no charge, job, or
+  event; a targeted audit was visible to its participant but omitted from clean
+  replay; an unauthorized full audit spent nothing; and a failing provenance job
+  charged once without persisting its internal error. The first full run exposed
+  two existing real-Git tests exceeding Vitest's 5-second timeout under 27-worker
+  disk contention, with no assertion failures; the repository timeout is now 15
+  seconds. Final `make check` passed the 350-line guard, ESLint, all six workspace
+  typechecks, 27 test files, and 198 tests.
+- Risks / follow-ups: authorization decisions remain an injected port until the
+  constitution features. Version 1 journal recovery has terminal receipts; a
+  controller crash after spending but before the terminal event may rerun the
+  same read-only stable job without another charge. The isolated executor later
+  must preserve stable-job idempotency and bounded sanitized output.
 
 ### 2026-09-17 (cn-016) — Add atomic shared governance credits
 
