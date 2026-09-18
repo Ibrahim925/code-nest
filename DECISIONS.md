@@ -1,5 +1,21 @@
 # Design Decisions
 
+## 2026-09-18: Compare adapters through matched isolated session records
+
+- Reason: a heterogeneous match must prove both adapter interoperability and the
+  concrete execution boundary without erasing the difference between split and
+  contained operation.
+- Rejected alternative: running two in-memory adapters proves contract variety
+  but not process isolation. Pooling both modes under one label makes security
+  and performance comparisons misleading. Letting arbitrary container output
+  overwrite the trusted worktree would bypass command validation.
+- Constraint: every round starts four distinct non-root participant containers,
+  requires adapter metadata mode to match the inspected manifest, accepts only a
+  known fixture write command, byte-compares captured output before trusted Git
+  integration, and persists the existing `runtime.started` descriptor shape.
+  Session audit events omit credentials and container-local identifiers; cleanup
+  must leave no labelled container, network, or volume.
+
 ## 2026-09-18: Make Tier 2 a provenance-bearing runtime observation
 
 - Reason: direct model loops can report usage and an optional provider-authored

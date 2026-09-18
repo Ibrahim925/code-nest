@@ -479,6 +479,24 @@ Tier 2 union admits only `provider_usage` labelled `provider_reported` and
 enforces that pairing. This keeps the optional summary comparable without
 presenting it as private chain-of-thought or trusted controller evidence.
 
+### Heterogeneous match composition
+
+The three-round acceptance composition keeps runtime choice and execution mode
+as independent ports. Each participant session pairs one adapter with one
+matching isolated execution boundary; the adapter's declared mode must equal the
+inspected container manifest before work is accepted. Reference-loop sessions
+exercise split workers, while deterministic contract sessions exercise contained
+workers and their brokers in the reproducible end-to-end fixture.
+
+Only an allow-listed fixture write command enters the execution boundary. The
+participant container produces the changed bytes, the controller compares them
+with the command, and only then writes them into the participant Git workspace
+for the normal integration path. `EventLedgerRuntimeSessionAudit` records the
+existing public `runtime.started` fact with round, participant, session, and the
+common runtime descriptor; credentials and container-local details stay out of
+that event. Adapter selection is therefore comparable without pooling split and
+contained modes.
+
 ## Split-runtime container boundary
 
 `apps/controller/src/containers` is a feature-oriented hexagon. The domain layer

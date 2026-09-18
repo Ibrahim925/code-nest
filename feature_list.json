@@ -447,9 +447,9 @@
       "milestone": "M4-real-runtimes-and-isolation",
       "title": "Heterogeneous four-agent match",
       "user_visible_behavior": "One three-round Station Access match runs four isolated participants using at least two adapter implementations and records comparable metadata for every runtime.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run tests/e2e/heterogeneous-match.test.ts", "make check"],
-      "evidence": "",
+      "evidence": "The Docker-backed heterogeneous Station Access match completed all three rounds on the real scenario repository. Every round kept four distinct non-root participant containers: two direct reference-loop adapters matched split networkless workers, while two deterministic contract adapters matched contained workers with private brokered networks. Only an allow-listed write command crossed the adapter boundary; container-produced bytes were compared before trusted Git integration. All six repository tests passed, the legitimate scorer passed 14 of 15 quality checks, final scoring produced successful defence, and exactly one sealed saboteur brief was assigned. Twelve public runtime.started facts durably recorded the same adapter/runtime/provider/model/execution-mode/observability/capability shape, without the contained credential marker. Normal completion left zero labelled containers, networks, or volumes. The focused test passed one of one in about 15 seconds. Final make check passed the 350-line guard, ESLint, six strict workspace typechecks, 67 test files, and 390 tests.",
       "notes": "At least one verification run covers split and contained execution; AC 1 through 3."
     },
     {

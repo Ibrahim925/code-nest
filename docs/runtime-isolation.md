@@ -197,3 +197,10 @@ captured-output allowances, exercises both normal and operator-cancelled shutdow
 and audits labelled containers, networks, and volumes afterward. A separate raw
 SQLite inspection proves a seeded public-output secret was replaced before any
 database bytes were written.
+
+The heterogeneous match acceptance test keeps four distinct participant
+containers alive per round, with two split and two contained boundaries. It runs
+the same three-round Station Access candidate through reference and deterministic
+adapter contracts, checks that adapter mode matches the inspected manifest,
+records every common runtime descriptor, and verifies no labelled container,
+network, or volume remains after normal completion.

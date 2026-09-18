@@ -14,21 +14,39 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-040` direct reference model loop is the latest
+- **Branch/commit:** `main`; `CN-041` heterogeneous four-agent match is the latest
   verified feature checkpoint.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 66 Vitest files, and 389 tests, including the
-  deterministic direct-provider loop and the real adversarial isolation,
+  typechecks across six workspaces, 67 Vitest files, and 390 tests, including the
+  heterogeneous three-round match, deterministic direct-provider loop, and real adversarial isolation,
   cleanup, redaction, trusted-test, credential, TLS, and Docker boundaries.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-041`, the heterogeneous four-agent match. Compose
-  a three-round Station Access run from at least two adapter implementations and
-  prove comparable runtime metadata, including split and contained execution.
+- **Next priority:** begin `CN-042`, the short Snake tutorial scenario. Review
+  its safe scoring contract before adding the repository, briefs, generator,
+  public/hidden tests, and tutorial verification.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-18 (cn-041) — Heterogeneous four-agent match
+
+- Outcome: done.
+- Did: composed the existing three-round Station Access service with four real
+  isolated participant boundaries per round. It paired the split boundary with the
+  direct reference adapter and the contained boundary with the deterministic
+  contract adapter, persist one common metadata shape for every session, capture
+  only validated work output, and use the normal Git integration and scoring path.
+  Root end-to-end typechecking now accepts the same direct TypeScript imports as
+  the controller and testing workspaces.
+- Verification run: the focused Docker-backed match passed one of one in about
+  15 seconds. It completed six repository tests, three rounds, twelve isolated
+  sessions, both adapters, both modes in every round, twelve durable metadata
+  events, final scoring, and zero labelled containers, networks, or volumes.
+  Final `make check` passed the 350-line guard, ESLint, all six strict workspace
+  typechecks, 67 test files, and 390 tests.
+- Remaining: seven M5 features.
 
 ### 2026-09-18 (cn-040) — Direct reference model loop
 
