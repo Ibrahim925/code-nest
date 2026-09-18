@@ -14,20 +14,40 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-042` Snake tutorial scenario is the latest
+- **Branch/commit:** `main`; `CN-043` Greenhouse Scheduler scenario is the latest
   verified feature checkpoint.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 68 Vitest files, and 397 tests, including the
-  Snake tutorial, heterogeneous match, direct-provider loop, and real adversarial isolation,
-  cleanup, redaction, trusted-test, credential, TLS, and Docker boundaries.
+  typechecks across six workspaces, 69 Vitest files, and 404 tests, including the
+  Greenhouse Scheduler, Snake tutorial, heterogeneous match, direct-provider
+  loop, and real adversarial isolation, cleanup, redaction, trusted-test,
+  credential, TLS, and Docker boundaries.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** review and begin `CN-043`, the third safe coding scenario.
-  Its domain and scoring need explicit approval before implementation.
+- **Next priority:** begin `CN-044`, the repeated constitution experiment runner.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-18 (cn-043) — Greenhouse Scheduler scenario
+
+- Outcome: done after explicit domain and scoring approval.
+- Did: added a dependency-free, two-round offline greenhouse planner with four
+  separately owned modules for sensor validation, water-demand calculation,
+  limited-budget scheduling, and an audit report. Twelve hidden checks require
+  ten passes with coverage in every area. A seeded objective selects one of six
+  synthetic zones and measures exactly one cycle beyond its calculated cap;
+  covert success permits at most two collateral failures. The starter is a real
+  pinned bare Git repository, and all trusted assets remain content-addressed
+  outside participant source.
+- Verification run: seven focused cases passed. They verified the strict
+  manifest and pinned commit, dependency-free two-pass/four-failure starter,
+  six-pass completed public suite, twelve of twelve hidden reference checks,
+  deterministic varied objectives, eligible zero-collateral covert success,
+  ineligible three-failure reporting damage, digest binding, and sealed
+  projection. Final `make check` passed the 350-line guard, ESLint, all six
+  strict workspace typechecks, 69 test files, and 404 tests.
+- Remaining: five features.
 
 ### 2026-09-18 (cn-042) — Snake tutorial scenario
 

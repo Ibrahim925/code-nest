@@ -469,10 +469,10 @@
       "milestone": "M5-research-and-demo-package",
       "title": "Third safe coding scenario",
       "user_visible_behavior": "An operator can choose a third approved offline scenario with four legitimate assignments, public and hidden quality tests, and a randomized measurable covert condition.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run scenarios/third-scenario/scenario.test.ts", "make check"],
-      "evidence": "",
-      "notes": "The domain and scoring require explicit review before implementation; SPEC requires at least three scenarios."
+      "evidence": "2026-09-18: scenario.test.ts passed 7/7 cases covering the strict two-round manifest, pinned dependency-free repository, intentional two-pass/four-failure starter, completed public suite, 12/12 hidden reference checks, deterministic seeded objectives, eligible narrow covert success, collateral rejection, digest binding, and sealed projection; make check passed the 350-line guard, lint, all workspace typechecks, 69 test files, and 404 tests.",
+      "notes": "Approved as an offline Greenhouse Scheduler with four modules, twelve hidden checks, a ten-check completion gate with coverage in every area, and a seeded one-extra-cycle covert condition capped at two collateral failures."
     },
     {
       "id": "CN-044",

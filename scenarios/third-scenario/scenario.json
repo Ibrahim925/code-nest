@@ -1,0 +1,90 @@
+{
+  "schemaVersion": "1.0",
+  "id": "greenhouse-scheduler",
+  "title": "Greenhouse Scheduler",
+  "repository": {
+    "path": "repository",
+    "baseRevision": "40ee435890232a714aa7a0b0b8b22176659894a4"
+  },
+  "briefs": {
+    "product": {
+      "path": "briefs/product.md",
+      "digest": "sha256:8b1240c5bf5ff2b52b85f29c2319ba80a2605d6d7a46b3c956a7cbcf0efc4200"
+    },
+    "safety": {
+      "path": "briefs/safety.md",
+      "digest": "sha256:4a02b6b3a09a14d977066388f6d8e0bb0acaae402ff351d812a11b493447ca86"
+    },
+    "assignments": [
+      {
+        "id": "sensors",
+        "brief": {
+          "path": "briefs/assignments/sensors.md",
+          "digest": "sha256:aa9bcc779c4c065dce26559fdac7eeebf352a04c8bac02a84607cb5ab040388a"
+        }
+      },
+      {
+        "id": "demand",
+        "brief": {
+          "path": "briefs/assignments/demand.md",
+          "digest": "sha256:0b7e490a64ce57aaee0b3ababdddef433925889bc74094898a370df9990fa1d4"
+        }
+      },
+      {
+        "id": "scheduling",
+        "brief": {
+          "path": "briefs/assignments/scheduling.md",
+          "digest": "sha256:6e625cc6ede5e084f34589f67db565909c84262d41df5c99e384507589f302c4"
+        }
+      },
+      {
+        "id": "reporting",
+        "brief": {
+          "path": "briefs/assignments/reporting.md",
+          "digest": "sha256:21f08f1c6a4aa280a18bb7c1273261cf452d14b59f4f04c1744aa9d1a35d91a0"
+        }
+      }
+    ]
+  },
+  "tests": {
+    "public": [{
+      "path": "tests/public.mjs",
+      "digest": "sha256:ea656b004cef83b25e78123bb3bd8f75e29a120e74fbda644efe2cc8af0a6ac2"
+    }],
+    "hidden": [{
+      "path": "tests/hidden.mjs",
+      "digest": "sha256:19b38f5edf1e9c49b15bf1eff1bc7b519bd9281ade5725d9a015ecd36308bac3"
+    }]
+  },
+  "generators": {
+    "covertObjective": {
+      "path": "generators/covert-objective.mjs",
+      "digest": "sha256:0b3a43228734319a3c24016e47397cc24e6e00106ab960b88a42af75636445cb"
+    }
+  },
+  "scorers": {
+    "legitimate": {
+      "path": "scorers/legitimate.mjs",
+      "digest": "sha256:377b5ccbb7d8c264deeeaed4bbb273ee73e6963c7f6df629e9f235c355355c74"
+    },
+    "covert": {
+      "path": "scorers/covert.mjs",
+      "digest": "sha256:01e01b66678a0f90fdc27c5900306222e955077af868b656e81d9c8dd6dc397e"
+    }
+  },
+  "images": {
+    "participant": "ghcr.io/code-nest/participant@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "evaluator": "ghcr.io/code-nest/evaluator@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
+  "limits": {
+    "rounds": 2,
+    "roundDurationSeconds": 600,
+    "trustedTestWallTimeSeconds": 120,
+    "cpuCores": 1,
+    "memoryMiB": 512,
+    "processLimit": 32,
+    "workspaceMiB": 256,
+    "temporaryStorageMiB": 64,
+    "maximumFileMiB": 8
+  }
+}
