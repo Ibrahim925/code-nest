@@ -14,20 +14,46 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-031` repository and evidence inspector is the
+- **Branch/commit:** `main`; `CN-032` Town Hall and governance surface is the
   latest verified feature checkpoint.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 49 Vitest files, and 319 tests.
+  typechecks across six workspaces, 51 Vitest files, and 329 tests.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-032`, the Town Hall and governance surface. Project
-  both passes, cited claims, motions, costs, sealed ballot progress, resolutions,
-  sanctions, appeals, office changes, and controller-confirmed effects in one
-  chronological, evidence-linked view.
+- **Next priority:** begin `CN-033`, observer modes and audited unblinding. Keep
+  Clean spectator output sealed, require an explicit audited intervention for
+  unblinded viewing, expose the current perspective throughout the Observatory,
+  and make benchmark ineligibility permanent after intervention.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-18 (cn-032) — Town Hall and governance surface
+
+- Outcome: done.
+- Did: added a Town Hall browser domain, pure authorized-event projector, React
+  surface, and responsive protocol-sheet presentation. The projector validates
+  unknown payloads, advances the fixed evidence/accusation then defence/rebuttal
+  speaking order, records explicit yields, bounds and sanitizes statements and
+  appeals, and keeps citation classification factual. Citation controls select
+  matching authorized Workstream evidence in the existing inspector. Governance
+  cards cover audits, patch actions, participant sanctions and appeals, office
+  changes, open aggregate progress, published closed votes, automatic abstentions,
+  authorized effects, controller-confirmed effects, and exact credit spend.
+  Open-ballot payloads containing choices fail closed.
+- Verification run: the focused projector and presentation suites passed 10 of
+  10 chronology, malformed-input, citation, privacy, closure, effect, cost, appeal,
+  hostile-text, and accessibility-label cases. Desktop and 390px in-app review
+  verified the three-region discussion/evidence/motion story, citation selection,
+  two-row mobile speaking order, stacked ballots and effects, and zero horizontal
+  overflow. Production Vite bundling passed. Final `make check` passed the
+  350-line guard, ESLint, all six strict workspace typechecks, 51 test files, and
+  329 tests.
+- Risks / follow-ups: the Town Hall is a deterministic consumer of authorized
+  events and therefore never reconstructs hidden votes or absent evidence in the
+  browser. CN-033 adds explicit clean/unblinded observer state; CN-034 packages
+  the same projections into portable replay.
 
 ### 2026-09-18 (cn-031) — Repository and evidence inspector
 

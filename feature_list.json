@@ -348,9 +348,9 @@
       "milestone": "M3-live-observatory",
       "title": "Town Hall and governance surface",
       "user_visible_behavior": "A viewer can follow both Town Hall passes, cited claims, motions, costs, ballots, sanctions, appeals, office changes, and their effects in chronological context.",
-      "status": "not_started",
-      "verification": ["corepack pnpm vitest run apps/web/src/town-hall/town-hall.test.tsx", "make check"],
-      "evidence": "",
+      "status": "passing",
+      "verification": ["corepack pnpm vitest run apps/web/src/town-hall/town-hall.test.tsx apps/web/src/town-hall/application/project-town-hall.test.ts", "make check"],
+      "evidence": "The focused Town Hall projector and presentation suites passed 10 of 10 cases. A feature-oriented browser domain and pure projector validate authorized unknown delivery payloads, enforce the fixed evidence/accusation then defence/rebuttal speaking order, preserve explicit yields, sanitize bounded statements and appeals, and retain valid, mismatched, and missing citation classifications. Valid or mismatched citations can select matching authorized Workstream evidence by stable event ID; missing evidence stays disabled. Open ballots expose only motion, proposer, electorate, approval rule, deadline, and aggregate submissions, and the projector rejects any open payload containing vote choices. Closed ballots publish exact choices and submitted status, including automatic abstentions. Passed authority stays distinct from later controller-confirmed effects and governance credit spend. Desktop and 390px in-app review verified the discussion/motions/evidence composition, citation-to-inspector interaction, text-labelled status, stacked mobile order, and zero horizontal overflow. Production Vite bundling passed. Final make check passed the 350-line guard, ESLint, six strict workspace typechecks, 51 test files, and 329 tests.",
       "notes": "Status and vote meaning never depend on color alone."
     },
     {

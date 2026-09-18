@@ -6,6 +6,9 @@ import { FetchArtifactClient } from "../evidence/http/fetch-artifact-client.js";
 import type { RunMutation } from "../run-setup/client.js";
 import type { RunControlView, RunSetupConfiguration } from "../run-setup/domain.js";
 import { RunControls } from "../run-setup/RunControls.js";
+import { projectTownHall } from "../town-hall/application/project-town-hall.js";
+import { createTownHallViewState } from "../town-hall/domain/town-hall.js";
+import { TownHall } from "../town-hall/TownHall.js";
 import { AgentLanes } from "./AgentLanes.js";
 import { ActivityFeed } from "./ActivityFeed.js";
 import { EvidenceInspector } from "./EvidenceInspector.js";
@@ -53,6 +56,7 @@ export function LiveObservatory({
   );
   const [lanes, setLanes] = useState(() => createAgentLaneState(participantSeeds));
   const [activity, setActivity] = useState(createActivityFeedState);
+  const [townHall, setTownHall] = useState(createTownHallViewState);
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
   const [connection, setConnection] = useState<LiveConnectionState>({
     status: "connecting",
@@ -68,6 +72,7 @@ export function LiveObservatory({
     const cancellation = new AbortController();
     setLanes(createAgentLaneState(participantSeeds));
     setActivity(createActivityFeedState());
+    setTownHall(createTownHallViewState());
     setSelectedItemId(null);
     const client = createLiveEventClient({ baseUrl });
     void client.follow(
@@ -76,6 +81,7 @@ export function LiveObservatory({
         onDelivery(delivery) {
           setLanes((current) => projectAgentLanes(current, delivery));
           setActivity((current) => projectActivityFeed(current, delivery));
+          setTownHall((current) => projectTownHall(current, delivery));
         },
         onState: setConnection,
       },
@@ -94,6 +100,8 @@ export function LiveObservatory({
 
   const sharedPhase = lanes.lanes[0]?.phase;
   const selected = activity.items.find(({ id }) => id === selectedItemId) ?? null;
+  const activityForEvent = (eventId: string) =>
+    activity.items.find((item) => item.eventId === eventId);
   return (
     <div className="observatory-shell">
       <header className="observatory-topbar">
@@ -126,12 +134,22 @@ export function LiveObservatory({
         {controlError !== null && <p className="request-error" role="alert">{controlError}</p>}
         <AgentLanes state={lanes} />
         <div className="observatory-workspace">
-          <ActivityFeed
-            state={activity}
-            participantIds={lanes.lanes.map(({ participantId }) => participantId)}
-            selectedItemId={selectedItemId}
-            onSelect={(item) => setSelectedItemId(item.id)}
-          />
+          <div className="observatory-primary">
+            <TownHall
+              state={townHall}
+              canInspectCitation={(eventId) => activityForEvent(eventId) !== undefined}
+              onInspectCitation={(eventId) => {
+                const item = activityForEvent(eventId);
+                if (item !== undefined) setSelectedItemId(item.id);
+              }}
+            />
+            <ActivityFeed
+              state={activity}
+              participantIds={lanes.lanes.map(({ participantId }) => participantId)}
+              selectedItemId={selectedItemId}
+              onSelect={(item) => setSelectedItemId(item.id)}
+            />
+          </div>
           <EvidenceInspector
             runId={run.runId}
             selected={selected}

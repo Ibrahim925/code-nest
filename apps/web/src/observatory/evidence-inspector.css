@@ -5,6 +5,7 @@
   align-items: start;
 }
 
+.observatory-primary,
 .observatory-workspace .activity-feed { min-width: 0; }
 
 .evidence-inspector {

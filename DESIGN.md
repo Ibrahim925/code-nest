@@ -156,6 +156,10 @@ The system is rectilinear. Sheets have square corners; inputs and buttons use a 
   with a dark identifier ledger, explicit causal facts, and one on-demand action
   per digest. It becomes an ordinary stacked section below 1040px rather than a
   covering drawer, preserving keyboard and chronological access.
+- **Town Hall record:** cobalt-topped protocol sheet with a numbered speaking
+  rail, two ruled discussion passes, and a navy motions ledger. Ballot state is
+  written (`open`, `passed`, `rejected`, `sealed`) and never relies on color.
+  Passed authority uses a separate fact block from controller-confirmed effects.
 
 ### Inputs / Fields
 

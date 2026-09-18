@@ -1,5 +1,22 @@
 # Design Decisions
 
+## 2026-09-18: Project Town Hall from authorized facts, not component state
+
+- Reason: discussion, sealed-ballot progress, published votes, sanctions, costs,
+  and applied effects must replay in the same order and with the same privacy
+  boundary as live viewing. A pure authorized-event projector makes that record
+  deterministic and lets citation selection reuse the evidence inspector.
+- Rejected alternative: maintaining the discussion and ballots only in React
+  would lose them on reconnect and invite live/replay drift. Sending vote choices
+  in an open-ballot payload and merely hiding them in CSS would disclose sealed
+  decisions. Treating a passed motion as proof an external audit or revert ran
+  would overstate authority as execution.
+- Constraint: open ballots contain electorate, threshold, deadline, and aggregate
+  submissions only; any open payload with choices fails closed. Choices publish
+  after closure. Authorized effects and controller-confirmed effects remain
+  separate records. Messages and appeals render as escaped bounded plain text,
+  and missing citations cannot open evidence.
+
 ## 2026-09-18: Inspect immutable evidence without inline browser execution
 
 - Reason: an event citation is useful only when an authorized observer can resolve

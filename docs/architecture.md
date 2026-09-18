@@ -83,6 +83,21 @@ recomputes SHA-256 before the Observatory may display anything. The inspector
 joins those verified artifacts to the already-authorized event projection; it
 does not decide visibility or infer repository state.
 
+## Town Hall projection
+
+`apps/web/src/town-hall` owns a presentation-side domain and pure projector. It
+accepts only deliveries already filtered by the controller, validates each
+unknown payload into a small view model, advances the fixed two-pass speaking
+order, and ignores malformed or out-of-order facts. React renders that state but
+does not invent discussion, ballot results, or effects.
+
+Open governance ballots expose only motion, electorate, approval rule, deadline,
+and aggregate submission count. The projector rejects an open payload containing
+vote choices. Closed ballots may publish each choice and whether an abstention was
+submitted. A passed ballot records authority; a separate effect event or existing
+governance spend event records controller-confirmed execution or cost. Citations
+select matching authorized Workstream evidence by stable event ID.
+
 ## Event ledger v1
 
 `apps/controller/src/ledger` owns the first durable store. It uses the SQLite

@@ -81,6 +81,26 @@ other media receives an explicit binary-preview message. Digest mismatch,
 oversize, malformed metadata, missing authority, and absence are visible as safe
 failures rather than invented previews.
 
+## Town Hall
+
+When authorized Town Hall events arrive, the primary Observatory column places
+the public governance record before the Workstream while the evidence inspector
+remains beside it. The surface fixes speaking order, names the current speaker,
+and keeps evidence/accusation separate from defence/rebuttal/action. A yield is an
+explicit turn, never an empty or fabricated statement.
+
+Each citation shows its claimed kind and `valid`, `mismatched`, or `missing`
+classification in text. Valid and mismatched references may open matching
+authorized evidence; missing or unavailable references stay disabled. The UI
+does not assess whether an argument is persuasive.
+
+Open ballots show the motion, proposer, electorate size, approval rule, deadline,
+and submitted count under an explicit sealed label. Choices appear only after
+closure, including whether an abstention was automatic. Passed authority is
+visually and verbally separate from later controller-confirmed effects and credit
+spend. On phones, speaking order becomes two rows and discussion, ballots,
+effects, and evidence stack in document order.
+
 ## Accessibility
 
 Core live and replay flows target WCAG 2.2 AA. Status never depends on color.
