@@ -66,6 +66,14 @@ The live screen uses progressive disclosure: a stable four-lane pulse first,
 details on selection. Reconnection fills missing sequences before returning to
 live mode. Virtualize large timelines and logs; artifacts load on demand.
 
+The Workstream and replay chronology retain every authorized event in their
+ordered projections while rendering an 80-row window. Older and newer controls
+name the exact visible range and work from the keyboard. The live adapter batches
+arrivals once per animation frame, then applies each projector in delivery order.
+Four simultaneous terminal streams therefore do not cause one React render per
+stream chunk. A compact connection metric reports the share observed within the
+two-second local target and retains only aggregate counts.
+
 ## Constitution Lab
 
 Completed comparison records open locally from the setup surface. The first
@@ -151,6 +159,11 @@ Core live and replay flows target WCAG 2.2 AA. Status never depends on color.
 Support keyboard operation, visible focus, scalable text, reduced motion, and
 screen-reader announcements for phase changes and governance outcomes. Preserve
 chronological meaning when layouts collapse on smaller screens.
+
+Phase and closed-governance changes use dedicated polite atomic announcements.
+Terminal bodies remain ordinary bounded plain text, outside live regions, so a
+busy participant cannot continuously seize the accessibility tree. Window
+navigation also announces its range politely after an explicit user action.
 
 Synthetic interface data must be labelled synthetic. Do not invent benchmark
 results, customers, publication claims, or model performance.

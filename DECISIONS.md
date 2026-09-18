@@ -1,5 +1,19 @@
 # Design Decisions
 
+## 2026-09-18: Window rendered events without truncating match history
+
+- Reason: a 10,000-event match must remain fully inspectable, but placing every
+  card and terminal body in the browser document makes interaction and assistive
+  navigation degrade with match length.
+- Rejected alternative: dropping old events destroys evidence; an unbounded
+  scrolling document moves the cost into layout and accessibility; a visual-only
+  scroll trick makes keyboard and screen-reader navigation ambiguous.
+- Constraint: live Workstream and replay chronology keep the complete ordered
+  projection but render at most 80 rows. Named Older/Newer controls expose the
+  current range. Browser updates batch once per animation frame and reduce every
+  delivery in sequence. Phase and governance announcements are polite; terminal
+  content is never a live region. Delivery timing stores aggregate counts only.
+
 ## 2026-09-18: Put distributions before stories in Constitution Lab
 
 - Reason: individual matches are vivid but stochastic. Researchers need the

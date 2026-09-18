@@ -50,6 +50,7 @@ export function RunControls({
             <button
               className="danger-action"
               type="button"
+              aria-label="Cancel run"
               disabled={pendingAction !== null}
               onClick={() => setConfirmCancel(true)}
             >

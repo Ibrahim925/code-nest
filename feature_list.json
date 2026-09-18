@@ -502,9 +502,9 @@
       "milestone": "M5-research-and-demo-package",
       "title": "Accessibility and 10,000-event performance",
       "user_visible_behavior": "The core live and replay flows remain keyboard and screen-reader usable, respect reduced motion, preserve non-color status cues, and stay interactive with 10,000 events and four terminal streams.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run apps/web/src/quality/accessibility.test.tsx apps/web/src/quality/event-scale.test.ts", "make check"],
-      "evidence": "",
+      "evidence": "2026-09-18: the exact focused suite passed 9/9 checks. A synthetic 10,000-event workload interleaved four terminal streams, exceeded the 200-events-per-second projector target, retained full ordered state while bounding live and replay markup to 80 rows and under 300 KB, rendered those windows in under two seconds, and preserved sequence order through one-frame batching. Aggregate timing produced exactly 95% within two seconds without retaining payloads. Accessibility checks covered named landmarks and controls, non-colour status, keyboard window navigation, visible focus, reduced motion, polite phase/governance/range announcements, and terminal content outside assertive or log regions. Seven affected UI suites passed 38/38, web typecheck and production build passed, and make check passed the 350-line guard, lint, six strict workspace typechecks, 73 test files, and 423 tests.",
       "notes": "Measure projector throughput, event latency, and browser interaction targets; AC 22."
     },
     {

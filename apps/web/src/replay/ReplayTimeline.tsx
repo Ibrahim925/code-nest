@@ -1,10 +1,20 @@
+import { useState } from "react";
+
 import type { ReplayProjection } from "@code-nest/core";
+
+import { EventWindowControls } from "../quality/EventWindowControls.js";
+import { projectEventWindow } from "../quality/domain/event-window.js";
 
 export function ReplayTimeline({
   analysis,
 }: {
-  readonly analysis: ReplayProjection;
+  readonly analysis: Pick<ReplayProjection, "timeline">;
 }): React.JSX.Element {
+  const [windowEnd, setWindowEnd] = useState<number | null>(null);
+  const eventWindow = projectEventWindow(
+    analysis.timeline,
+    windowEnd ?? analysis.timeline.length,
+  );
   return (
     <section className="replay-timeline" aria-labelledby="replay-timeline-title">
       <header>
@@ -14,8 +24,13 @@ export function ReplayTimeline({
         </div>
         <strong>{analysis.timeline.length} visible events</strong>
       </header>
+      <EventWindowControls
+        label="Replay timeline"
+        window={eventWindow}
+        onWindowEndChange={setWindowEnd}
+      />
       <ol>
-        {analysis.timeline.map((item) => (
+        {eventWindow.items.map((item) => (
           <li key={item.eventId}>
             <span>{String(item.deliverySequence).padStart(3, "0")}</span>
             <div>

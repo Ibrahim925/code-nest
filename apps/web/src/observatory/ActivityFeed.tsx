@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
 
+import { EventWindowControls } from "../quality/EventWindowControls.js";
+import { projectEventWindow } from "../quality/domain/event-window.js";
 import type {
   ActivityFeedState,
   ActivityItem,
@@ -35,7 +37,10 @@ function ActivityCard({
 }): React.JSX.Element {
   const body = item.body;
   return (
-    <article className={`activity-card category-${item.category} ${selected ? "is-selected" : ""}`}>
+    <article
+      className={`activity-card category-${item.category} ${selected ? "is-selected" : ""}`}
+      role="listitem"
+    >
       <header>
         <div>
           <span className="activity-category">{item.category.replaceAll("_", " ")}</span>
@@ -105,12 +110,14 @@ export function ActivityFeed({
 }: ActivityFeedProps): React.JSX.Element {
   const [view, setView] = useState<FeedView>("chronology");
   const [participant, setParticipant] = useState("all");
+  const [windowEnd, setWindowEnd] = useState<number | null>(null);
   const filtered = useMemo(
     () => participant === "all"
       ? state.items
       : state.items.filter(({ participantId }) => participantId === participant),
     [participant, state.items],
   );
+  const eventWindow = projectEventWindow(filtered, windowEnd ?? filtered.length);
 
   return (
     <section className="activity-feed" aria-labelledby="activity-feed-title">
@@ -122,7 +129,10 @@ export function ActivityFeed({
         <div className="feed-tools">
           <label>
             Participant
-            <select value={participant} onChange={(event) => setParticipant(event.target.value)}>
+            <select value={participant} onChange={(event) => {
+              setParticipant(event.target.value);
+              setWindowEnd(null);
+            }}>
               <option value="all">All actors</option>
               {participantIds.map((id) => <option value={id} key={id}>{id}</option>)}
             </select>
@@ -142,9 +152,14 @@ export function ActivityFeed({
         </div>
       </header>
 
+      <EventWindowControls
+        label="Workstream"
+        window={eventWindow}
+        onWindowEndChange={setWindowEnd}
+      />
       {filtered.length === 0 ? <EmptyFeed /> : view === "chronology" ? (
-        <div className="chronology-feed">
-          {filtered.map((item) => (
+        <div className="chronology-feed" role="list" aria-label="Observable work events">
+          {eventWindow.items.map((item) => (
             <ActivityCard
               item={item}
               selected={item.id === selectedItemId}
@@ -158,7 +173,7 @@ export function ActivityFeed({
           {participantIds.map((id) => (
             <section key={id} aria-labelledby={`feed-${id}`}>
               <h3 id={`feed-${id}`}>{id}</h3>
-              {filtered.filter(({ participantId }) => participantId === id).map((item) => (
+              {eventWindow.items.filter(({ participantId }) => participantId === id).map((item) => (
                 <ActivityCard
                   item={item}
                   selected={item.id === selectedItemId}

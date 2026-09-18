@@ -147,8 +147,18 @@ export function TownHall({
 }: TownHallProps): React.JSX.Element | null {
   const hasContent = state.status !== "inactive" || state.ballots.length > 0 || state.outcomes.length > 0;
   if (!hasContent) return null;
+  const latestOutcome = state.outcomes.at(-1);
+  const latestClosedBallot = state.ballots.findLast(({ status }) => status !== "open");
+  const governanceAnnouncement = latestOutcome === undefined
+    ? latestClosedBallot === undefined
+      ? "No closed governance outcome."
+      : `Ballot ${latestClosedBallot.motionSummary} closed ${latestClosedBallot.status}.`
+    : `Governance effect confirmed: ${latestOutcome.summary}`;
   return (
     <section className="town-hall" aria-labelledby="town-hall-title">
+      <p className="sr-only" aria-live="polite" aria-atomic="true">
+        {governanceAnnouncement}
+      </p>
       <header className="town-hall-heading">
         <div>
           <p className="section-kicker">Round {state.round ?? "—"} · Public governance record</p>

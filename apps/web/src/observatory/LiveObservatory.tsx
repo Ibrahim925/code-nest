@@ -7,6 +7,14 @@ import { projectObserverMode } from "../observer/application/project-observer-mo
 import { initialObserverMode } from "../observer/domain/modes.js";
 import { HttpObserverModeClient } from "../observer/http/observer-mode-client.js";
 import { ObserverModePanel } from "../observer/ObserverModePanel.js";
+import { createFrameBatcher } from "../quality/application/frame-batcher.js";
+import { animationFrameScheduler } from "../quality/browser/animation-frame-scheduler.js";
+import {
+  createDeliveryLatencyState,
+  deliveryLatencyLabel,
+  projectDeliveryLatency,
+} from "../quality/domain/delivery-latency.js";
+import type { DecodedEventDelivery } from "../events/domain/live-events.js";
 import { ReplayExportPanel } from "../replay/ReplayExportPanel.js";
 import { HttpReplayClient } from "../replay/http/replay-client.js";
 import type { RunMutation } from "../run-setup/client.js";
@@ -35,6 +43,11 @@ export interface LiveObservatoryProps {
   readonly pendingAction: RunMutation | null;
   readonly controlError: string | null;
   readonly onMutation: (action: RunMutation) => void;
+}
+
+interface ReceivedDelivery {
+  readonly delivery: DecodedEventDelivery;
+  readonly receivedAtEpochMilliseconds: number;
 }
 
 function connectionLabel(state: LiveConnectionState): string {
@@ -73,6 +86,7 @@ export function LiveObservatory({
     attempt: 1,
     lastEventId: null,
   });
+  const [deliveryLatency, setDeliveryLatency] = useState(createDeliveryLatencyState);
   const artifactClient = useMemo(
     () => new FetchArtifactClient({ baseUrl, bearerToken }),
     [baseUrl, bearerToken],
@@ -103,16 +117,32 @@ export function LiveObservatory({
     setLanes(createAgentLaneState(participantSeeds));
     setActivity(createActivityFeedState());
     setTownHall(createTownHallViewState());
+    setDeliveryLatency(createDeliveryLatencyState());
     setSelectedItemId(null);
     const client = createLiveEventClient({ baseUrl });
+    const batcher = createFrameBatcher<ReceivedDelivery>(
+      animationFrameScheduler,
+      (batch) => {
+        const deliveries = batch.map(({ delivery }) => delivery);
+        setLanes((current) => deliveries.reduce(projectAgentLanes, current));
+        setActivity((current) => deliveries.reduce(projectActivityFeed, current));
+        setTownHall((current) => deliveries.reduce(projectTownHall, current));
+        setObserverMode((current) => deliveries.reduce(projectObserverMode, current));
+        setDeliveryLatency((current) => batch.reduce(
+          (state, received) => projectDeliveryLatency(
+            state,
+            received.delivery,
+            received.receivedAtEpochMilliseconds,
+          ),
+          current,
+        ));
+      },
+    );
     void client.follow(
       { runId: run.runId, bearerToken, signal: cancellation.signal },
       {
         onDelivery(delivery) {
-          setLanes((current) => projectAgentLanes(current, delivery));
-          setActivity((current) => projectActivityFeed(current, delivery));
-          setTownHall((current) => projectTownHall(current, delivery));
-          setObserverMode((current) => projectObserverMode(current, delivery));
+          batcher.push({ delivery, receivedAtEpochMilliseconds: Date.now() });
           if (delivery.kind === "match.completed") {
             void observerClient.get(run.runId).then(setObserverMode).catch(() => undefined);
           }
@@ -129,10 +159,16 @@ export function LiveObservatory({
         });
       }
     });
-    return () => cancellation.abort();
+    return () => {
+      batcher.stop();
+      cancellation.abort();
+    };
   }, [baseUrl, bearerToken, observerClient, participantSeeds, projectionEpoch, run.runId]);
 
   const sharedPhase = lanes.lanes[0]?.phase;
+  const phaseAnnouncement = sharedPhase?.name === null || sharedPhase?.name === undefined
+    ? "Match phase awaiting the first authorized event."
+    : `Match phase changed to round ${sharedPhase.round ?? "run"}, ${sharedPhase.name.replaceAll("_", " ")}.`;
   const selected = activity.items.find(({ id }) => id === selectedItemId) ?? null;
   const activityForEvent = (eventId: string) =>
     activity.items.find((item) => item.eventId === eventId);
@@ -144,11 +180,16 @@ export function LiveObservatory({
           <span>Code Nest</span>
         </a>
         <div className={`connection-state is-${connection.status}`} aria-live="polite">
-          <span aria-hidden="true" /> {connectionLabel(connection)}
+          <span className="connection-indicator" aria-hidden="true" />
+          <span>{connectionLabel(connection)}</span>
+          <small>{deliveryLatencyLabel(deliveryLatency)}</small>
         </div>
       </header>
 
       <main id="live-observatory" className="observatory-layout">
+        <p className="sr-only" aria-live="polite" aria-atomic="true">
+          {phaseAnnouncement}
+        </p>
         <section className="run-bar" aria-labelledby="run-bar-title">
           <div>
             <p className="section-kicker">Live Observatory</p>

@@ -14,21 +14,44 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-045` Constitution Lab is the latest
+- **Branch/commit:** `main`; `CN-046` accessibility and event-scale quality is the latest
   verified feature checkpoint.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 71 Vitest files, and 414 tests, including
-  Constitution Lab, the matched constitution runner, Greenhouse Scheduler,
-  Snake tutorial, heterogeneous match, direct-provider loop, and real
-  adversarial isolation, cleanup, redaction, trusted-test, credential, TLS, and
-  Docker boundaries.
+  typechecks across six workspaces, 73 Vitest files, and 423 tests, including the
+  10,000-event/four-stream stress path, accessibility contract, Constitution
+  Lab, matched constitution runner, Greenhouse Scheduler, Snake tutorial,
+  heterogeneous match, direct-provider loop, and real adversarial isolation,
+  cleanup, redaction, trusted-test, credential, TLS, and Docker boundaries.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-046`, accessibility and 10,000-event performance.
+- **Next priority:** begin `CN-047`, recovery and leakage hardening.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-18 (cn-046) — Accessible 10,000-event Observatory
+
+- Outcome: done.
+- Did: added a framework-free event-window policy, keyboard-operable window
+  controls, an animation-frame scheduler port and browser adapter, and an
+  aggregate delivery-latency projection. Live Workstream and replay chronology
+  retain every ordered event while rendering at most 80 rows. Four concurrent
+  terminal streams batch into one frame update without changing delivery order.
+  The top bar reports the proportion received within two seconds. Dedicated
+  polite regions announce phase and governance changes while terminal content
+  stays outside live regions. Existing visible focus, reduced-motion, and
+  non-colour status behavior is now protected by focused tests.
+- Verification run: the exact feature suite passed 9 of 9 checks. Its synthetic
+  10,000-event/four-participant workload exceeded 200 projected events per
+  second, bounded both live and replay documents to 80 rows and under 300 KB of
+  markup, rendered those windows in under two seconds, preserved one-frame
+  sequence order, and calculated the exact 95% delivery objective without
+  retaining deliveries. Seven affected UI suites passed 38 of 38 checks, web
+  typecheck and the production Vite build passed, and final `make check` passed
+  the 350-line guard, ESLint, all six strict workspace typechecks, 73 test files,
+  and 423 tests.
+- Remaining: two features.
 
 ### 2026-09-18 (cn-045) — Constitution Lab comparison UI
 

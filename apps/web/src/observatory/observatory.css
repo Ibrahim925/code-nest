@@ -29,7 +29,7 @@
   text-transform: uppercase;
 }
 
-.connection-state > span {
+.connection-indicator {
   width: 8px;
   height: 8px;
   border: 1px solid #b8e2ca;
@@ -37,10 +37,17 @@
   background: #31a86d;
 }
 
-.connection-state.is-connecting > span { background: #78a7ff; }
-.connection-state.is-recovering > span { background: #f0a629; }
-.connection-state.is-failed > span { background: #e16c78; }
-.connection-state.is-stopped > span { background: #8591a4; }
+.connection-state.is-connecting .connection-indicator { background: #78a7ff; }
+.connection-state.is-recovering .connection-indicator { background: #f0a629; }
+.connection-state.is-failed .connection-indicator { background: #e16c78; }
+.connection-state.is-stopped .connection-indicator { background: #8591a4; }
+
+.connection-state small {
+  color: #9eabc0;
+  font-size: 0.58rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
 
 .observatory-layout {
   width: min(1540px, 96vw);
