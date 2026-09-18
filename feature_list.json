@@ -293,9 +293,9 @@
       "milestone": "M3-live-observatory",
       "title": "Run setup and operator controls",
       "user_visible_behavior": "An operator can choose a scenario, pinned source, four adapters, seed, limits, disclosure policy, and constitution, then start, pause, resume, or cancel the run.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run apps/web/src/run-setup/run-setup.test.tsx", "make check"],
-      "evidence": "",
+      "evidence": "The focused UI suite passed 5 of 5 cases covering the complete pinned four-participant protocol, explanatory validation failures, authority-gated start, state-appropriate controls, and credential-safe HTTP requests. Protocol and real-SQLite controller suites passed 6 of 6 cases: strict setup parsing, duplicate participant rejection, one public configuration-bearing run.created event, mismatched/malformed/credential-bearing rejection, exact retry replay, and changed-configuration conflict. A live Vite-proxied controller flow returned running event 1, paused event 2, resumed event 3, and cancelled event 4. Production build passed and retained the direction contract. Responsive in-app inspection verified labelled controls, disabled unavailable capabilities, password masking, HOLD-to-READY feedback, mobile reflow, and explicit status text. The finish detector found one side-accent warning; it was removed, and the degraded fresh-eye review disposition was ship. Final make check passed the 350-line guard, ESLint, six strict workspace typechecks, 41 test files, and 278 tests.",
       "notes": "Unsafe or incomplete configurations explain what must be fixed."
     },
     {

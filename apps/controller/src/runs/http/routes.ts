@@ -1,5 +1,9 @@
 import { timingSafeEqual } from "node:crypto";
 
+import {
+  parseRunSetupConfiguration,
+  type RunSetupConfiguration,
+} from "@code-nest/protocol";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 import {
@@ -30,9 +34,25 @@ function isIdentifier(value: unknown): value is string {
   return typeof value === "string" && IDENTIFIER_PATTERN.test(value);
 }
 
-function parseCreationBody(body: unknown): string | undefined {
-  if (!isRecord(body) || Object.keys(body).length !== 1) return undefined;
-  return isIdentifier(body.runId) ? body.runId : undefined;
+interface CreationRequest {
+  readonly runId: string;
+  readonly configuration?: RunSetupConfiguration;
+}
+
+function parseCreationBody(body: unknown): CreationRequest | undefined {
+  if (!isRecord(body) || !isIdentifier(body.runId)) return undefined;
+  const keys = Object.keys(body).sort();
+  if (keys.length === 1 && keys[0] === "runId") return { runId: body.runId };
+  if (
+    keys.length !== 2 ||
+    keys[0] !== "configuration" ||
+    keys[1] !== "runId"
+  ) {
+    return undefined;
+  }
+  const parsed = parseRunSetupConfiguration(body.configuration);
+  if (!parsed.ok || parsed.value.runId !== body.runId) return undefined;
+  return { runId: body.runId, configuration: parsed.value };
 }
 
 function isEmptyMutationBody(body: unknown): boolean {
@@ -142,20 +162,22 @@ export function registerRunRoutes(
     if (!requireOperator(request, reply, operatorToken)) return;
     const commandId = requireCommandId(request, reply);
     if (commandId === undefined) return;
-    const runId = parseCreationBody(request.body);
-    if (runId === undefined) {
+    const creation = parseCreationBody(request.body);
+    if (creation === undefined) {
       return reply
         .code(400)
         .send(
           errorResponse(
             "INVALID_RUN_REQUEST",
-            "Creation requires exactly one valid runId.",
+            "Creation requires a valid runId and optional matching run configuration.",
           ),
         );
     }
 
     try {
-      return reply.code(201).send(service.create(runId, commandId));
+      return reply
+        .code(201)
+        .send(service.create(creation.runId, commandId, creation.configuration));
     } catch (error: unknown) {
       return sendApplicationError(reply, error);
     }

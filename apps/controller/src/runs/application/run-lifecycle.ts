@@ -1,3 +1,7 @@
+import { isDeepStrictEqual } from "node:util";
+
+import type { RunSetupConfiguration } from "@code-nest/protocol";
+
 import {
   canApplyRunAction,
   foldRunEvents,
@@ -34,8 +38,17 @@ export interface RunLifecycleDependencies {
 export class RunLifecycleService implements RunLifecycleUseCases {
   constructor(private readonly dependencies: RunLifecycleDependencies) {}
 
-  create(runId: string, commandId: string): RunView {
-    const duplicate = this.#duplicate(runId, commandId, "create");
+  create(
+    runId: string,
+    commandId: string,
+    configuration?: RunSetupConfiguration,
+  ): RunView {
+    const duplicate = this.#duplicate(
+      runId,
+      commandId,
+      "create",
+      configuration,
+    );
     if (duplicate !== undefined) return duplicate;
 
     if (this.dependencies.store.hasEvents(runId)) {
@@ -50,7 +63,7 @@ export class RunLifecycleService implements RunLifecycleUseCases {
       );
     }
 
-    return this.#append(runId, commandId, "create");
+    return this.#append(runId, commandId, "create", undefined, configuration);
   }
 
   get(runId: string): RunView {
@@ -83,10 +96,16 @@ export class RunLifecycleService implements RunLifecycleUseCases {
     runId: string,
     commandId: string,
     action: RunAction,
+    configuration?: RunSetupConfiguration,
   ): RunView | undefined {
     const result = this.dependencies.store.getCommandResult(runId, commandId);
     if (result === undefined) return undefined;
-    if (result.kind === "other" || result.event.action !== action) {
+    if (
+      result.kind === "other" ||
+      result.event.action !== action ||
+      (action === "create" &&
+        !isDeepStrictEqual(result.event.configuration, configuration))
+    ) {
       throw new RunApplicationError(
         "IDEMPOTENCY_KEY_REUSED",
         "The idempotency key was used for another action.",
@@ -128,6 +147,7 @@ export class RunLifecycleService implements RunLifecycleUseCases {
     commandId: string,
     action: RunAction,
     parentEventId?: string,
+    configuration?: RunSetupConfiguration,
   ): RunView {
     const event = this.dependencies.store.append(commandId, {
       eventId: this.dependencies.createEventId(),
@@ -135,6 +155,7 @@ export class RunLifecycleService implements RunLifecycleUseCases {
       recordedAt: this.dependencies.now().toISOString(),
       action,
       commandId,
+      ...(configuration === undefined ? {} : { configuration }),
       ...(parentEventId === undefined ? {} : { parentEventId }),
     });
     const state = this.#read(runId, event.sequence);

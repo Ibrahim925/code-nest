@@ -1,0 +1,103 @@
+@media (max-width: 1040px) {
+  .setup-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .readiness-panel {
+    position: static;
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 10px 22px;
+  }
+
+  .readiness-panel h2,
+  .readiness-panel .readiness-intro {
+    grid-column: 2;
+  }
+
+  .readiness-panel h2 {
+    margin: 0;
+  }
+
+  .readiness-list,
+  .token-field,
+  .issue-summary,
+  .request-error,
+  .primary-action,
+  .run-controls,
+  .status-announcement {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 700px) {
+  .topbar {
+    padding: 0 18px;
+  }
+
+  .environment-mark {
+    font-size: 0;
+  }
+
+  .setup-layout {
+    width: 100%;
+    gap: 14px;
+    padding: 0 0 30px;
+  }
+
+  .protocol-sheet,
+  .readiness-panel {
+    border-right: 0;
+    border-left: 0;
+  }
+
+  .sheet-heading {
+    padding: 30px 20px;
+  }
+
+  .protocol-number {
+    display: none;
+  }
+
+  .protocol-fields fieldset,
+  .readiness-panel {
+    padding: 25px 20px 29px;
+  }
+
+  .field-pair,
+  .condition-grid,
+  .limit-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pin-row {
+    grid-template-columns: 88px minmax(0, 1fr);
+  }
+
+  .pin-row strong {
+    display: none;
+  }
+
+  .adapter-head {
+    display: none;
+  }
+
+  .adapter-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .adapter-row label > span {
+    display: block;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+  }
+
+  .readiness-panel {
+    display: block;
+  }
+
+  .readiness-panel h2 {
+    margin-top: 25px;
+  }
+}

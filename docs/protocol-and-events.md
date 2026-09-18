@@ -74,6 +74,27 @@ specific `kind` belongs to the command or event registry layered on top of this
 base envelope. A new kind does not change the base version, but a new control
 field, renamed field, changed meaning, or relaxed visibility rule does.
 
+## Run setup v1
+
+`@code-nest/protocol` publishes a strict `RunSetupConfigurationSchema` and parser
+for the operator creation boundary. The record binds one stable run ID to a
+scenario ID, manifest SHA-256, full Git revision, participant and evaluator OCI
+digests, exactly four distinct participant/adapter selections, deterministic
+seed, bounded resource limits, disclosure policy, and constitution. Unknown
+fields and malformed or unpinned identifiers fail closed.
+
+The configured `POST /runs` body carries the same run ID outside and inside this
+record. The controller rejects mismatches before persistence. A successful
+creation stores the complete record inside the public `run.created` payload so a
+replay can identify its inputs without a mutable setup table. It is public only
+because Version 1 contains reproducibility metadata rather than roles, covert
+briefs, hidden tests, provider credentials, or bearer material. The operator
+token remains exclusively in the transport authorization header.
+
+Legacy creation with only `{ "runId": ... }` remains accepted. New operator
+clients always send the configuration. An exact command retry replays its first
+result; the same idempotency key with changed configuration is a conflict.
+
 Malformed envelopes return `INVALID_COMMAND_ENVELOPE` or
 `INVALID_EVENT_ENVELOPE` with stable JSON-pointer issues. A string version other
 than `1.0` returns the corresponding `UNSUPPORTED_*_VERSION` error and lists the

@@ -1,5 +1,21 @@
 # Design Decisions
 
+## 2026-09-18: Bind reproducible setup to run creation
+
+- Reason: a run that becomes `running` before its scenario, source, adapters,
+  seed, limits, disclosure, and constitution are durable cannot be reproduced or
+  safely resumed. The first event is the only atomic command result available in
+  the Version 1 ledger schema, so it must contain the validated setup.
+- Rejected alternative: a browser-only setup object makes the UI authoritative.
+  A second configuration event permits a partially created run if its append
+  fails. A new mutable setup table would duplicate event state and require an
+  unnecessary schema migration.
+- Constraint: the strict Version 1 protocol parser rejects unknown, unpinned,
+  out-of-range, or duplicate-participant input. `run.created` may carry the
+  public configuration while old `{runId}` callers remain valid. The operator
+  bearer never enters the body or ledger. Exact retries replay; changed setup
+  under the same command ID conflicts.
+
 ## 2026-09-18: Resolve matches from one hashed final candidate
 
 - Reason: final scores, role reveal, and replay must all refer to the same release

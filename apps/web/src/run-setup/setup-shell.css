@@ -1,0 +1,126 @@
+.app-shell {
+  min-height: 100vh;
+  background: #e9edf2;
+}
+
+.topbar {
+  position: sticky;
+  z-index: 10;
+  top: 0;
+  display: flex;
+  min-height: 56px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4vw;
+  color: #f8fafc;
+  border-bottom: 3px solid #1746a2;
+  background: #111c33;
+}
+
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  color: inherit;
+  font-size: 0.86rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.wordmark-mark {
+  display: grid;
+  width: 22px;
+  grid-template-columns: repeat(2, 8px);
+  gap: 3px;
+}
+
+.wordmark-mark i {
+  width: 8px;
+  height: 8px;
+  border: 1px solid #8eaddf;
+  background: #1746a2;
+}
+
+.environment-mark {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #bac5d7;
+  font-size: 0.73rem;
+  font-weight: 650;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.environment-mark > span {
+  width: 7px;
+  height: 7px;
+  border: 1px solid #b8e2ca;
+  border-radius: 50%;
+  background: #31a86d;
+  box-shadow: 0 0 0 3px #1f3c3a;
+}
+
+.setup-layout {
+  display: grid;
+  width: min(1380px, 94vw);
+  margin: 0 auto;
+  grid-template-columns: minmax(0, 1fr) 330px;
+  gap: 24px;
+  align-items: start;
+  padding: 42px 0 72px;
+}
+
+.protocol-sheet,
+.readiness-panel {
+  border: 1px solid #c7ced8;
+  background: #fbfcfe;
+  box-shadow: 0 14px 35px rgb(31 43 65 / 8%);
+}
+
+.protocol-sheet {
+  min-width: 0;
+}
+
+.sheet-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 28px;
+  padding: 35px 38px 30px;
+  color: #fff;
+  background: #1746a2;
+}
+
+.sheet-heading h1 {
+  max-width: 670px;
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3.45rem);
+  font-weight: 650;
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+}
+
+.sheet-heading p {
+  max-width: 590px;
+  margin: 14px 0 0;
+  color: #cfdbf2;
+  font-size: 0.96rem;
+  line-height: 1.6;
+}
+
+.protocol-number {
+  flex: 0 0 auto;
+  align-self: flex-start;
+  padding-left: 18px;
+  color: #c8d6ef;
+  border-left: 1px solid #7695cf;
+  font: 600 0.68rem/1.5 "SFMono-Regular", Consolas, monospace;
+  letter-spacing: 0.12em;
+}
+
+.protocol-number strong {
+  color: #fff;
+  font-size: 1.1rem;
+}

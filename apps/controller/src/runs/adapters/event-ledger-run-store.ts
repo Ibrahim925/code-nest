@@ -1,4 +1,9 @@
-import { EVENT_SCHEMA_VERSION, type EventEnvelope } from "@code-nest/protocol";
+import {
+  EVENT_SCHEMA_VERSION,
+  parseRunSetupConfiguration,
+  type EventEnvelope,
+  type RunSetupConfiguration,
+} from "@code-nest/protocol";
 
 import {
   RunStoreError,
@@ -39,8 +44,13 @@ function lifecycleEvent(event: EventEnvelope): RunLifecycleEvent | undefined {
     );
   }
 
-  const expectedKeys =
-    action === "cancel" ? ["action", "terminalReason"] : ["action"];
+  const hasConfiguration =
+    action === "create" && "configuration" in event.payload;
+  const expectedKeys = action === "cancel"
+    ? ["action", "terminalReason"]
+    : hasConfiguration
+      ? ["action", "configuration"]
+      : ["action"];
   const keys = Object.keys(event.payload).sort();
   if (
     keys.length !== expectedKeys.length ||
@@ -54,12 +64,24 @@ function lifecycleEvent(event: EventEnvelope): RunLifecycleEvent | undefined {
     );
   }
 
+  let configuration: RunSetupConfiguration | undefined;
+  if (hasConfiguration) {
+    const parsed = parseRunSetupConfiguration(event.payload.configuration);
+    if (!parsed.ok || parsed.value.runId !== event.runId) {
+      throw new RunHistoryError(
+        `Lifecycle event ${event.eventId} has an invalid run configuration.`,
+      );
+    }
+    configuration = parsed.value;
+  }
+
   return {
     eventId: event.eventId,
     runId: event.runId,
     sequence: event.sequence,
     recordedAt: event.recordedAt,
     action,
+    ...(configuration === undefined ? {} : { configuration }),
   };
 }
 
@@ -72,9 +94,10 @@ function eventDraft(draft: RunEventDraft): EventDraft {
     actor: { kind: "operator", id: "local-operator" },
     context: { round: null, phase: null },
     kind: RUN_EVENT_KINDS[draft.action],
-    payload:
-      draft.action === "cancel"
-        ? { action: draft.action, terminalReason: "operator_cancelled" }
+    payload: draft.action === "cancel"
+      ? { action: draft.action, terminalReason: "operator_cancelled" }
+      : draft.action === "create" && draft.configuration !== undefined
+        ? { action: draft.action, configuration: draft.configuration }
         : { action: draft.action },
     visibility: { class: "public" },
     causationId: draft.commandId,

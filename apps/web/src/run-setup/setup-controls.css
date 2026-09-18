@@ -1,0 +1,198 @@
+.readiness-panel {
+  position: sticky;
+  top: 80px;
+  padding: 28px;
+}
+
+.readiness-stamp {
+  display: inline-grid;
+  min-width: 100px;
+  padding: 8px 0;
+  color: #8c3440;
+  border-top: 2px solid currentcolor;
+  border-bottom: 2px solid currentcolor;
+}
+
+.readiness-stamp span {
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.readiness-stamp strong {
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.08em;
+}
+
+.readiness-stamp.is-ready {
+  color: #1d704a;
+}
+
+.readiness-panel h2 {
+  margin: 27px 0 8px;
+  font-size: 1.45rem;
+  font-weight: 650;
+}
+
+.readiness-intro {
+  margin: 0;
+  color: #657187;
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+.readiness-list {
+  margin: 24px 0;
+  border-top: 2px solid #17233d;
+}
+
+.readiness-list > div {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid #d8dde5;
+}
+
+.readiness-list dt,
+.readiness-list dd {
+  margin: 0;
+  font-size: 0.69rem;
+  line-height: 1.4;
+}
+
+.readiness-list dt {
+  color: #69758a;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.readiness-list dd {
+  color: #273550;
+  font-weight: 650;
+  text-transform: capitalize;
+}
+
+.token-field span {
+  color: #788397;
+  font-size: 0.66rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.primary-action,
+.control-actions > button,
+.cancel-confirm button {
+  min-height: 44px;
+  border-radius: 2px;
+  font-size: 0.78rem;
+  font-weight: 750;
+  letter-spacing: 0.04em;
+}
+
+.primary-action {
+  width: 100%;
+  margin-top: 18px;
+  color: #fff;
+  border: 1px solid #1746a2;
+  background: #1746a2;
+}
+
+.primary-action:hover:not(:disabled) {
+  background: #10377f;
+}
+
+.primary-action:disabled {
+  color: #778298;
+  border-color: #cbd1db;
+  background: #e1e5eb;
+}
+
+.issue-summary,
+.request-error {
+  margin: 18px 0;
+  padding: 13px;
+  color: #6e2531;
+  border: 1px solid #d9abb1;
+  border-top: 3px solid #a64754;
+  background: #faeef0;
+  font-size: 0.72rem;
+  line-height: 1.5;
+}
+
+.issue-summary h3 {
+  margin: 0 0 8px;
+  font-size: 0.76rem;
+}
+
+.issue-summary ul {
+  margin: 0;
+  padding-left: 17px;
+}
+
+.run-controls {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 2px solid #17233d;
+}
+
+.run-state {
+  display: grid;
+  gap: 4px;
+}
+
+.run-state span,
+.run-state small {
+  color: #6b778c;
+  font-size: 0.65rem;
+}
+
+.run-state strong {
+  font-size: 1.05rem;
+  font-weight: 650;
+}
+
+.control-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+  margin-top: 15px;
+}
+
+.control-actions > button,
+.cancel-confirm button {
+  color: #17233d;
+  border: 1px solid #aeb8c7;
+  background: #fff;
+}
+
+.control-actions .danger-action {
+  color: #8c3440;
+  border-color: #c7959c;
+}
+
+.cancel-confirm {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid #c7959c;
+  background: #faeef0;
+}
+
+.cancel-confirm p {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: #6e2531;
+  font-size: 0.72rem;
+}
+
+.status-announcement {
+  margin: 16px 0 0;
+  color: #758096;
+  font-size: 0.65rem;
+}

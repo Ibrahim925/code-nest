@@ -1,3 +1,5 @@
+import type { RunSetupConfiguration } from "@code-nest/protocol";
+
 import type {
   RunAction,
   RunLifecycleEvent,
@@ -10,6 +12,7 @@ export interface RunEventDraft {
   readonly action: RunAction;
   readonly commandId: string;
   readonly parentEventId?: string;
+  readonly configuration?: RunSetupConfiguration;
 }
 
 export type StoredCommandResult =

@@ -1,3 +1,5 @@
+import type { RunSetupConfiguration } from "@code-nest/protocol";
+
 export const RUN_EVENT_KINDS = {
   create: "run.created",
   pause: "run.paused",
@@ -14,6 +16,7 @@ export interface RunLifecycleEvent {
   readonly sequence: number;
   readonly recordedAt: string;
   readonly action: RunAction;
+  readonly configuration?: RunSetupConfiguration;
 }
 
 export interface RunView {

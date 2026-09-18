@@ -14,20 +14,49 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-026` three-round completion and resolution is the
+- **Branch/commit:** `main`; `CN-027` run setup and operator controls is the
   latest verified feature checkpoint.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 38 Vitest files, and 267 tests.
+  typechecks across six workspaces, 41 Vitest files, and 278 tests.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-027`, run setup and operator controls. Build a
-  validated setup model for scenario, pinned source, four adapters, seed, limits,
-  disclosure policy, and constitution; then wire accessible start, pause, resume,
-  and cancel controls without letting the browser author authoritative state.
+- **Next priority:** begin `CN-028`, the live event client with gap recovery.
+  Consume audience-safe deliveries, reconnect from visible event IDs, fill gaps,
+  deduplicate repeated delivery, and expose connection state without treating a
+  browser cursor as authoritative ledger position.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-18 (cn-027) — Add run setup and operator controls
+
+- Outcome: done.
+- Did: added a strict Version 1 run-setup protocol for scenario manifest, source
+  revision, OCI image digests, exactly four distinct adapter selections, seed,
+  bounded limits, disclosure, and constitution. Configured creation remains
+  backward compatible but now stores the complete setup atomically in the public
+  `run.created` event; exact retries replay and changed configuration under the
+  same command ID conflicts. Added a feature-oriented browser hexagon with pure
+  validation, a credential-safe HTTP adapter, controlled React setup fields, and
+  state-specific start, pause, resume, cancel, and inline confirmation controls.
+  The operator token remains only in component memory. Vite proxies same-origin
+  `/api` requests to the loopback controller. Added the protocol-workstation
+  visual system and durable `DESIGN.md` plus sidecar.
+- Verification run: focused web tests passed 5 of 5; focused protocol and real-
+  SQLite controller tests passed 6 of 6. A live proxied controller flow produced
+  running sequence 1, paused 2, resumed 3, and cancelled 4. The Vite production
+  build passed and retained the direction contract. In-app responsive inspection
+  verified labels, unavailable states, masked credentials, mobile reflow, and
+  HOLD-to-READY feedback. The finish detector's one side-accent warning was
+  removed; the degraded fresh-eye review disposition was `ship`. Final
+  `make check` passed the 350-line guard, ESLint, all six workspace typechecks,
+  41 test files, and 278 tests.
+- Risks / follow-ups: legacy `{runId}` creation remains accepted for compatibility
+  and therefore produces an unconfigured historical event; new UI clients always
+  send Version 1 setup. The catalog currently exposes only Station Access and the
+  deterministic fake split adapter; CN-039 will add real adapter capability
+  selection. CN-028 owns live delivery and reconnection after setup.
 
 ### 2026-09-18 (cn-026) — Complete, score, and reveal a three-round match
 

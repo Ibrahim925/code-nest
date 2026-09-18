@@ -8,6 +8,7 @@ export default defineConfig({
     include: [
       "tests/**/*.test.ts",
       "apps/**/*.test.ts",
+      "apps/**/*.test.tsx",
       "packages/**/*.test.ts",
       "scenarios/**/*.test.ts",
     ],

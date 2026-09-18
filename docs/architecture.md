@@ -161,9 +161,11 @@ with `CODE_NEST_OPERATOR_TOKEN`; when it is absent, the local process generates
 an ephemeral token and reports it in the controller log. Every `POST` also
 requires an `idempotency-key` whose syntax matches a protocol identifier.
 
-Creation accepts exactly `{ "runId": "<stable-id>" }`. The three state mutations
-accept no body. The response is a Version 1 view containing the run ID, status,
-terminal reason, creation and update timestamps, and last lifecycle-event
+Creation accepts `{ "runId": "<stable-id>", "configuration": <run-setup-v1> }`.
+The configuration is optional only for backward compatibility with the original
+lifecycle client; the operator interface always supplies it. The three state
+mutations accept no body. The response is a Version 1 view containing the run ID,
+status, terminal reason, creation and update timestamps, and last lifecycle-event
 sequence. The permitted transitions are:
 
 | Request | Required state | Result |
@@ -174,18 +176,28 @@ sequence. The permitted transitions are:
 | cancel | running or paused | cancelled (`operator_cancelled`) |
 
 Successful mutations append public `run.created`, `run.paused`, `run.resumed`,
-or `run.cancelled` events. Reads rebuild the view from those durable events; no
+or `run.cancelled` events. A configured creation event contains the complete
+validated setup, but never the operator bearer. Reads rebuild the view from those durable events; no
 second run-state table can drift from the ledger. The run domain and application
 service depend on a lifecycle-store port; the SQLite ledger and Fastify routes
 are outer adapters wired in `app.ts`. Retrying the same action with
 the same key returns the state produced by the original event, even if later
-events have moved the run onward. Reusing a key for a different action is a
-conflict. Invalid transitions and unauthorized requests never append a lifecycle
-event.
+events have moved the run onward. Reusing a key for a different action or changed
+creation configuration is a conflict. Invalid transitions and unauthorized
+requests never append a lifecycle event.
 
 Lifecycle state does not claim that a participant process was interrupted or a
 phase clock was frozen. Runtime supervision and phase-clock effects attach to
 these accepted events in later features and must not silently invent success.
+
+The browser setup feature is a separate inbound hexagon under
+`apps/web/src/run-setup`. Pure validation owns field safety and local capability
+availability; the HTTP adapter sends versioned configuration and lifecycle
+intents. React owns only controlled interaction state. The operator bearer stays
+in component memory and is never placed in configuration, URLs, browser storage,
+or a `VITE_*` variable. Development requests use same-origin `/api`, which Vite
+proxies to the loopback controller; production can provide a non-secret
+`VITE_CONTROLLER_URL` for its trusted reverse-proxy topology.
 
 ## SSE event delivery v1
 

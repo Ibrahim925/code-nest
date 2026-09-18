@@ -1,17 +1,12 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
+import { HttpOperatorRunClient } from "./run-setup/client.js";
+import { RunSetupApp } from "./run-setup/RunSetupApp.js";
+import "./run-setup/run-setup.css";
 import "./styles.css";
 
-function HarnessReady(): React.JSX.Element {
-  return (
-    <main>
-      <p className="eyebrow">CODE NEST</p>
-      <h1>The harness is ready.</h1>
-      <p>Feature implementation begins after initialization is checkpointed.</p>
-    </main>
-  );
-}
+const controllerUrl = import.meta.env.VITE_CONTROLLER_URL ?? "/api";
 
 const rootElement = document.querySelector("#root");
 
@@ -21,6 +16,11 @@ if (!(rootElement instanceof HTMLElement)) {
 
 createRoot(rootElement).render(
   <StrictMode>
-    <HarnessReady />
+    <RunSetupApp
+      createClient={(token) => new HttpOperatorRunClient({
+        baseUrl: controllerUrl,
+        token,
+      })}
+    />
   </StrictMode>,
 );

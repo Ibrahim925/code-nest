@@ -1,0 +1,208 @@
+.protocol-fields fieldset {
+  margin: 0;
+  padding: 28px 38px 34px;
+  border: 0;
+  border-bottom: 1px solid #d8dde5;
+}
+
+.protocol-fields fieldset:last-child {
+  border-bottom: 0;
+}
+
+.protocol-fields fieldset:disabled {
+  color: inherit;
+  opacity: 0.72;
+}
+
+.protocol-fields legend {
+  width: 100%;
+  margin-bottom: 18px;
+  padding: 0;
+  color: #1746a2;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.field-pair,
+.condition-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.protocol-fields label,
+.token-field {
+  display: grid;
+  gap: 7px;
+  color: #3c4960;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.035em;
+}
+
+.protocol-fields input,
+.protocol-fields select,
+.token-field input {
+  width: 100%;
+  min-height: 42px;
+  padding: 9px 11px;
+  color: #17233d;
+  border: 1px solid #adb7c6;
+  border-radius: 2px;
+  background: #fff;
+  font-size: 0.88rem;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.protocol-fields input:disabled,
+.protocol-fields select:disabled,
+.token-field input:disabled {
+  color: #677286;
+  background: #edf0f4;
+}
+
+.pin-ledger {
+  margin-top: 20px;
+  border-top: 2px solid #17233d;
+}
+
+.pin-row {
+  display: grid;
+  grid-template-columns: 124px minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  min-height: 41px;
+  border-bottom: 1px solid #d8dde5;
+  font-size: 0.72rem;
+}
+
+.pin-row span {
+  color: #546177;
+  font-weight: 700;
+}
+
+.pin-row code {
+  overflow: hidden;
+  color: #273550;
+  font: 0.68rem "SFMono-Regular", Consolas, monospace;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pin-row strong {
+  color: #1d704a;
+  font-size: 0.63rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.field-note {
+  margin: -7px 0 17px;
+  color: #657187;
+  font-size: 0.82rem;
+}
+
+.adapter-table {
+  overflow: hidden;
+  border: 1px solid #c4ccd7;
+}
+
+.adapter-head,
+.adapter-row {
+  display: grid;
+  grid-template-columns: 0.9fr 1.05fr 0.8fr 1.4fr;
+  gap: 10px;
+}
+
+.adapter-head {
+  padding: 9px 10px;
+  color: #dfe7f5;
+  background: #273550;
+  font-size: 0.62rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.adapter-row {
+  padding: 10px;
+  border-top: 1px solid #d8dde5;
+  background: #f8fafc;
+}
+
+.adapter-row:first-of-type {
+  border-top: 0;
+}
+
+.adapter-row label > span {
+  display: none;
+}
+
+.adapter-row input,
+.adapter-row select {
+  min-height: 37px;
+  padding: 7px 8px;
+  font-size: 0.76rem;
+}
+
+.disclosure-choice {
+  margin-top: 22px;
+}
+
+.disclosure-choice > p {
+  margin: 0 0 9px;
+  color: #3c4960;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.disclosure-choice label {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 12px 0;
+  border-top: 1px solid #d8dde5;
+  font-size: 0.81rem;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.disclosure-choice input {
+  width: 17px;
+  min-height: 17px;
+  margin-top: 2px;
+  accent-color: #1746a2;
+}
+
+.disclosure-choice strong {
+  display: block;
+  color: #17233d;
+}
+
+.limit-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px 12px;
+}
+
+.number-field {
+  position: relative;
+  display: block;
+}
+
+.number-field input {
+  padding-right: 68px;
+}
+
+.number-field > span {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  color: #6c778a;
+  font-size: 0.62rem;
+  font-weight: 600;
+  transform: translateY(-50%);
+}

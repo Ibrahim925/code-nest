@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-18T13:00:12Z",
+  "title": "Design System: Code Nest",
+  "extensions": {
+    "colorMeta": {
+      "protocol-cobalt": {
+        "role": "primary",
+        "displayName": "Protocol Cobalt",
+        "canonical": "#1746a2"
+      },
+      "control-navy": {
+        "role": "neutral",
+        "displayName": "Control Navy",
+        "canonical": "#111c33"
+      },
+      "cool-canvas": {
+        "role": "neutral",
+        "displayName": "Cool Canvas",
+        "canonical": "#e9edf2"
+      },
+      "protocol-paper": {
+        "role": "neutral",
+        "displayName": "Protocol Paper",
+        "canonical": "#fbfcfe"
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Protocol Display",
+        "purpose": "One task-defining title per surface."
+      },
+      "label": {
+        "displayName": "Structural Label",
+        "purpose": "Fieldsets, table heads, and state metadata."
+      }
+    },
+    "shadows": [
+      {
+        "name": "paper-stack",
+        "value": "0 14px 35px rgb(31 43 65 / 8%)",
+        "purpose": "Separates complete working records from the canvas."
+      }
+    ],
+    "breakpoints": [
+      { "name": "stack-record", "value": "1040px" },
+      { "name": "single-column", "value": "700px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Action",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Commits one validated operator decision.",
+      "html": "<button class=\"primary-action\">Start match</button>",
+      "css": ".primary-action { min-height: 44px; color: #fff; border: 1px solid #1746a2; border-radius: 2px; background: #1746a2; }"
+    },
+    {
+      "name": "Readiness Record",
+      "kind": "custom",
+      "refersTo": "protocol-sheet",
+      "description": "Summarizes reproducibility and operator authority beside the setup protocol.",
+      "html": "<aside class=\"readiness-panel\"><h2>Readiness record</h2></aside>",
+      "css": ".readiness-panel { position: sticky; top: 80px; padding: 28px; border: 1px solid #c7ced8; background: #fbfcfe; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Research Protocol Workstation",
+    "overview": "A precise, calm, and inspectable interface built from cool protocol paper, institutional cobalt, dark control surfaces, and ruled evidence rows.",
+    "keyCharacteristics": [
+      "Cool-white working surfaces",
+      "Cobalt commitments",
+      "Ruled provenance rows",
+      "Explicit text-labelled state"
+    ],
+    "rules": [
+      {
+        "name": "Evidence Before Color",
+        "body": "Status remains understandable when color is removed.",
+        "section": "colors"
+      },
+      {
+        "name": "Paper Stack",
+        "body": "Elevation separates whole records, never individual data rows.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Group decisions by experimental ownership.",
+      "Expose provenance and capability availability.",
+      "Pair status color with precise text."
+    ],
+    "donts": [
+      "Do not represent private thought as ground truth.",
+      "Do not use gradients, faux stamps, or thick side-tab accents.",
+      "Do not persist operator bearer credentials."
+    ]
+  }
+}
