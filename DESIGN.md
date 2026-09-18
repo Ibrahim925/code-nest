@@ -114,6 +114,13 @@ The palette uses one institutional accent, deep neutral controls, cool paper neu
 
 Primary operator surfaces use a bounded two-column grid: a flexible protocol sheet and a 330px decision record. The sheet uses 38px horizontal padding and a repeated section boundary. At 1040px the readiness record moves below the sheet; at 700px fields become single-column, adapter rows become two-column cards, and outer borders yield to the viewport edge.
 
+The Live Observatory uses a compact run bar above four equal participant lanes.
+Each lane keeps the same field order so concurrent state can be scanned by row,
+not by decorative card differences. At 1120px lanes form a two-by-two grid; at
+680px they become one chronological column without horizontal scrolling.
+Unavailable health or observability is written explicitly instead of receiving a
+healthy-looking placeholder.
+
 The first viewport should establish the task, pinned-input assurance, and readiness decision. Long identifiers truncate visually but retain their full value as accessible title text.
 
 ## Elevation & Depth

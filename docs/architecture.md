@@ -233,6 +233,28 @@ an event ID or prior sequence changes meaning. Connecting, live, recovering,
 failed, and stopped are explicit observer states. The bearer remains outside
 URLs and browser storage; a native `EventSource` is not used because it cannot
 set the required authorization header.
+
+## Live participant lanes v1
+
+`apps/web/src/observatory` is a feature-oriented projection hexagon. Its pure
+application reducer receives already-authorized live deliveries and owns the
+stable four-lane state. React renders that state and the Observatory composition
+subscribes through the event client; neither the lane domain nor its reducer
+opens a network connection.
+
+Run setup supplies stable participant order, adapter selection, execution mode,
+and declared model text. Public briefing events add assignment IDs, runtime-start
+events add validated runtime metadata and negotiated capabilities, event context
+updates phase, and captured work adds the latest reported commit. Pause/resume
+preserves the last factual activity; integration can mark an explicitly reported
+quarantine; cancellation or completion finishes every lane.
+
+Container health is unavailable until a controller event reports it. Runtime
+startup is not treated as proof of container health, and missing adapter
+capabilities remain `Capabilities pending` or an explicit count rather than
+invented observations. Lane order never follows event arrival order. Unknown,
+malformed, foreign-participant, and repeated delivery updates cannot add or
+reorder lanes.
 This split preserves deterministic client ordering without revealing gaps made
 by covert, participant-private, post-reveal, or operator-private events.
 

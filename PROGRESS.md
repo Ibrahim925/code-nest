@@ -14,20 +14,41 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-028` live event client with gap recovery is the
+- **Branch/commit:** `main`; `CN-029` four concurrent agent lanes is the
   latest verified feature checkpoint.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 45 Vitest files, and 293 tests.
+  typechecks across six workspaces, 46 Vitest files, and 299 tests.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-029`, four concurrent agent lanes. Derive a stable
-  four-participant observatory projection from authorized deliveries and render
-  phase, status, assignment, health, and supported current activity without
-  synthesizing unavailable adapter capabilities.
+- **Next priority:** begin `CN-030`, observable work and artifact views. Project
+  authorized work notes, commands, terminal output, file changes, tests, usage,
+  messages, and artifact references into a chronological or per-lane workstream
+  while sanitizing every untrusted presentation boundary.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-18 (cn-029) — Four concurrent agent lanes
+
+- Outcome: done.
+- Did: added a feature-oriented Observatory hexagon with a pure lane projector,
+  explicit four-lane domain state, React lane rail, live event subscription, run
+  bar, operator controls, and responsive presentation. Validated setup fixes lane
+  identity and order; briefing, context, runtime, captured-work, pause/resume,
+  quarantine, completion, cancellation, and health events update only their owned
+  facts. Runtime startup never masquerades as container health, missing adapter
+  observations stay explicit, and each activity names its causal event.
+- Verification run: the focused suite passed 6 of 6 cases and the existing setup
+  suite remained green. Production Vite bundling passed. Desktop inspection showed
+  four equal lanes; a 390px inspection showed one column and zero horizontal
+  overflow. The visual pass found a stylesheet-order bug that initially defeated
+  the narrow breakpoint; it was corrected. Final `make check` passed the 350-line
+  guard, ESLint, all six strict workspace typechecks, 46 test files, and 299 tests.
+- Risks / follow-ups: current controller fixtures report runtime facts but not real
+  container health, so the UI correctly shows `Not reported`; CN-036 supplies real
+  participant containers. CN-030 fills the intentionally reserved workstream with
+  sanitized observable activity and artifact access.
 
 ### 2026-09-18 (cn-028) — Live event client with gap recovery
 

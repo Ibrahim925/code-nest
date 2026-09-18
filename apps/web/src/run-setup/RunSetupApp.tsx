@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 
+import { LiveObservatory } from "../observatory/LiveObservatory.js";
 import { DEFAULT_RUN_SETUP, SETUP_CATALOG } from "./catalog.js";
 import {
   OperatorClientError,
@@ -11,11 +12,11 @@ import {
   type RunControlView,
   type RunSetupConfiguration,
 } from "./domain.js";
-import { RunControls, runStatusLabel } from "./RunControls.js";
 import { SetupFields } from "./SetupFields.js";
 
 export interface RunSetupAppProps {
   readonly createClient: (token: string) => OperatorRunClient;
+  readonly controllerBaseUrl?: string;
   readonly initialConfiguration?: RunSetupConfiguration;
 }
 
@@ -27,6 +28,7 @@ function safeMessage(error: unknown): string {
 
 export function RunSetupApp({
   createClient,
+  controllerBaseUrl = "/api",
   initialConfiguration = DEFAULT_RUN_SETUP,
 }: RunSetupAppProps): React.JSX.Element {
   const [configuration, setConfiguration] = useState(initialConfiguration);
@@ -66,6 +68,20 @@ export function RunSetupApp({
       setPendingAction(null);
     }
   };
+
+  if (run !== null) {
+    return (
+      <LiveObservatory
+        baseUrl={controllerBaseUrl}
+        bearerToken={operatorToken}
+        configuration={configuration}
+        run={run}
+        pendingAction={pendingAction === "start" ? null : pendingAction}
+        controlError={requestError}
+        onMutation={(action) => void mutate(action)}
+      />
+    );
+  }
 
   return (
     <div className="app-shell">
@@ -157,26 +173,18 @@ export function RunSetupApp({
             <p className="request-error" role="alert">{requestError}</p>
           )}
 
-          {run === null ? (
-            <button
-              className="primary-action"
-              type="submit"
-              form="run-setup-form"
-              disabled={!ready || pendingAction !== null}
-            >
-              {pendingAction === "start" ? "Starting match…" : "Start match"}
-            </button>
-          ) : (
-            <RunControls
-              run={run}
-              pendingAction={pendingAction}
-              onMutation={(action) => void mutate(action)}
-            />
-          )}
+          <button
+            className="primary-action"
+            type="submit"
+            form="run-setup-form"
+            disabled={!ready || pendingAction !== null}
+          >
+            {pendingAction === "start" ? "Starting match…" : "Start match"}
+          </button>
 
           <p className="status-announcement" aria-live="polite">
             {pendingAction === null
-              ? run === null ? "No run has started." : runStatusLabel(run)
+              ? "No run has started."
               : `${pendingAction} request in progress.`}
           </p>
         </aside>

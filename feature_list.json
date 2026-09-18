@@ -315,9 +315,9 @@
       "milestone": "M3-live-observatory",
       "title": "Four concurrent agent lanes",
       "user_visible_behavior": "The Live Observatory shows four stable participant lanes with phase, status, assignment, container health, and current observable activity.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run apps/web/src/observatory/agent-lanes.test.tsx", "make check"],
-      "evidence": "",
+      "evidence": "The focused agent-lane suite passed 6 of 6 tests. A pure event projector fixes exactly four unique lanes from validated setup, preserves their order under concurrent participant updates, applies public assignments and phase context, reports runtime metadata and negotiated observability without inventing unsupported capability, records latest captured commit and activity provenance, restores factual state across pause/resume, preserves quarantine, completes or cancels all lanes, and ignores duplicate, malformed, or unknown-participant updates. Container health remains explicitly Not reported until a valid health event arrives. Server-rendered UI checks prove non-color status text, four accessible list items, credential omission, connection state, operator controls, and the composed run bar. Existing run-setup tests passed, and the Vite production build succeeded. In-app inspection verified the four-column operating view and a 390px single-column view with no horizontal overflow; it also caught and prompted correction of stylesheet order. Final make check passed the 350-line guard, ESLint, six strict workspace typechecks, 46 test files, and 299 tests.",
       "notes": "Unsupported adapter capabilities appear unavailable rather than synthesized; AC 13."
     },
     {

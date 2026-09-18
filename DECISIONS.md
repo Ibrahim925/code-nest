@@ -1,5 +1,19 @@
 # Design Decisions
 
+## 2026-09-18: Derive stable participant lanes from authorized facts
+
+- Reason: concurrent event arrival must not reorder participants or turn absent
+  telemetry into a healthy-looking guess. A pure lane reducer gives live viewing
+  and later replay the same factual projection while React remains presentation.
+- Rejected alternative: component-local per-card subscriptions can race and drift.
+  Treating runtime startup as container health or mapping unknown Tier 0 output to
+  a precise activity label would overstate what the adapter observed.
+- Constraint: validated run setup fixes exactly four lane identities and order.
+  Authorized deliveries may update only known participants. Assignment, phase,
+  runtime capability, activity provenance, commit, pause, quarantine, and finish
+  states each require their owning event. Health remains `Not reported` until an
+  explicit health event arrives; status meaning is always written in text.
+
 ## 2026-09-18: Stream authenticated browser events through Fetch
 
 - Reason: the live browser must authenticate without placing bearer material in

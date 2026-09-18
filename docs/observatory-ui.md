@@ -37,6 +37,19 @@ The live screen uses progressive disclosure: a stable four-lane pulse first,
 details on selection. Reconnection fills missing sequences before returning to
 live mode. Virtualize large timelines and logs; artifacts load on demand.
 
+## Four-lane pulse
+
+The first live projection fixes lane order from the validated run setup, never
+from event arrival. Every lane uses the same scan order: participant and phase,
+factual activity, assignment, runtime/model disclosure, container health,
+observability, latest reported commit, and the event that caused the activity.
+
+Initial values say `Awaiting briefing`, `Capabilities pending`, `None reported`,
+or `Not reported`. In particular, a runtime-start event does not prove that a
+container is healthy. A health label appears only after an authorized
+container-health event. Wide screens show four equal lanes, medium screens show
+two by two, and phones use one column without changing chronological meaning.
+
 ## Accessibility
 
 Core live and replay flows target WCAG 2.2 AA. Status never depends on color.

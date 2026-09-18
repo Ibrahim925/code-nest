@@ -5,6 +5,8 @@ import { HttpOperatorRunClient } from "./run-setup/client.js";
 import { RunSetupApp } from "./run-setup/RunSetupApp.js";
 import "./run-setup/run-setup.css";
 import "./styles.css";
+import "./observatory/observatory.css";
+import "./observatory/observatory-responsive.css";
 
 const controllerUrl = import.meta.env.VITE_CONTROLLER_URL ?? "/api";
 
@@ -17,6 +19,7 @@ if (!(rootElement instanceof HTMLElement)) {
 createRoot(rootElement).render(
   <StrictMode>
     <RunSetupApp
+      controllerBaseUrl={controllerUrl}
       createClient={(token) => new HttpOperatorRunClient({
         baseUrl: controllerUrl,
         token,
