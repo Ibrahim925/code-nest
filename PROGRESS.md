@@ -14,20 +14,44 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-027` run setup and operator controls is the
+- **Branch/commit:** `main`; `CN-028` live event client with gap recovery is the
   latest verified feature checkpoint.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 41 Vitest files, and 278 tests.
+  typechecks across six workspaces, 45 Vitest files, and 293 tests.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-028`, the live event client with gap recovery.
-  Consume audience-safe deliveries, reconnect from visible event IDs, fill gaps,
-  deduplicate repeated delivery, and expose connection state without treating a
-  browser cursor as authoritative ledger position.
+- **Next priority:** begin `CN-029`, four concurrent agent lanes. Derive a stable
+  four-participant observatory projection from authorized deliveries and render
+  phase, status, assignment, health, and supported current activity without
+  synthesizing unavailable adapter capabilities.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-18 (cn-028) — Live event client with gap recovery
+
+- Outcome: done.
+- Did: added a framework-free live client behind transport and decoder ports. It
+  tracks audience-visible delivery order, resumes from the last accepted event
+  ID, repairs detected gaps, suppresses exact at-least-once duplicates, rejects
+  changed event IDs or prior sequences, reports connecting/live/recovering/
+  failed/stopped states, and bounds retry attempts. Added an authenticated fetch
+  adapter and incremental bounded SSE reader; bearer material stays in headers,
+  and heartbeats plus chunk-split CRLF input are supported. The browser now links
+  the existing protocol workspace package; one composition factory joins the
+  Fetch transport and exact Version 1 delivery parser without duplicating wire
+  validation. Tests remain colocated with application, HTTP, and protocol
+  ownership instead of accumulating in one oversized file.
+- Verification run: four focused suites passed 15 of 15 cases, including real
+  transport/parser composition, gap recovery, deduplication, bounded terminal
+  failure, cancellation, credential-safe requests, incremental SSE parsing, and
+  strict malformed/version/leaked-sequence/frame-ID rejection. Final `make check`
+  passed the 350-line guard, ESLint, all six strict workspace typechecks, 45 test
+  files, and 293 tests.
+- Risks / follow-ups: accepted event IDs remain in memory for the followed run so
+  changed duplicate meaning can fail closed; CN-046 will validate the intended
+  10,000-event workload. CN-029 consumes this client to render participant lanes.
 
 ### 2026-09-18 (cn-027) — Add run setup and operator controls
 

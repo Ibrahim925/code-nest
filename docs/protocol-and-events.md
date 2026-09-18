@@ -215,6 +215,15 @@ position, and then resumes live delivery. Unknown, cross-run, and unauthorized
 cursors all fail as `INVALID_EVENT_CURSOR`. Clients deduplicate by event ID
 because delivery is at least once.
 
+The browser validates the SSE event type, JSON body, complete Version 1 delivery,
+and agreement between the frame ID and delivered event ID before projection. It
+expects the next audience-visible delivery sequence, but never treats that number
+as a ledger cursor. A higher number triggers recovery from the last accepted
+event ID. An exact repeated event is ignored; a reused event ID, changed prior
+sequence, malformed delivery, or unsupported version is a terminal protocol
+failure. Transport recovery is bounded and exposes an honest failed state when
+the stream cannot be restored.
+
 The authenticated token determines whether the stream is a clean-observer or
 operator projection. Audience, run identity, reveal state, source sequences,
 and hidden placeholders are never accepted from or returned to a clean client.

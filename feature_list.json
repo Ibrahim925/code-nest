@@ -304,9 +304,9 @@
       "milestone": "M3-live-observatory",
       "title": "Live event client with gap recovery",
       "user_visible_behavior": "The browser follows a run live, reconnects after interruption, fills missing sequences, deduplicates repeated delivery, and shows connection state honestly.",
-      "status": "not_started",
-      "verification": ["corepack pnpm vitest run apps/web/src/events/event-client.test.ts", "make check"],
-      "evidence": "",
+      "status": "passing",
+      "verification": ["corepack pnpm vitest run apps/web/src/events", "make check"],
+      "evidence": "The four focused browser-event suites passed 15 of 15 tests. The transport-independent client resumed from the last accepted visible event ID, repaired disconnect and explicit sequence gaps, suppressed exact at-least-once duplicates, rejected changed event IDs and prior sequences, bounded retries, stopped cleanly on cancellation, and exposed connecting/live/recovering/failed/stopped states. The Fetch SSE adapter kept bearer authority out of URLs, sent Last-Event-ID, handled heartbeats, split CRLF input and multiline data, and distinguished terminal request failures from recoverable network/server failures. The composition suite streamed a complete delivery through the real Fetch, SSE, and shared @code-nest/protocol adapters; strict tests rejected malformed JSON, unexpected event types, unsupported versions, leaked ledger sequences, and mismatched frame IDs. Final make check passed the 350-line guard, ESLint, six strict workspace typechecks, 45 test files, and 293 tests.",
       "notes": "Client projections consume authorized server events only; AC 14."
     },
     {

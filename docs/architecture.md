@@ -218,6 +218,21 @@ scan. This closes the catch-up/live handoff without broadcasting before commit.
 The wire record has its own Version 1 schema in `@code-nest/protocol`. It carries
 a contiguous audience-visible delivery sequence and the projected event without
 its ledger sequence. SSE frame IDs remain stable event IDs for reconnection.
+
+The browser counterpart is a separate inbound hexagon under
+`apps/web/src/events`. Its application state machine depends on transport and
+delivery-decoder ports, so recovery rules have no React or Fetch dependency. A
+Fetch streaming adapter supplies bearer authorization and `Last-Event-ID`
+headers; the protocol adapter validates every frame with the shared strict
+Version 1 parser. The composition factory is the only place that joins them.
+
+The client advances its cursor only after accepting the next contiguous visible
+delivery. It reconnects after closure, network failure, or a detected sequence
+gap, suppresses exact at-least-once duplicates by event ID, and fails closed if
+an event ID or prior sequence changes meaning. Connecting, live, recovering,
+failed, and stopped are explicit observer states. The bearer remains outside
+URLs and browser storage; a native `EventSource` is not used because it cannot
+set the required authorization header.
 This split preserves deterministic client ordering without revealing gaps made
 by covert, participant-private, post-reveal, or operator-private events.
 

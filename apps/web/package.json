@@ -8,6 +8,7 @@
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
+    "@code-nest/protocol": "workspace:*",
     "react": "19.3.0",
     "react-dom": "19.3.0"
   },

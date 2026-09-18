@@ -1,5 +1,21 @@
 # Design Decisions
 
+## 2026-09-18: Stream authenticated browser events through Fetch
+
+- Reason: the live browser must authenticate without placing bearer material in
+  a URL, resume from an opaque visible event ID, and inspect delivery sequences
+  to repair gaps. Fetch exposes authorization headers and a readable SSE body
+  while keeping transport concerns outside the recovery state machine.
+- Rejected alternative: native `EventSource` cannot set the required bearer
+  header. Query-string credentials can leak through history, logs, referrers, or
+  screenshots. A handwritten browser delivery validator would drift from the
+  controller's shared protocol contract.
+- Constraint: the web package depends on the existing `@code-nest/protocol`
+  workspace package and parses every delivery through its Version 1 validator.
+  The application layer knows only transport and decoder ports. Recovery uses
+  `Last-Event-ID`, bounds retries, accepts only contiguous audience-visible
+  sequences, and never interprets delivery sequence as private ledger position.
+
 ## 2026-09-18: Bind reproducible setup to run creation
 
 - Reason: a run that becomes `running` before its scenario, source, adapters,
