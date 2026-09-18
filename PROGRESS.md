@@ -14,20 +14,44 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-038` disposable trusted-test containers is the
+- **Branch/commit:** `main`; `CN-039` adversarial isolation, redaction, and cleanup is the
   latest verified feature checkpoint.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 64 Vitest files, and 377 tests, including the
-  real trusted-test, participant, credential, TLS, and Docker network boundaries.
+  typechecks across six workspaces, 65 Vitest files, and 381 tests, including the
+  real adversarial isolation, cleanup, redaction, trusted-test, credential, TLS,
+  and Docker network boundaries.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-039`, the adversarial isolation, redaction, and
-  cleanup suite. Exercise private mounts, hidden tests, secrets, Docker socket,
-  peer and network denial, enforced exhaustion, cancellation, and persistence.
+- **Next priority:** begin `CN-040`, the direct reference model-loop adapter. Add
+  a provider-neutral control-plane loop with deterministic provider tests,
+  measured usage, and provenance-labelled optional reasoning summaries.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-18 (cn-039) — Adversarial isolation, redaction, and cleanup
+
+- Outcome: done.
+- Did: added a cross-boundary attack suite in `packages/testing` and a pure
+  pre-persistence secret-redaction domain. The ledger now scrubs configured exact
+  patterns from JSON payload keys and strings before validation or SQLite work;
+  app composition always includes operator and observer bearers. Tests drove real
+  simultaneous split and contained runtimes against peer workspaces, hidden tests,
+  controller files, credentials, process environments, read-only roots, Docker
+  socket, peer brokers, direct internet, file size, captured output, normal stop,
+  and cancellation.
+- Verification run: four focused adversarial cases passed. They proved every
+  forbidden access failed, file and output limits enforced, output exhaustion
+  destroyed its worker, separate contained networks blocked peer traffic, both
+  shutdown reasons removed all labelled containers/networks/volumes, and a seeded
+  public-output secret was absent from the returned event and every SQLite file
+  byte. Final `make check` passed the 350-line guard, ESLint, all six strict
+  workspace typechecks, 65 test files, and 381 tests.
+- Risks / follow-ups: arbitrary binary artifact rewriting remains with each typed
+  collection adapter; `ArtifactStore` does not guess how to mutate binary formats.
+  Active provider/runtime secret patterns must be supplied to app composition.
+  Docker remains a local single-machine boundary, not kernel-escape protection.
 
 ### 2026-09-18 (cn-038) — Disposable trusted-test containers
 

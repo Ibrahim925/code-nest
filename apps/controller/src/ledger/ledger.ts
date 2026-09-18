@@ -17,6 +17,7 @@ import {
   decodeStoredEvent,
   readInteger,
 } from "./ledger-database.js";
+import { SecretRedactor } from "../redaction/index.js";
 
 export {
   EventLedgerError,
@@ -51,10 +52,12 @@ export class EventLedger {
   readonly #getEvent: StatementSync;
   readonly #listEvents: StatementSync;
   readonly #listeners = new Map<string, Set<EventListener>>();
+  readonly #redactor: SecretRedactor;
   #closed = false;
 
-  private constructor(database: DatabaseSync) {
+  private constructor(database: DatabaseSync, secretPatterns: readonly string[]) {
     this.#database = database;
+    this.#redactor = new SecretRedactor(secretPatterns);
     this.#findCommand = database.prepare(`
       SELECT e.run_id, e.sequence, e.event_id, e.envelope_json
       FROM processed_commands AS c
@@ -105,7 +108,7 @@ export class EventLedger {
     `);
   }
 
-  static open(path: string): EventLedger {
+  static open(path: string, options: { readonly secretPatterns?: readonly string[] } = {}): EventLedger {
     const database = new DatabaseSync(path, {
       allowExtension: false,
       enableDoubleQuotedStringLiterals: false,
@@ -113,7 +116,7 @@ export class EventLedger {
     });
     try {
       configureAndMigrateDatabase(database);
-      return new EventLedger(database);
+      return new EventLedger(database, options.secretPatterns ?? []);
     } catch (error: unknown) {
       database.close();
       throw error;
@@ -121,7 +124,7 @@ export class EventLedger {
   }
 
   appendCommandEvent(commandId: string, draft: EventDraft): AppendEventResult {
-    const provisional = provisionalEvent(draft);
+    const provisional = provisionalEvent({ ...draft, payload: this.#redactor.redact(draft.payload) });
     if (provisional.causationId !== commandId) {
       throw new EventLedgerError(
         "CAUSATION_MISMATCH",

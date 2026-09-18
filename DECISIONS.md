@@ -1,5 +1,23 @@
 # Design Decisions
 
+## 2026-09-18: Redact configured secrets at the ledger write boundary
+
+- Reason: every public producer remembering to scrub runtime output is not a
+  reliable security boundary. Once a secret reaches SQLite, later projection or
+  browser masking is too late.
+- Rejected alternative: UI-only masking leaves the ledger, replay, SSE, and
+  artifacts contaminated. Ad hoc producer redaction is easy to omit and hard to
+  audit. Rejecting every event containing a secret avoids leakage but can turn a
+  malicious output into a denial of service and loses otherwise useful evidence.
+- Constraint: normalize a bounded set of exact secret patterns, replace them in
+  JSON payload keys and string values before protocol validation or transaction
+  start, and fail on replacement-induced key collisions. The controller always
+  seeds the guard with operator and observer bearers and may add provider/runtime
+  patterns. Structural envelope fields remain controller-owned and unchanged.
+  Artifact bytes still require their owning collection path to scrub before
+  `ArtifactStore.put`; the store never guesses how to rewrite arbitrary binary
+  evidence.
+
 ## 2026-09-18: Sign a safe projection from disposable trusted evaluators
 
 - Reason: trusted tests need the exact frozen candidate and private evaluator,

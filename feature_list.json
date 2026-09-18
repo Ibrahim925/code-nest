@@ -425,9 +425,9 @@
       "milestone": "M4-real-runtimes-and-isolation",
       "title": "Isolation, redaction, and cleanup adversarial suite",
       "user_visible_behavior": "Automated checks prove participants cannot read private mounts, hidden tests, credentials, the Docker socket, another participant, or forbidden networks, and completion or cancellation leaves no run resources.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run packages/testing/src/isolation-adversarial.test.ts", "make check"],
-      "evidence": "",
+      "evidence": "A cross-boundary adversarial suite now drives the real split and contained supervisors plus raw SQLite persistence. Two simultaneous split participants could not access another workspace, hidden evaluator source, controller storage, the Docker socket, an evaluator mount, a seeded host credential through env or /proc, the read-only root, or any interface beyond loopback. The file-size cgroup/ulimit boundary capped a deliberate write; a separate unbounded-output attack hit the capture limit and caused immediate fail-closed container removal. Two contained participants received separate private networks: one could not reach the other's broker address or direct internet and never received either long provider credential. Normal completion and operator-cancelled shutdown left zero labelled containers, networks, or volumes. A new pure secret-redaction domain is applied by the ledger before event validation or SQLite work; the app always includes operator/observer bearers and accepts additional runtime/provider patterns. A seeded secret in nested public payload keys and values was absent from both the returned event and every database file byte. Four focused adversarial cases passed. Final make check passed the 350-line guard, ESLint, six strict workspace typechecks, 65 test files, and 381 tests.",
       "notes": "Include a seeded fake secret and resource-exhaustion cases; AC 4 through 8."
     },
     {

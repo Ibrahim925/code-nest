@@ -28,6 +28,7 @@ export interface BuildAppOptions {
   readonly observerToken?: string;
   readonly now?: () => Date;
   readonly createEventId?: () => string;
+  readonly secretPatterns?: readonly string[];
   readonly logger?: boolean;
 }
 
@@ -59,7 +60,9 @@ export function buildApp(options: BuildAppOptions = {}): FastifyInstance {
   }
   const createEventId = options.createEventId ?? randomUUID;
   const now = options.now ?? (() => new Date());
-  const ledger = EventLedger.open(databasePath);
+  const ledger = EventLedger.open(databasePath, {
+    secretPatterns: [operatorToken, observerToken, ...(options.secretPatterns ?? [])],
+  });
   const artifactRoot = options.artifactRoot ?? (
     options.databasePath === undefined
       ? ".code-nest/artifacts"

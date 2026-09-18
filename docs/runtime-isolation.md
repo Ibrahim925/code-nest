@@ -165,3 +165,12 @@ Isolation tests must attempt forbidden reads, mounts, network destinations,
 participant traffic, token reuse, resource exhaustion, and post-run persistence.
 Normal completion and cancellation must leave no participant process, network,
 or writable run volume behind.
+
+The cross-boundary adversarial suite starts real split and contained participants
+and attempts host workspace, peer workspace, hidden evaluator, controller store,
+Docker socket, root filesystem, peer-broker, and direct-internet access. It also
+inspects process environments for a seeded host credential, exceeds file and
+captured-output allowances, exercises both normal and operator-cancelled shutdown,
+and audits labelled containers, networks, and volumes afterward. A separate raw
+SQLite inspection proves a seeded public-output secret was replaced before any
+database bytes were written.

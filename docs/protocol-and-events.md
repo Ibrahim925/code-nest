@@ -69,6 +69,14 @@ Sequences start at one. Timestamps are RFC 3339 `date-time` strings assigned by
 the controller. Payloads must be JSON values: functions, `undefined`, non-finite
 numbers, and other process-local values are invalid at the boundary.
 
+Before event validation or persistence, the controller replaces configured
+secret patterns in payload keys and string values with `[REDACTED]`. This is a
+storage-boundary safeguard, not a new envelope field or protocol version. A
+replacement that would collapse two object keys is rejected. Operator and
+observer bearers are always configured; runtime and provider collectors add
+their active secret patterns. Structural identifiers remain controller-owned
+and are never rewritten.
+
 Both envelopes reject undeclared control fields. Payload validation for a
 specific `kind` belongs to the command or event registry layered on top of this
 base envelope. A new kind does not change the base version, but a new control

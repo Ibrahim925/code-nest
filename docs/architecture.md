@@ -82,6 +82,21 @@ material, constructs and inspects containers, and executes the fixed evaluator
 entry point. It returns observations and bounded bytes rather than Docker or Git
 objects.
 
+## Pre-persistence secret redaction
+
+`apps/controller/src/redaction` owns a pure JSON secret redactor. The ledger
+applies it to payload keys and string values before envelope validation,
+idempotency lookup, or SQLite transaction work. This makes the durable event,
+live delivery, and later replay share the same already-scrubbed fact rather than
+creating divergent display-only copies. Configuration is bounded, longest-match
+first, and key collisions fail closed.
+
+The application composition seeds operator and observer bearer values plus any
+explicit runtime/provider patterns. Envelope structure is controller-owned and
+is not rewritten. Arbitrary artifact bytes remain the responsibility of their
+typed collection adapter because safely rewriting binary formats is not a ledger
+concern.
+
 ## State flow
 
 1. A typed command reaches the controller with an idempotency key.
