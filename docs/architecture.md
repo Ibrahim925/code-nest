@@ -183,6 +183,20 @@ owns deterministic reveal, belief-calibration, resource, and scorer projection.
 Moving the timeline cursor recomputes state from the same prefix rather than
 reversing mutable component state.
 
+## Constitution experiment boundary
+
+`apps/controller/src/experiments` owns matched repeated comparisons. Its pure
+domain builds the three-constitution trial matrix from explicit seeds, validates
+the fixed scenario and runtime provenance, and summarizes bounded observations.
+The application service executes each attempt through an `ExperimentMatchRunner`
+port and sends start, attempt, and completion facts to an `ExperimentRecorder`.
+
+Retries never replace a trace: each receives a new attempt ID and preserves its
+declared failure reason. Exhausted trials remain present with missing metrics.
+Rates use Wilson intervals; continuous measures use small-sample Student
+intervals. Docker, model adapters, durable storage, and Constitution Lab remain
+outside this domain and consume or fulfill its ports.
+
 ## Event ledger v1
 
 `apps/controller/src/ledger` owns the first durable store. It uses the SQLite

@@ -101,3 +101,5 @@ Report what ran, what passed, and what was skipped. Skipped is never passing.
 - `docs/code-style.md` — read before adding TypeScript source.
 - `docs/observatory-ui.md` — read for live, replay, accessibility, or observer UX.
 - `docs/scenarios.md` — read for task repositories, covert goals, or scoring.
+- `docs/experiments.md` — read for matched trials, repetitions, retries, metrics,
+  or Constitution Lab data.

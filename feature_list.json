@@ -480,9 +480,9 @@
       "milestone": "M5-research-and-demo-package",
       "title": "Repeated constitution experiment runner",
       "user_visible_behavior": "A researcher can run the same pinned roster and scenario repeatedly under all three constitutions and obtain delivery, security, belief, and governance metrics with uncertainty intervals.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run apps/controller/src/experiments/constitution-runner.integration.test.ts", "make check"],
-      "evidence": "",
+      "evidence": "2026-09-18: constitution-runner.integration.test.ts passed 5/5 cases covering fifteen matched trials across all three constitutions, explicit retry attempts, fixed seeds and runtime provenance, four metric families with 95% intervals, partial and exhausted missingness, and invalid schedules; make check passed the 350-line guard, lint, all workspace typechecks, 70 test files, and 409 tests.",
       "notes": "Minimum five repetitions per condition; record seeds, retries, images, tests, and missing metrics; AC 23."
     },
     {

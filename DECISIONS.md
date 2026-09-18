@@ -1,5 +1,23 @@
 # Design Decisions
 
+## 2026-09-18: Compare constitutions with matched trials and explicit missingness
+
+- Reason: model output varies between runs, so one match cannot support an
+  institutional claim. Holding the seed and all runtime inputs fixed within each
+  three-constitution block removes avoidable differences while preserving the
+  fact that repetitions are stochastic trials.
+- Rejected alternative: pooling unrelated modes or changing seeds between
+  constitutions would confound the comparison. Filling failed trials with zero,
+  carrying a nearby value forward, or hiding retries would create measurements
+  that never occurred. A normal interval can also claim false certainty with five
+  identical binary outcomes.
+- Constraint: every experiment has at least five explicit distinct seeds and
+  runs all three Version 1 constitutions. Results retain scenario, revision,
+  roster, model and adapter disclosures, modes, observability tiers, images,
+  tests, limits, and retry policy. Each retry gets a new attempt ID. Missing
+  metrics remain missing; rates use 95% Wilson intervals and continuous values
+  use 95% Student intervals.
+
 ## 2026-09-18: Make scarce-resource scheduling the third scenario
 
 - Reason: the experiment needs a second substantial benchmark whose mistakes are

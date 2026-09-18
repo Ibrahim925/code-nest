@@ -14,20 +14,38 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-043` Greenhouse Scheduler scenario is the latest
+- **Branch/commit:** `main`; `CN-044` repeated constitution runner is the latest
   verified feature checkpoint.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 69 Vitest files, and 404 tests, including the
-  Greenhouse Scheduler, Snake tutorial, heterogeneous match, direct-provider
-  loop, and real adversarial isolation, cleanup, redaction, trusted-test,
-  credential, TLS, and Docker boundaries.
+  typechecks across six workspaces, 70 Vitest files, and 409 tests, including the
+  matched constitution runner, Greenhouse Scheduler, Snake tutorial,
+  heterogeneous match, direct-provider loop, and real adversarial isolation,
+  cleanup, redaction, trusted-test, credential, TLS, and Docker boundaries.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-044`, the repeated constitution experiment runner.
+- **Next priority:** begin `CN-045`, the Constitution Lab comparison UI.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-18 (cn-044) — Repeated constitution experiment runner
+
+- Outcome: done.
+- Did: added a feature-oriented experiment hexagon. Its pure domain validates a
+  matched three-constitution trial matrix with at least five explicit seeds,
+  immutable scenario/runtime provenance, bounded retry policy, and four shared
+  metric families. The application runner uses match and recorder ports, assigns
+  fresh IDs to named attempts, retains failures, and leaves exhausted metrics
+  missing. Binary rates use 95% Wilson intervals; continuous metrics use 95%
+  Student intervals suited to the small minimum sample.
+- Verification run: five focused cases passed. They exercised fifteen matched
+  trials, one failed and then successful retry, fixed seeds and provenance across
+  all conditions, delivery/security/belief/governance summaries, one partially
+  missing metric, all-missing exhausted trials, and invalid seed schedules. Final
+  `make check` passed the 350-line guard, ESLint, all six strict workspace
+  typechecks, 70 test files, and 409 tests.
+- Remaining: four features.
 
 ### 2026-09-18 (cn-043) — Greenhouse Scheduler scenario
 
