@@ -14,20 +14,44 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-018` round evidence packet is the
+- **Branch/commit:** `main`; `CN-019` private suspicion distributions is the
   latest verified feature checkpoint.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 28 Vitest files, and 203 tests.
+  typechecks across six workspaces, 30 Vitest files, and 213 tests.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-019`, private suspicion distributions. Validate an
-  active participant's private 100-point allocation over exactly the other three
-  participants, retain its strongest evidence citations, and prove clean viewers
-  cannot see beliefs until role reveal.
+- **Next priority:** begin `CN-020`, bounded Town Hall and evidence citations.
+  Model the evidence/accusation and defence/rebuttal passes with deterministic
+  speaking limits, then classify each cited event as valid, mismatched, or missing
+  without judging the argument.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-17 (cn-019) — Add private suspicion distributions
+
+- Outcome: done.
+- Did: added pure belief-report rules that require each active reporter to assign
+  integer points totaling exactly 100 across every other active participant once,
+  normalize target order, and cite one strongest visible evidence event. Added a
+  feature-oriented controller hexagon: a context port owns phase and active-roster
+  authorization, an evidence port checks same-round participant visibility, and a
+  journal port durably records the accepted report. The SQLite adapters persist a
+  strict `belief.reported` event visible only to its reporter and linked to the
+  cited parent event. Exact retries replay after phase closure; changed and
+  cross-action command reuse fail closed.
+- Verification run: the focused pure-core and real-SQLite suites passed 10 of 10
+  cases, including invalid totals, points, targets, rosters, rounds, payload fields,
+  hidden/missing evidence, wrong phase, inactive reporter, retry recovery, command
+  conflict, participant isolation, Clean spectator omission, and revealed replay.
+  Final `make check` passed the 350-line guard, ESLint, all six workspace
+  typechecks, 30 test files, and 213 tests.
+- Risks / follow-ups: the phase supervisor will provide the concrete context port
+  when it coordinates multi-round matches; this slice deliberately does not infer
+  active status from incomplete one-round fixture events. Beliefs are durable and
+  replayable but calibration metrics remain CN-037. CN-020 consumes the same stable
+  evidence IDs for public Town Hall claims.
 
 ### 2026-09-17 (cn-018) — Build the round evidence packet
 

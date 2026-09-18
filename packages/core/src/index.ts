@@ -15,3 +15,4 @@ export * from "./match-state";
 export * from "./roles";
 export * from "./budget.js";
 export * from "./evidence-packet.js";
+export * from "./beliefs.js";

@@ -401,6 +401,28 @@ claimed—but the schema deliberately has no suspicion, role, or verdict field.
 Private beliefs and Town Hall arguments consume this factual boundary instead of
 adding inference to it.
 
+## Private belief reporting v1
+
+`packages/core/src/beliefs.ts` owns the deterministic report contract. A valid
+active roster contains the reporter and at least one other participant. The
+report allocates one integer point value from 0 through 100 to every other active
+participant exactly once, totals exactly 100, and cites one strongest evidence
+event. Canonical participant-ID ordering makes replay and retry comparison
+independent of submitted allocation order. Runtime parsing rejects unknown fields.
+
+`apps/controller/src/beliefs` is the persistence hexagon. The application service
+reads current round, phase, and active roster through a context port; accepts new
+reports only in the matching `belief` phase; and asks an evidence port whether the
+citation was visible to the reporter in that round. Hidden, foreign, wrong-round,
+and nonexistent evidence all produce the same unavailable result.
+
+The event-ledger journal stores an accepted report as `belief.reported`, with the
+participant as actor, `participant_private` visibility naming only that reporter,
+and the strongest evidence ID as its parent event. Exact command retries return
+the recorded report even after the phase moves forward. The shared projector
+keeps it out of other participants and Clean spectator replay while sealed, then
+admits it to research replay after reveal. Public ballots remain separate events.
+
 ## Failure behavior
 
 Model timeout, policy rejection, container exit, OOM, operator cancellation,

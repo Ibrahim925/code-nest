@@ -205,9 +205,9 @@
       "milestone": "M2-governance-game",
       "title": "Private suspicion distributions",
       "user_visible_behavior": "Before Town Hall, each active participant privately allocates exactly 100 suspicion points across the others and cites its strongest evidence.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run packages/core/src/beliefs.test.ts apps/controller/src/beliefs/visibility.integration.test.ts", "make check"],
-      "evidence": "",
+      "evidence": "The focused core and real-SQLite suites passed 10 of 10 tests: exact integer allocations total 100 across every other active participant, normalize deterministically, reject malformed rosters, self/duplicate/unknown targets and invalid evidence IDs, and compare normalized retries. The controller admits only an active reporter in the matching belief phase; verifies the cited event was visible to that reporter in the same round; returns one safe error for hidden and absent citations; stores one participant-private belief.reported event linked to its evidence; omits it from other participants and Clean spectator mode; reveals it in post-match replay; replays exact retries after phase closure; and rejects changed or cross-action command reuse. Final make check passed the 350-line guard, ESLint, six strict workspace typechecks, 30 test files, and 213 tests.",
       "notes": "Beliefs remain private until reveal and later support calibration metrics; AC 18."
     },
     {

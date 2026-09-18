@@ -125,6 +125,12 @@ semantics are reviewed. Role assignments, private beliefs, covert objectives,
 hidden-test details, credentials, and provider-private traces require the
 narrowest class.
 
+An accepted private belief is a `belief.reported` event. Its actor and sole
+`participant_private` recipient are the reporting participant; its round and
+phase are explicit; its strict payload contains the versioned 100-point report;
+and its single parent is the strongest evidence event the participant was allowed
+to see in that round. Public votes never reuse or overwrite this event.
+
 ### Version 1 projection rules
 
 The controller builds projection context from the authenticated token and the

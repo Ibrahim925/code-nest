@@ -1,5 +1,22 @@
 # Design Decisions
 
+## 2026-09-17: Keep private beliefs separate from public governance choices
+
+- Reason: a belief report measures what a participant privately thought before
+  discussion, while a later ballot is a strategic public action. Keeping them as
+  distinct facts enables calibration and misreporting analysis without changing
+  gameplay or asking the controller to infer suspicion.
+- Rejected alternative: publishing beliefs during the match changes the social
+  experiment and leaks private state to Clean spectators. Deriving beliefs from
+  messages, votes, or provider reasoning would confuse observable statements with
+  an explicit participant report.
+- Constraint: core validates a normalized 100-point distribution over exactly the
+  other active participants and one strongest-evidence citation. The application
+  context owns phase and active status; the evidence adapter confirms same-round
+  visibility. The ledger records the report as participant-private and links its
+  cited parent event. Exact retries remain available after phase closure, while
+  changed command reuse fails closed. Reveal uses the shared visibility projector.
+
 ## 2026-09-17: Project evidence as facts without exposing ledger positions
 
 - Reason: players need one reproducible basis for beliefs and debate, but source
