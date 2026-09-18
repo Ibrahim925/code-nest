@@ -1,0 +1,90 @@
+{
+  "schemaVersion": "1.0",
+  "id": "snake-tutorial",
+  "title": "Snake Tutorial",
+  "repository": {
+    "path": "repository",
+    "baseRevision": "7871421f49df9cf5f3df8fa6a0fc7bec4009812f"
+  },
+  "briefs": {
+    "product": {
+      "path": "briefs/product.md",
+      "digest": "sha256:d6d18ba81094509469f66ed89965121eccd5685028e55a4698c6671a5adaa0b3"
+    },
+    "safety": {
+      "path": "briefs/safety.md",
+      "digest": "sha256:84d539345fb60699424429eb798ff03bf4cc336052cf99253fed5aa935260016"
+    },
+    "assignments": [
+      {
+        "id": "movement",
+        "brief": {
+          "path": "briefs/assignments/movement.md",
+          "digest": "sha256:0cc45290b1d51997c448a66c795b0c54ccee4dbbd6c7c18938d912eba8e6fb2c"
+        }
+      },
+      {
+        "id": "food",
+        "brief": {
+          "path": "briefs/assignments/food.md",
+          "digest": "sha256:939a7ca0314c4c01c5fe4ff5dc282dd89ef83b1e5ea5efd69e6b5d454d68828c"
+        }
+      },
+      {
+        "id": "collision",
+        "brief": {
+          "path": "briefs/assignments/collision.md",
+          "digest": "sha256:36b6f97bbf1ddb19e1fde95a896f39e45fdb8f139d78979bce92d0c43d0583b9"
+        }
+      },
+      {
+        "id": "presentation",
+        "brief": {
+          "path": "briefs/assignments/presentation.md",
+          "digest": "sha256:ee080ababdf28266b53c384caf65d1ef60d39f03e6f77146668536124430bc06"
+        }
+      }
+    ]
+  },
+  "tests": {
+    "public": [{
+      "path": "tests/public.mjs",
+      "digest": "sha256:53a1cf4fd9618c844b122ceea20d7228212f3000635f6d857065f875faee66eb"
+    }],
+    "hidden": [{
+      "path": "tests/hidden.mjs",
+      "digest": "sha256:d4e7cb08216a41479236bf0c7ddd60720d8e32f60f367d408b9d1eae4dbc76bc"
+    }]
+  },
+  "generators": {
+    "covertObjective": {
+      "path": "generators/covert-objective.mjs",
+      "digest": "sha256:456d9818ff3af71a8d734cc7fbe40123a680bfd00f66c9b37fdf52caea89f745"
+    }
+  },
+  "scorers": {
+    "legitimate": {
+      "path": "scorers/legitimate.mjs",
+      "digest": "sha256:f58fa44aaa42159607fdd17427bf5d88cd707a440ed45b2fa74101888754d389"
+    },
+    "covert": {
+      "path": "scorers/covert.mjs",
+      "digest": "sha256:2a15cb7975e07c6ad5ac48675f164dd17d8cda2560e0deb5f5af336f2e4690c0"
+    }
+  },
+  "images": {
+    "participant": "ghcr.io/code-nest/participant@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "evaluator": "ghcr.io/code-nest/evaluator@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
+  "limits": {
+    "rounds": 1,
+    "roundDurationSeconds": 300,
+    "trustedTestWallTimeSeconds": 60,
+    "cpuCores": 1,
+    "memoryMiB": 256,
+    "processLimit": 32,
+    "workspaceMiB": 128,
+    "temporaryStorageMiB": 32,
+    "maximumFileMiB": 8
+  }
+}
