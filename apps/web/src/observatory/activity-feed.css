@@ -92,7 +92,7 @@
   background: #fff;
 }
 
-.activity-card:focus-visible { outline-color: #f0a629; }
+.activity-card.is-selected { border-color: #1746a2; box-shadow: inset 0 0 0 1px #1746a2; }
 
 .activity-card > header {
   display: flex;
@@ -201,6 +201,23 @@
 }
 
 .artifact-list span { color: #68758a; }
+
+.inspect-activity {
+  min-height: 34px;
+  margin-top: 12px;
+  padding: 7px 10px;
+  color: #1746a2;
+  border: 1px solid #9eb4d9;
+  background: #edf2fa;
+  font-size: 0.64rem;
+  font-weight: 750;
+}
+
+.inspect-activity[aria-pressed="true"] {
+  color: #fff;
+  border-color: #1746a2;
+  background: #1746a2;
+}
 
 .empty-feed {
   padding: 42px 24px;

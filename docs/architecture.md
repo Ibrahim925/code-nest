@@ -64,6 +64,25 @@ Filesystem logs and Git output are evidence, not authoritative state. Large
 artifacts are content-addressed; ledger events refer to their digest and access
 class.
 
+## Evidence inspection hexagon
+
+`apps/controller/src/evidence` owns authorized artifact retrieval. Its application
+use case accepts run ID, digest, and sealed audience through an evidence-reader
+port. The artifact-store adapter fulfills that port and the HTTP adapter translates
+safe domain outcomes. No route knows object paths or visibility policy details.
+
+Every read preserves the store's digest and size verification. The HTTP boundary
+uses bearer authority from the request, returns the same not-found response for
+absent and unauthorized artifacts, and serves successful bytes as a forced
+download with `nosniff`, sandbox CSP, and no-store headers. Original media type,
+visibility, and the stored redacted preview travel only as bounded metadata.
+
+`apps/web/src/evidence` is a separate browser-side hexagon. Its HTTP adapter keeps
+credentials in an authorization header, bounds downloads, validates metadata, and
+recomputes SHA-256 before the Observatory may display anything. The inspector
+joins those verified artifacts to the already-authorized event projection; it
+does not decide visibility or infer repository state.
+
 ## Event ledger v1
 
 `apps/controller/src/ledger` owns the first durable store. It uses the SQLite

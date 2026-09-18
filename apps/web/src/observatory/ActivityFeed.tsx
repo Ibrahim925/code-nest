@@ -8,6 +8,8 @@ import type {
 export interface ActivityFeedProps {
   readonly state: ActivityFeedState;
   readonly participantIds: readonly string[];
+  readonly selectedItemId?: string | null;
+  readonly onSelect?: (item: ActivityItem) => void;
 }
 
 type FeedView = "chronology" | "lanes";
@@ -22,10 +24,18 @@ function contextLabel(item: ActivityItem): string {
   return `${item.round === null ? "Run" : `Round ${item.round}`} · ${phase}`;
 }
 
-function ActivityCard({ item }: { readonly item: ActivityItem }): React.JSX.Element {
+function ActivityCard({
+  item,
+  selected,
+  onSelect,
+}: {
+  readonly item: ActivityItem;
+  readonly selected: boolean;
+  readonly onSelect: ((item: ActivityItem) => void) | undefined;
+}): React.JSX.Element {
   const body = item.body;
   return (
-    <article className={`activity-card category-${item.category}`} tabIndex={0}>
+    <article className={`activity-card category-${item.category} ${selected ? "is-selected" : ""}`}>
       <header>
         <div>
           <span className="activity-category">{item.category.replaceAll("_", " ")}</span>
@@ -66,6 +76,14 @@ function ActivityCard({ item }: { readonly item: ActivityItem }): React.JSX.Elem
           ))}
         </details>
       )}
+      {onSelect !== undefined && (
+        <button
+          className="inspect-activity"
+          type="button"
+          aria-pressed={selected}
+          onClick={() => onSelect(item)}
+        >Inspect exact evidence</button>
+      )}
     </article>
   );
 }
@@ -82,6 +100,8 @@ function EmptyFeed(): React.JSX.Element {
 export function ActivityFeed({
   state,
   participantIds,
+  selectedItemId = null,
+  onSelect,
 }: ActivityFeedProps): React.JSX.Element {
   const [view, setView] = useState<FeedView>("chronology");
   const [participant, setParticipant] = useState("all");
@@ -124,7 +144,14 @@ export function ActivityFeed({
 
       {filtered.length === 0 ? <EmptyFeed /> : view === "chronology" ? (
         <div className="chronology-feed">
-          {filtered.map((item) => <ActivityCard item={item} key={item.id} />)}
+          {filtered.map((item) => (
+            <ActivityCard
+              item={item}
+              selected={item.id === selectedItemId}
+              onSelect={onSelect}
+              key={item.id}
+            />
+          ))}
         </div>
       ) : (
         <div className="per-agent-feed">
@@ -132,7 +159,12 @@ export function ActivityFeed({
             <section key={id} aria-labelledby={`feed-${id}`}>
               <h3 id={`feed-${id}`}>{id}</h3>
               {filtered.filter(({ participantId }) => participantId === id).map((item) => (
-                <ActivityCard item={item} key={item.id} />
+                <ActivityCard
+                  item={item}
+                  selected={item.id === selectedItemId}
+                  onSelect={onSelect}
+                  key={item.id}
+                />
               ))}
             </section>
           ))}

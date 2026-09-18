@@ -67,6 +67,20 @@ digest-only `load on demand` record until the evidence inspector authorizes and
 sanitizes retrieval. Phones retain the merged chronology by default and stack
 per-agent lanes if that alternate view is chosen.
 
+## Evidence inspector
+
+Selecting `Inspect exact evidence` pins one Workstream record beside the timeline.
+The inspector repeats the exact event ID, actor, visibility, verification class,
+causation, correlation, parent events, body, and artifact digests so an observer
+does not lose the citation's original context. Wide screens use a sticky secondary
+record; narrower screens stack it after the Workstream without changing meaning.
+
+Artifacts load only after an explicit action. A verified allow-list of UTF-8 text
+may appear as escaped plain text. SVG is named but never rendered inline, and all
+other media receives an explicit binary-preview message. Digest mismatch,
+oversize, malformed metadata, missing authority, and absence are visible as safe
+failures rather than invented previews.
+
 ## Accessibility
 
 Core live and replay flows target WCAG 2.2 AA. Status never depends on color.

@@ -8,6 +8,7 @@ import "./styles.css";
 import "./observatory/observatory.css";
 import "./observatory/observatory-responsive.css";
 import "./observatory/activity-feed.css";
+import "./observatory/evidence-inspector.css";
 
 const controllerUrl = import.meta.env.VITE_CONTROLLER_URL ?? "/api";
 

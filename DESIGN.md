@@ -152,6 +152,10 @@ The system is rectilinear. Sheets have square corners; inputs and buttons use a 
   collapsed digest ledger for load-on-demand artifacts.
 - **Terminal surface:** bounded navy plain-text block inside an evidence card;
   collapsed or scrollable output never expands the page without limit.
+- **Evidence inspector:** protocol-paper secondary record beside the Workstream,
+  with a dark identifier ledger, explicit causal facts, and one on-demand action
+  per digest. It becomes an ordinary stacked section below 1040px rather than a
+  covering drawer, preserving keyboard and chronological access.
 
 ### Inputs / Fields
 

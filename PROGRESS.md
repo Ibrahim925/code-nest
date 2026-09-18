@@ -14,20 +14,47 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-030` observable work and artifact views is the
+- **Branch/commit:** `main`; `CN-031` repository and evidence inspector is the
   latest verified feature checkpoint.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 47 Vitest files, and 308 tests.
+  typechecks across six workspaces, 49 Vitest files, and 319 tests.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-031`, the repository and evidence inspector. Add
-  authorized, load-on-demand artifact retrieval and let a selected citation or
-  Workstream event open its exact commit, diff, command output, test report,
-  candidate revision, visibility, causality, and digest context.
+- **Next priority:** begin `CN-032`, the Town Hall and governance surface. Project
+  both passes, cited claims, motions, costs, sealed ballot progress, resolutions,
+  sanctions, appeals, office changes, and controller-confirmed effects in one
+  chronological, evidence-linked view.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-18 (cn-031) — Repository and evidence inspector
+
+- Outcome: done.
+- Did: added a controller evidence hexagon with an application reader port, an
+  existing-artifact-store adapter, and an authenticated Fastify route. Sealed
+  audience policy stays in the store; forbidden and absent evidence share one
+  response. Exact bytes are re-verified and forced to attachment-only octet
+  streams with `nosniff`, sandbox CSP, no-store, original media/visibility, and a
+  bounded encoded redacted preview. Added a separate browser evidence hexagon
+  that sends bearer authority only in headers, caps content at 2 MiB, validates
+  length and metadata, and independently verifies SHA-256. The Workstream now
+  opens an inspector with event, actor, visibility, verification, causation,
+  correlation, parent, body, and artifact context. Only verified allow-listed
+  UTF-8 text renders as escaped plain text; SVG and binary content stay inert.
+- Verification run: three focused suites passed 20 of 20 cases across real-store
+  authorization, corruption, forced-download safety, client credential handling,
+  integrity failure, oversize/malformed response rejection, hostile content, and
+  selected-context presentation. Desktop and 390px in-app review verified the
+  sticky/stacked inspector, successful load-on-demand state, and zero horizontal
+  overflow. Production Vite bundling passed. Final `make check` passed the
+  350-line guard, ESLint, all six strict workspace typechecks, 49 test files, and
+  319 tests.
+- Risks / follow-ups: the browser intentionally previews only four inert textual
+  media types and caps inspection at 2 MiB; all other or larger artifacts remain
+  verifiable digest records. CN-032 links Town Hall citations into this inspector,
+  and CN-046 owns large-timeline virtualization.
 
 ### 2026-09-18 (cn-030) — Observable work and artifact views
 

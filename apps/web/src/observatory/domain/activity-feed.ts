@@ -35,6 +35,10 @@ export interface ActivityItem {
   readonly recordedAt: string | null;
   readonly round: number | null;
   readonly phase: string | null;
+  readonly visibility: string;
+  readonly causationId: string | null;
+  readonly correlationId: string | null;
+  readonly parentEventIds: readonly string[];
   readonly category: ActivityCategory;
   readonly title: string;
   readonly body: SanitizedText | null;

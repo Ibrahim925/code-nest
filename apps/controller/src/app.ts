@@ -1,11 +1,15 @@
 import { randomUUID } from "node:crypto";
 import { mkdirSync } from "node:fs";
+import { dirname, join } from "node:path";
 
 import Fastify, { type FastifyInstance } from "fastify";
 
 import { EventLedgerEventSource } from "./events/adapters/event-ledger-event-source.js";
 import { EventStreamService } from "./events/application/event-stream.js";
 import { registerSseRoutes } from "./events/http/sse.js";
+import { ArtifactStoreEvidenceReader } from "./evidence/adapters/artifact-store-evidence-reader.js";
+import { ReadArtifactEvidenceService } from "./evidence/application/read-artifact-evidence.js";
+import { registerArtifactRoutes } from "./evidence/http/artifacts.js";
 import { EventLedger } from "./ledger/ledger.js";
 import { EventLedgerRunStore } from "./runs/adapters/event-ledger-run-store.js";
 import { RunLifecycleService } from "./runs/application/run-lifecycle.js";
@@ -13,6 +17,7 @@ import { registerRunRoutes } from "./runs/http/routes.js";
 
 export interface BuildAppOptions {
   readonly databasePath?: string;
+  readonly artifactRoot?: string;
   readonly operatorToken?: string;
   readonly observerToken?: string;
   readonly now?: () => Date;
@@ -47,6 +52,14 @@ export function buildApp(options: BuildAppOptions = {}): FastifyInstance {
     throw new Error("Operator and observer tokens must be distinct.");
   }
   const ledger = EventLedger.open(databasePath);
+  const artifactRoot = options.artifactRoot ?? (
+    options.databasePath === undefined
+      ? ".code-nest/artifacts"
+      : join(dirname(databasePath), "artifacts")
+  );
+  const artifactService = new ReadArtifactEvidenceService(
+    new ArtifactStoreEvidenceReader(artifactRoot),
+  );
   const eventSource = new EventLedgerEventSource(ledger);
   const eventStreamService = new EventStreamService(eventSource);
   const runStore = new EventLedgerRunStore(ledger);
@@ -59,6 +72,7 @@ export function buildApp(options: BuildAppOptions = {}): FastifyInstance {
     ledger.close();
   });
   registerSseRoutes(app, eventStreamService, { observerToken, operatorToken });
+  registerArtifactRoutes(app, artifactService, { observerToken, operatorToken });
   registerRunRoutes(app, runService, operatorToken);
 
   app.get("/health", async () => ({

@@ -1,5 +1,19 @@
 # Design Decisions
 
+## 2026-09-18: Inspect immutable evidence without inline browser execution
+
+- Reason: an event citation is useful only when an authorized observer can resolve
+  it to the same bytes, visibility, provenance, and causal context that were
+  recorded. The artifact store already supplies the immutable run-scoped source.
+- Rejected alternative: returning authored media types or rendering SVG/HTML
+  inline would turn untrusted evidence into active browser content. Putting bearer
+  credentials in download links would expose them through URLs and logs.
+- Constraint: the controller reads through a sealed-audience application port,
+  makes forbidden and absent artifacts indistinguishable, rechecks stored bytes,
+  and forces attachment-only octet-stream responses. The browser authenticates by
+  header, caps reads at 2 MiB, verifies SHA-256 again, and renders only a small
+  allow-list of UTF-8 text as escaped plain text. Other media remain metadata.
+
 ## 2026-09-18: Project observable work as escaped plain-text evidence
 
 - Reason: runtime output, filenames, Markdown, messages, and artifact metadata

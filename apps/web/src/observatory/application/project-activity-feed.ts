@@ -15,7 +15,8 @@ type UnknownRecord = Readonly<Record<string, unknown>>;
 type ItemDraft = Omit<
   ActivityItem,
   "id" | "eventId" | "deliverySequence" | "participantId" | "recordedAt" |
-  "round" | "phase" | "artifacts" | "resourceCost"
+  "round" | "phase" | "visibility" | "causationId" | "correlationId" |
+  "parentEventIds" | "artifacts" | "resourceCost"
 > & { readonly participantId?: string | null };
 
 const DIGEST = /^sha256:[a-f0-9]{64}$/;
@@ -220,6 +221,7 @@ export function projectActivityFeed(
   }
   const actor = record(event.actor);
   const context = record(event.context);
+  const visibility = record(event.visibility);
   const linkedArtifacts = artifacts(event.artifactDigests);
   let eventDrafts = drafts(kind, payload);
   if (eventDrafts.length === 0 && linkedArtifacts.length > 0) {
@@ -239,6 +241,15 @@ export function projectActivityFeed(
     recordedAt: shortText(event.recordedAt),
     round: Number.isSafeInteger(context?.round) ? Number(context?.round) : null,
     phase: shortText(context?.phase, 80),
+    visibility: shortText(visibility?.class, 80) ?? "unknown",
+    causationId: identifier(event.causationId),
+    correlationId: identifier(event.correlationId),
+    parentEventIds: Array.isArray(event.parentEventIds)
+      ? event.parentEventIds.flatMap((parent) => {
+        const id = identifier(parent);
+        return id === null ? [] : [id];
+      })
+      : [],
     artifacts: linkedArtifacts,
     resourceCost: resourceCost(event.resourceCost),
   }));

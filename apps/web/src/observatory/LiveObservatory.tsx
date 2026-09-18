@@ -2,11 +2,13 @@ import { useEffect, useMemo, useState } from "react";
 
 import { createLiveEventClient } from "../events/create-live-event-client.js";
 import type { LiveConnectionState } from "../events/domain/live-events.js";
+import { FetchArtifactClient } from "../evidence/http/fetch-artifact-client.js";
 import type { RunMutation } from "../run-setup/client.js";
 import type { RunControlView, RunSetupConfiguration } from "../run-setup/domain.js";
 import { RunControls } from "../run-setup/RunControls.js";
 import { AgentLanes } from "./AgentLanes.js";
 import { ActivityFeed } from "./ActivityFeed.js";
+import { EvidenceInspector } from "./EvidenceInspector.js";
 import {
   createAgentLaneState,
   projectAgentLanes,
@@ -51,16 +53,22 @@ export function LiveObservatory({
   );
   const [lanes, setLanes] = useState(() => createAgentLaneState(participantSeeds));
   const [activity, setActivity] = useState(createActivityFeedState);
+  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
   const [connection, setConnection] = useState<LiveConnectionState>({
     status: "connecting",
     attempt: 1,
     lastEventId: null,
   });
+  const artifactClient = useMemo(
+    () => new FetchArtifactClient({ baseUrl, bearerToken }),
+    [baseUrl, bearerToken],
+  );
 
   useEffect(() => {
     const cancellation = new AbortController();
     setLanes(createAgentLaneState(participantSeeds));
     setActivity(createActivityFeedState());
+    setSelectedItemId(null);
     const client = createLiveEventClient({ baseUrl });
     void client.follow(
       { runId: run.runId, bearerToken, signal: cancellation.signal },
@@ -85,6 +93,7 @@ export function LiveObservatory({
   }, [baseUrl, bearerToken, participantSeeds, run.runId]);
 
   const sharedPhase = lanes.lanes[0]?.phase;
+  const selected = activity.items.find(({ id }) => id === selectedItemId) ?? null;
   return (
     <div className="observatory-shell">
       <header className="observatory-topbar">
@@ -116,10 +125,19 @@ export function LiveObservatory({
 
         {controlError !== null && <p className="request-error" role="alert">{controlError}</p>}
         <AgentLanes state={lanes} />
-        <ActivityFeed
-          state={activity}
-          participantIds={lanes.lanes.map(({ participantId }) => participantId)}
-        />
+        <div className="observatory-workspace">
+          <ActivityFeed
+            state={activity}
+            participantIds={lanes.lanes.map(({ participantId }) => participantId)}
+            selectedItemId={selectedItemId}
+            onSelect={(item) => setSelectedItemId(item.id)}
+          />
+          <EvidenceInspector
+            runId={run.runId}
+            selected={selected}
+            artifactClient={artifactClient}
+          />
+        </div>
       </main>
     </div>
   );

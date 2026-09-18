@@ -337,9 +337,9 @@
       "milestone": "M3-live-observatory",
       "title": "Repository and evidence inspector",
       "user_visible_behavior": "Selecting a Town Hall citation opens the exact authorized commit, diff, command output, test report, candidate revision, and event context it referenced.",
-      "status": "not_started",
-      "verification": ["corepack pnpm vitest run apps/web/src/evidence/inspector.test.tsx", "make check"],
-      "evidence": "",
+      "status": "passing",
+      "verification": ["corepack pnpm vitest run apps/controller/src/evidence/http/artifacts.integration.test.ts apps/web/src/observatory/repository-inspector.test.tsx apps/web/src/observatory/activity-feed.test.tsx", "make check"],
+      "evidence": "The focused evidence route, browser client, inspector, and Workstream suites passed 20 of 20 cases. The controller evidence hexagon reads the existing run-scoped immutable artifact store through an application port and sealed audience, returns forbidden and missing artifacts identically, rejects malformed authority and identifiers, re-verifies stored size and SHA-256, and reports corruption without host paths. Successful reads force attachment-only application/octet-stream with nosniff, sandbox CSP, no-store, bounded redacted-preview metadata, original media type, and visibility. The browser hexagon keeps bearer authority out of URLs, enforces a 2 MiB inspection cap, validates response metadata and exact length, and independently recomputes SHA-256 before display. The selected-event inspector preserves actor, visibility, verification, causation, correlation, parents, body, and digest context; allowed UTF-8 evidence renders as escaped plain text, SVG never renders inline, and binary or failure states remain explicit. In-app review at 1280px and 390px verified sticky/stacked layouts, successful load-on-demand interaction, and zero horizontal overflow. Production Vite bundling passed. Final make check passed the 350-line guard, ESLint, six strict workspace typechecks, 49 test files, and 319 tests.",
       "notes": "Large artifacts load on demand; AC 19."
     },
     {
