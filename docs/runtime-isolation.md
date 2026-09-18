@@ -86,6 +86,33 @@ escalates to `SIGKILL` after the configured grace period. Final reports are
 derived by the adapter from validated results and observed process state, never
 accepted as an opaque child-authored summary.
 
+### Split-runtime container v1
+
+The split supervisor accepts only repository images pinned by full SHA-256
+digest and explicit non-root UID/GID values. Docker receives direct argument
+vectors with no host shell, `--pull never`, network none, private IPC and cgroup
+namespaces, a read-only root, all capabilities dropped, no-new-privileges,
+built-in seccomp, no devices, no restart, and fixed CPU, memory/swap, process,
+file-size, output, and wall-time limits. The Docker CLI subprocess receives only
+the small environment allow-list required to locate the trusted engine; model and
+cloud credentials are never forwarded into the container.
+
+The only host mount is that participant's workspace seed at
+`/opt/code-nest/seed`, read-only. Startup copies it as the participant identity
+into bounded tmpfs at `/workspace`; `/home/agent` and `/tmp` are independent
+bounded tmpfs mounts. No writable bind or named volume is created. Docker's
+actual inspection record must match every required identity, namespace, mount,
+label, restart, security, and cgroup field before the worker becomes ready.
+Freeze and thaw are explicit. A transport timeout, output overflow, or policy
+mismatch removes the container immediately; normal stop is graceful and then
+force-verifies removal. The audit-safe manifest omits host paths and environment
+values.
+
+`docker/images.json` pins the minimal public test worker. Setup resolves the
+active engine endpoint, then pulls that digest through an ephemeral credential-
+free Docker client configuration so public fixture installation neither reads
+nor writes registry account credentials.
+
 ## Trusted tests
 
 Trusted tests use a fresh networkless container and an exact candidate digest.

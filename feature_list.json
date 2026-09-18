@@ -392,9 +392,9 @@
       "milestone": "M4-real-runtimes-and-isolation",
       "title": "Split-runtime participant containers",
       "user_visible_behavior": "Each split-mode participant executes repository and shell work in its own networkless, non-root, resource-limited disposable container while model credentials remain outside.",
-      "status": "not_started",
-      "verification": ["corepack pnpm vitest run apps/controller/src/containers/split-runtime.integration.test.ts", "make check"],
-      "evidence": "",
+      "status": "passing",
+      "verification": ["corepack pnpm vitest run apps/controller/src/containers/split-runtime.integration.test.ts apps/controller/src/containers/application/split-runtime-container.test.ts", "make check"],
+      "evidence": "A feature-oriented container hexagon separates domain policy, a process-neutral application supervisor, and the Docker CLI outer adapter. Images require exact repository digests; setup installs the pinned public Alpine fixture through an ephemeral credential-free client configuration. The supervisor launches direct CLI argument vectors with no host shell and an allow-listed Docker client environment. Each worker is non-root, networkless, unprivileged, non-restarting, capability-free, no-new-privileges, built-in-seccomp, read-only-root, private-IPC/cgroup namespaced, device-free, and constrained by CPU, memory/swap, process, file-size, output, and wall-time limits. One participant-only host directory is mounted read-only as a seed; repository work, home, and temporary data live in three size-bounded tmpfs mounts, so no writable host bind or named volume exists. Docker's actual inspection record must match the complete policy before readiness. Freeze/thaw is explicit, normal command failures stay participant results, and timeout, output overflow, or policy mismatch removes the container fail-closed. Six focused cases passed against real Docker and a deterministic policy-dropping engine, including two concurrent participants with distinct containers and workspaces, missing host/model secrets, loopback-only networking, immutable root, absent Docker socket, timeout termination, rollback, and verified cleanup. Post-suite inspection found zero managed containers and volumes. Final make check passed the 350-line guard, ESLint, six strict workspace typechecks, 61 test files, and 368 tests.",
       "notes": "Apply pinned image, cap-drop, no-new-privileges, seccomp, read-only root, and bounded writable mounts; AC 3 and 5."
     },
     {

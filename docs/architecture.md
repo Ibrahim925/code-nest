@@ -419,6 +419,25 @@ stderr becomes bounded Tier 0 evidence, and declared Tier 1 observations remain
 labelled. Returned commands stay unknown until the controller parses and
 authorizes them through the protocol and capability boundaries.
 
+## Split-runtime container boundary
+
+`apps/controller/src/containers` is a feature-oriented hexagon. The domain layer
+owns image, identity, namespace, filesystem, resource, label, and audit-manifest
+rules. The application supervisor depends on a process-neutral container-engine
+port and owns transactional startup, readiness verification, bounded command
+execution, freeze/thaw, and cleanup. Only the Docker outer adapter translates
+that profile into CLI arguments or parses engine inspection records; it invokes
+the CLI directly without a host shell.
+
+The host worktree is a participant-specific read-only seed, not the live writable
+workspace. The non-root container copies it into bounded tmpfs and performs all
+repository and shell work there. Home and temporary storage are separate bounded
+tmpfs mounts. Before returning a manifest, the supervisor compares Docker's
+observed state with the complete requested policy. A mismatch rolls back the
+container. Timeout or output overflow also destroys the worker so an abandoned
+`docker exec` cannot continue consuming resources. The returned manifest records
+the split mode and immutable image digest but never serializes host paths.
+
 ## Private role briefing v1
 
 `packages/core/src/roles.ts` assigns exactly one saboteur among exactly four

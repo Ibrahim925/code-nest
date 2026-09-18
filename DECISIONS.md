@@ -1,5 +1,25 @@
 # Design Decisions
 
+## 2026-09-18: Seed bounded split workspaces from read-only participant sources
+
+- Reason: a writable host bind gives commands immediate access to durable host
+  bytes and cannot enforce the participant's workspace capacity. A bounded
+  in-container workspace preserves normal repository operations without making
+  the host worktree writable from the untrusted plane.
+- Rejected alternative: a named Docker volume would still need a secure import
+  and export protocol, can outlive the container, and is not inherently
+  capacity-limited. A direct writable bind is easier but weakens cleanup and
+  resource enforcement. Relying on requested flags without inspection can mark a
+  container ready after the engine silently applies a different policy.
+- Constraint: mount only that participant's seed directory read-only, copy it as
+  the non-root participant into size-bounded tmpfs at `/workspace`, and use
+  separate bounded tmpfs mounts for home and temporary data. The supervisor
+  inspects every security, namespace, mount, identity, label, restart, and
+  resource field before readiness. Command limit or policy failure removes the
+  container; normal stop removes it and its anonymous volumes. Images use exact
+  repository digests and setup fetches the public fixture without account
+  credentials.
+
 ## 2026-09-18: Put command-line agents behind strict NDJSON sessions
 
 - Reason: a persistent request/response stream preserves an agent's session while

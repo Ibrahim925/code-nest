@@ -14,19 +14,48 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-035` subprocess coding-agent adapter is the
+- **Branch/commit:** `main`; `CN-036` split-runtime participant containers is the
   latest verified feature checkpoint.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 59 Vitest files, and 362 tests.
+  typechecks across six workspaces, 61 Vitest files, and 368 tests, including the
+  real Docker isolation boundary.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** begin `CN-036`, split-runtime participant containers. Keep
-  model clients and credentials in the trusted control plane while repository and
-  shell work runs in isolated, networkless, disposable participant containers.
+- **Next priority:** begin `CN-037`, the contained runtime and credential broker.
+  Run a complete coding-agent CLI inside its participant container while forcing
+  provider traffic through authenticated, allow-listed controlled egress and
+  keeping long-lived provider credentials in the trusted control plane.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-18 (cn-036) — Split-runtime participant containers
+
+- Outcome: done.
+- Did: added a container hexagon with pure policy and audit-manifest rules, a
+  process-neutral application supervisor, and a Docker CLI adapter. Split workers
+  use exact image digests, explicit non-root identities, network none, a read-only
+  root, dropped capabilities, no-new-privileges, built-in seccomp, private IPC and
+  cgroup namespaces, no devices or restart, and bounded CPU, memory/swap, process,
+  file-size, output, and wall time. The participant worktree is mounted only as a
+  read-only seed and copied into bounded tmpfs; home and temporary storage are
+  separate bounded tmpfs mounts. Startup inspects every applied control before
+  readiness. Commands, freeze/thaw, graceful stop, and fail-closed removal are
+  lifecycle-owned. Added a pinned minimal Alpine test image and credential-free
+  public-image setup helper.
+- Verification run: five real Docker cases plus one deterministic rollback case
+  passed. They exercised two concurrent participant containers, isolated writable
+  workspaces, non-root execution, absent host/model secrets and Docker socket,
+  loopback-only networking, immutable root, expected participant command failure,
+  freeze/thaw, timeout destruction, policy mismatch rollback, and removal. A
+  post-suite audit found no managed containers or volumes. Final `make check`
+  passed the 350-line guard, ESLint, all six strict workspace typechecks, 61 test
+  files, and 368 tests.
+- Risks / follow-ups: the minimal fixture proves the container policy, not a full
+  language toolchain. Scenario images remain caller-supplied exact digests. CN-037
+  adds controlled egress for contained runtimes; CN-039 expands adversarial
+  leakage, resource-exhaustion, and cleanup coverage.
 
 ### 2026-09-18 (cn-035) — Subprocess coding-agent adapter
 

@@ -5,6 +5,7 @@ PNPM := env PATH="$(NODE24_PREFIX)$(PATH)" corepack pnpm
 
 setup:  ## install and lock dependencies
 	$(PNPM) install --frozen-lockfile
+	env PATH="$(NODE24_PREFIX)$(PATH)" node scripts/prepare-container-images.mjs
 
 dev:  ## run the controller and Live Observatory locally
 	$(PNPM) dev
