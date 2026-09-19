@@ -1,0 +1,25 @@
+@media (max-width: 1240px) {
+  .agent-observatory-layout { grid-template-columns: 1fr; }
+  .observatory-record { position: static; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .observatory-record section + section { border-top: 0; border-left: 1px solid #c6cfdb; }
+}
+
+@media (max-width: 820px) {
+  .observatory-phase-banner { align-items: flex-start; flex-direction: column; }
+  .phase-readout { width: 100%; padding: 14px 0 0; border-top: 1px solid #55647d; border-left: 0; }
+  .agent-computer-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 680px) {
+  .agent-observatory { margin-top: 12px; }
+  .observatory-phase-banner { padding: 19px 20px; }
+  .agent-observatory-layout { gap: 12px; margin-top: 12px; }
+  .agent-computer-grid { gap: 12px; }
+  .agent-computer { border-right: 0; border-left: 0; }
+  .agent-computer-heading { grid-template-columns: 34px minmax(0, 1fr); }
+  .agent-activity { grid-column: 1 / -1; }
+  .observatory-record { display: block; border-right: 0; border-left: 0; }
+  .observatory-record section + section { border-top: 1px solid #c6cfdb; border-left: 0; }
+  .discourse-panel ol,
+  .observatory-timeline ol { max-height: 360px; }
+}

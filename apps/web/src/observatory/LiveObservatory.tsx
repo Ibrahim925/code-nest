@@ -23,13 +23,17 @@ import { RunControls } from "../run-setup/RunControls.js";
 import { projectTownHall } from "../town-hall/application/project-town-hall.js";
 import { createTownHallViewState } from "../town-hall/domain/town-hall.js";
 import { TownHall } from "../town-hall/TownHall.js";
-import { AgentLanes } from "./AgentLanes.js";
+import { AgentObservatory } from "./AgentObservatory.js";
 import { ActivityFeed } from "./ActivityFeed.js";
 import { EvidenceInspector } from "./EvidenceInspector.js";
 import {
   createAgentLaneState,
   projectAgentLanes,
 } from "./application/project-agent-lanes.js";
+import {
+  createAgentObservatoryState,
+  projectAgentObservatory,
+} from "./application/project-agent-observatory.js";
 import {
   createActivityFeedState,
   projectActivityFeed,
@@ -74,6 +78,9 @@ export function LiveObservatory({
     [configuration.adapters],
   );
   const [lanes, setLanes] = useState(() => createAgentLaneState(participantSeeds));
+  const [agentObservatory, setAgentObservatory] = useState(() =>
+    createAgentObservatoryState(participantSeeds)
+  );
   const [activity, setActivity] = useState(createActivityFeedState);
   const [townHall, setTownHall] = useState(createTownHallViewState);
   const [observerMode, setObserverMode] = useState(() =>
@@ -115,6 +122,7 @@ export function LiveObservatory({
   useEffect(() => {
     const cancellation = new AbortController();
     setLanes(createAgentLaneState(participantSeeds));
+    setAgentObservatory(createAgentObservatoryState(participantSeeds));
     setActivity(createActivityFeedState());
     setTownHall(createTownHallViewState());
     setDeliveryLatency(createDeliveryLatencyState());
@@ -125,6 +133,9 @@ export function LiveObservatory({
       (batch) => {
         const deliveries = batch.map(({ delivery }) => delivery);
         setLanes((current) => deliveries.reduce(projectAgentLanes, current));
+        setAgentObservatory((current) =>
+          deliveries.reduce(projectAgentObservatory, current)
+        );
         setActivity((current) => deliveries.reduce(projectActivityFeed, current));
         setTownHall((current) => deliveries.reduce(projectTownHall, current));
         setObserverMode((current) => deliveries.reduce(projectObserverMode, current));
@@ -165,7 +176,10 @@ export function LiveObservatory({
     };
   }, [baseUrl, bearerToken, observerClient, participantSeeds, projectionEpoch, run.runId]);
 
-  const sharedPhase = lanes.lanes[0]?.phase;
+  const lanePhase = lanes.lanes[0]?.phase;
+  const sharedPhase = agentObservatory.phase.name === null
+    ? lanePhase
+    : agentObservatory.phase;
   const phaseAnnouncement = sharedPhase?.name === null || sharedPhase?.name === undefined
     ? "Match phase awaiting the first authorized event."
     : `Match phase changed to round ${sharedPhase.round ?? "run"}, ${sharedPhase.name.replaceAll("_", " ")}.`;
@@ -223,7 +237,12 @@ export function LiveObservatory({
         />
 
         {controlError !== null && <p className="request-error" role="alert">{controlError}</p>}
-        <AgentLanes state={lanes} />
+        <AgentObservatory
+          runId={run.runId}
+          state={agentObservatory}
+          laneState={lanes}
+          artifactClient={artifactClient}
+        />
         <div className="observatory-workspace">
           <div className="observatory-primary">
             <TownHall

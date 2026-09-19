@@ -192,7 +192,7 @@ describe("four concurrent agent lanes", () => {
     expect(markup).toContain("Live Observatory");
     expect(markup).toContain("run-029");
     expect(markup).toContain("Connecting");
-    expect(markup.match(/class="agent-lane"/g)).toHaveLength(4);
+    expect(markup.match(/class="agent-computer agent-lane"/g)).toHaveLength(4);
     expect(markup).toContain("Pause");
     expect(markup).not.toContain("not-rendered");
   });

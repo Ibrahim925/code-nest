@@ -590,9 +590,9 @@
       "milestone": "M6-live-harnesses",
       "title": "Live Village-style Observatory interface",
       "user_visible_behavior": "A human sees four model-labelled computers in a responsive 2x2 workspace with unmistakable phase transitions, live discourse, activity and rationale, a persistent timeline, and per-agent memory inspection.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run apps/web/src/observatory/agent-observatory.test.tsx", "corepack pnpm --filter @code-nest/web build", "make check"],
-      "evidence": "",
+      "evidence": "2026-09-18: four focused UI cases passed for exactly four computer cards, honest initial states, phase transitions, public discourse, submitted rationale attribution, tool/activity facts, explicit frame states, memory inspection controls, sanitized memory text, and an 80-row timeline window. The production Vite build passed and excludes the development-only synthetic preview. Impeccable's detector returned no findings. Manual browser review at 1440px and 390px verified the 2x2/one-column compositions and successfully expanded and loaded a verified individual memory. Final make check passed the 350-line guard, lint, all workspace typechecks, 83 test files, and 470 tests.",
       "notes": "Use Code Nest's cobalt/navy research-workstation identity; preserve keyboard, screen-reader, reduced-motion, mobile, and bounded-rendering behavior."
     },
     {

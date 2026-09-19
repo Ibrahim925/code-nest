@@ -3,10 +3,13 @@ import { createRoot } from "react-dom/client";
 
 import { HttpOperatorRunClient } from "./run-setup/client.js";
 import { RunSetupApp } from "./run-setup/RunSetupApp.js";
+import { ObservatoryPreview } from "./observatory/ObservatoryPreview.js";
 import "./run-setup/run-setup.css";
 import "./styles.css";
 import "./observatory/observatory.css";
 import "./observatory/observatory-responsive.css";
+import "./observatory/agent-observatory.css";
+import "./observatory/agent-observatory-responsive.css";
 import "./observatory/activity-feed.css";
 import "./observatory/evidence-inspector.css";
 import "./town-hall/town-hall.css";
@@ -24,14 +27,19 @@ if (!(rootElement instanceof HTMLElement)) {
   throw new Error("Code Nest could not find the #root application element.");
 }
 
+const showObservatoryPreview = import.meta.env.DEV &&
+  new URLSearchParams(window.location.search).get("preview") === "observatory";
+
 createRoot(rootElement).render(
   <StrictMode>
-    <RunSetupApp
-      controllerBaseUrl={controllerUrl}
-      createClient={(token) => new HttpOperatorRunClient({
-        baseUrl: controllerUrl,
-        token,
-      })}
-    />
+    {showObservatoryPreview ? <ObservatoryPreview /> : (
+      <RunSetupApp
+        controllerBaseUrl={controllerUrl}
+        createClient={(token) => new HttpOperatorRunClient({
+          baseUrl: controllerUrl,
+          token,
+        })}
+      />
+    )}
   </StrictMode>,
 );

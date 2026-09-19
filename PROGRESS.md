@@ -14,12 +14,13 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-053` adds the deterministic four-agent
-  Observatory projector on top of authorized human-view deliveries.
+- **Branch/commit:** `main`; `CN-054` adds the live four-computer Observatory
+  interface on top of deterministic authorized projection.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 82 Vitest files, and 466 tests. The set
-  includes deterministic four-agent live/replay projection, OMP
+  typechecks across six workspaces, 83 Vitest files, and 470 tests. The set
+  includes the accessible four-computer interface and verified memory
+  inspection, deterministic four-agent live/replay projection, OMP
   activity/tool/submission/frame telemetry, controller recording,
   memory ownership and secret redaction,
   Observatory payload, privacy, provenance, and artifact contracts,
@@ -31,10 +32,29 @@ actually verified.
   cleanup, redaction, trusted-test, credential, TLS, and Docker boundaries.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** `CN-054` Live Village-style Observatory interface.
+- **Next priority:** `CN-055` Four-container OMP live Observatory flow.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-18 (cn-054) — Live four-computer Observatory interface
+
+- Outcome: done; 54 of 55 recorded features pass.
+- Did: replaced the compact live lane rail with four model-labelled computer
+  workspaces backed by the authorized projector and verified artifact client.
+  Each workspace names activity, runtime, assignment, container report, tool,
+  submitted rationale provenance, explicit computer freshness/withholding, and
+  an expandable verified memory revision. A phase banner, persistent public
+  discourse, and bounded visible timeline make Town Hall transitions clear. A
+  development-only synthetic preview supports safe visual review without
+  entering production output.
+- Verification run: four focused UI cases passed. The production Vite build
+  passed and contained no synthetic-preview label. Impeccable's detector
+  returned no findings. Manual browser checks at 1440px and 390px verified the
+  two-by-two and one-column layouts; the memory flow expanded, verified, and
+  rendered sanitized text. Final `make check` passed the 350-line guard, ESLint,
+  all six workspace typechecks, 83 test files, and 470 tests.
+- Remaining: one slice: the complete four-container OMP live/replay flow.
 
 ### 2026-09-18 (cn-053) — Four-agent Observatory projector
 
