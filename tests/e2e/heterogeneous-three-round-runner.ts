@@ -7,8 +7,15 @@ import type { RuntimeMetadata } from "../../packages/adapters/src/index.js";
 import type { PatchIntegrator } from "../../apps/controller/src/integration/application/patch-integrator.js";
 import type {
   RoundExecutor,
+  RoundTownHallRecorder,
   RoundWorkRequest,
 } from "../../apps/controller/src/matches/application/ports/three-round-match-ports.js";
+import {
+  advanceTownHall,
+  createTownHall,
+  type TownHallPass,
+  type TownHallState,
+} from "../../packages/core/src/index.js";
 import type {
   RoundIntegrationResult,
   RoundWorkResult,
@@ -191,6 +198,40 @@ export class HeterogeneousThreeRoundRunner implements RoundExecutor {
       await Promise.allSettled([...isolated.values()].map((session) => session.stop()));
       await this.workspaces.cleanup(roundId);
       throw error;
+    }
+  }
+
+  async runTownHall(
+    roundId: string,
+    recorder: RoundTownHallRecorder,
+  ): Promise<void> {
+    const pending = this.#pending.get(roundId);
+    if (pending === undefined) throw new Error("Heterogeneous round is unavailable.");
+    const speakingOrder = pending.request.participants.map(
+      ({ participantId }) => participantId,
+    );
+    await recorder.record({
+      type: "town_hall_started",
+      round: pending.request.round,
+      speakingOrder,
+    });
+    let state: TownHallState = createTownHall(pending.request.round, speakingOrder);
+    for (const pass of ["evidence_accusation", "defence_rebuttal"] as TownHallPass[]) {
+      for (const participantId of speakingOrder) {
+        const result = advanceTownHall(state, {
+          turnId: `round-${pending.request.round}-${pass}-${participantId}`,
+          expectedPass: pass,
+          participantId,
+          message: `${participantId} completed ${pass.replaceAll("_", " ")} review.`,
+          citations: [],
+        }, []);
+        state = result.state;
+        await recorder.record({
+          type: "town_hall_turn_recorded",
+          round: pending.request.round,
+          turn: result.turn,
+        });
+      }
     }
   }
 

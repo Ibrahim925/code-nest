@@ -17,6 +17,7 @@ import type {
   ContainedOmpDependencies,
   ContainedWorkspaceSynchronizer,
 } from "./ports/contained-omp-ports.js";
+import { parsePublishedMessages } from "../domain/published-message-command.js";
 
 const MODELS_CONFIGURATION = `providers:
   code-nest-openai:
@@ -35,18 +36,6 @@ function containerUser(): { readonly uid: number; readonly gid: number } {
   const uid = process.getuid?.() ?? 65_532;
   const gid = process.getgid?.() ?? 65_532;
   return { uid: uid > 0 ? uid : 65_532, gid: gid > 0 ? gid : 65_532 };
-}
-
-function publicMessages(commands: readonly unknown[]): string[] {
-  return commands.flatMap((command) => {
-    if (
-      typeof command !== "object" || command === null || Array.isArray(command) ||
-      !("type" in command) || command.type !== "message.publish" ||
-      !("body" in command) || typeof command.body !== "string"
-    ) return [];
-    const body = command.body.trim();
-    return body.length > 0 && body.length <= 4_096 ? [body] : [];
-  });
 }
 
 function completedStatus(status: TurnResult["status"]): "completed" | "yielded" {
@@ -167,6 +156,31 @@ export class ContainedOmpParticipant implements MatchParticipantRuntime {
     if (!result.accepted) throw new Error("Contained OMP rejected its private brief.");
   }
 
+  async deliverTownHallContext(input: {
+    readonly round: number;
+    readonly pass: "evidence_accusation" | "defence_rebuttal";
+    readonly transcript: readonly {
+      readonly participantId: string;
+      readonly pass: "evidence_accusation" | "defence_rebuttal";
+      readonly message: string | null;
+    }[];
+  }): Promise<void> {
+    const result = await this.#requiredAdapter().deliver({
+      observationId: `town-hall-${input.round}-${input.pass}`,
+      kind: "town-hall-speaking-turn",
+      payload: {
+        round: input.round,
+        pass: input.pass,
+        instruction:
+          "Read the public transcript. Submit at most one concise public statement with code_nest_submit_command using {type:'message.publish', body:'...'}. Submit no command to yield. Do not edit files.",
+        transcript: input.transcript.map((turn) => ({ ...turn })),
+      },
+    });
+    if (!result.accepted) {
+      throw new Error("Contained OMP rejected its Town Hall context.");
+    }
+  }
+
   async run(request: {
     readonly maximumOutputTokens: number;
     readonly wallTimeMilliseconds: number;
@@ -179,7 +193,7 @@ export class ContainedOmpParticipant implements MatchParticipantRuntime {
       status: completedStatus(turn.status),
       candidateRevision: synchronized.candidateRevision,
       commitSummary: synchronized.commitSummary,
-      publicMessages: publicMessages(turn.commands),
+      publicMessages: parsePublishedMessages(turn.commands),
       usage: turn.usage,
     };
   }

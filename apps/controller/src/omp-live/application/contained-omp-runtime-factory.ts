@@ -17,6 +17,7 @@ export class ContainedOmpRuntimeFactory implements MatchRuntimeFactory {
     configuration: OmpLiveConfiguration,
     private readonly dependencies: ContainedOmpDependencies,
     private readonly synchronizer: ContainedWorkspaceSynchronizer,
+    private readonly discussionSynchronizer?: ContainedWorkspaceSynchronizer,
   ) {
     this.#configuration = normalizeOmpLiveConfiguration(configuration);
   }
@@ -35,6 +36,22 @@ export class ContainedOmpRuntimeFactory implements MatchRuntimeFactory {
       this.#configuration,
       this.dependencies,
       this.synchronizer,
+    );
+  }
+
+  async createForDiscussion(
+    workspace: ParticipantWorkspace,
+    observationRunId: string,
+  ): Promise<ContainedOmpParticipant> {
+    if (this.discussionSynchronizer === undefined) {
+      throw new Error("Contained OMP discussion synchronization is unavailable.");
+    }
+    return new ContainedOmpParticipant(
+      workspace,
+      observationRunId,
+      this.#configuration,
+      this.dependencies,
+      this.discussionSynchronizer,
     );
   }
 }

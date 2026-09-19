@@ -1,5 +1,20 @@
 # Design Decisions
 
+## 2026-09-19: Run Town Hall in fresh discard-only participant sessions
+
+- Reason: agents need to respond to one shared public transcript after their
+  proposals are captured, while discussion must not silently change the Git
+  material that the controller later integrates.
+- Rejected alternative: keeping work sessions alive would preserve opaque
+  harness state across a phase boundary; synchronizing discussion sessions back
+  into proposals would let conversational turns bypass the integration record.
+- Constraint: each round starts four fresh contained OMP sessions from the
+  participant proposal seeds. The controller delivers prior public turns and
+  grants one deterministic speaking turn per participant in each of two passes.
+  Only an exact bounded `message.publish` command becomes speech; no command is
+  an explicit yield. Container files are disposable, every accepted turn is
+  persisted before the next speaker, and observation identities include phase.
+
 ## 2026-09-19: Restart contained participants from each integrated round base
 
 - Reason: every round must be independently reproducible and must see exactly

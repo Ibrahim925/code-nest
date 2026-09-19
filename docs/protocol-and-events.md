@@ -242,9 +242,17 @@ benchmark eligibility or reveals `operator_private` events.
 ### Match completion facts
 
 Normal three-round completion records public `match.phase_advanced`,
-`match.round_work_completed`, `match.round_integrated`,
+`match.round_work_completed`, `town_hall.started`,
+`town_hall.turn_recorded`, `match.round_integrated`,
 `match.candidate_frozen`, and `match.completed` facts. Public candidate facts
 contain the committed revision and SHA-256 identity but never a host path.
+
+Production Town Hall accepts one exact `{ type: "message.publish", body }`
+candidate per speaking turn. The controller trims and bounds the body, maps no
+candidate to an explicit yield, advances the pure two-pass state machine, and
+persists the resulting public turn before the next speaker receives the updated
+transcript. Extra command fields, malformed bodies, and unrelated commands are
+not promoted into public discourse.
 
 `scoring.legitimate_completed`, `scoring.covert_completed`,
 `match.roles_revealed`, and `match.scoreboard_published` are separate

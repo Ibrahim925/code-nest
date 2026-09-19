@@ -71,6 +71,32 @@ function fields(fact: MatchResolutionFact): EventFields {
         },
         visibility: PUBLIC,
       };
+    case "town_hall_started":
+      return {
+        commandId: `round-${fact.round}-town-hall-started`,
+        kind: "town_hall.started",
+        round: fact.round,
+        phase: "town_hall",
+        payload: {
+          round: fact.round,
+          speakingOrder: [...fact.speakingOrder],
+        },
+        visibility: PUBLIC,
+      };
+    case "town_hall_turn_recorded":
+      return {
+        commandId: fact.turn.turnId,
+        kind: "town_hall.turn_recorded",
+        round: fact.round,
+        phase: "town_hall",
+        payload: {
+          turn: {
+            ...fact.turn,
+            citations: fact.turn.citations.map((citation) => ({ ...citation })),
+          },
+        },
+        visibility: PUBLIC,
+      };
     case "round_integrated":
       return {
         commandId: `round-${fact.integration.round}-integrated`,
@@ -164,7 +190,9 @@ export class EventLedgerMatchResolutionJournal
       eventId: this.options.createEventId(),
       runId,
       recordedAt: this.options.now().toISOString(),
-      actor: { kind: "controller", id: "three-round-match" },
+      actor: fact.type === "town_hall_turn_recorded"
+        ? { kind: "participant", id: fact.turn.participantId }
+        : { kind: "controller", id: "three-round-match" },
       context: { round: event.round, phase: event.phase },
       kind: event.kind,
       payload: event.payload,

@@ -173,6 +173,17 @@ describe("ContainedOmpThreeRoundRunner", () => {
           role: "builder",
         }),
       },
+      {
+        run: async ({ request: townHallRequest, recorder }) => {
+          await recorder.record({
+            type: "town_hall_started",
+            round: townHallRequest.round,
+            speakingOrder: townHallRequest.participants.map(
+              ({ participantId }) => participantId,
+            ),
+          });
+        },
+      },
       integrator,
       context,
       { maximumOutputTokens: 4_000, wallTimeMilliseconds: 60_000 },
@@ -191,6 +202,12 @@ describe("ContainedOmpThreeRoundRunner", () => {
       ]);
     }
 
+    const townHallFacts: string[] = [];
+    await runner.runTownHall(work.roundId, {
+      record: async (fact) => {
+        townHallFacts.push(fact.type);
+      },
+    });
     const integrated = await runner.integrate(work.roundId);
     expect(integrated.governance).toEqual({
       initialCredits: 18,
@@ -202,6 +219,7 @@ describe("ContainedOmpThreeRoundRunner", () => {
       IDS.map((id) => `proposal-r2-${id}`),
     );
     expect(context.current()).toEqual({ round: 2, phase: "integration" });
+    expect(townHallFacts).toEqual(["town_hall_started"]);
     expect(workspaces.cleaned).toEqual(["match-1-round-2"]);
   });
 });

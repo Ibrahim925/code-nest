@@ -31,7 +31,9 @@ import { WorkspaceManager } from "../workspaces/application/workspace-manager.js
 import { DockerTrustedContainerEngine } from "../trusted-ci/adapters/docker-trusted-container-engine.js";
 import { TrustedTestRunner } from "../trusted-ci/application/trusted-test-runner.js";
 import { GitContainedWorkspaceSynchronizer } from "./adapters/git-contained-workspace-synchronizer.js";
+import { DiscardingWorkspaceSynchronizer } from "./adapters/discarding-workspace-synchronizer.js";
 import { ContainedOmpThreeRoundRunner } from "./application/contained-omp-three-round-runner.js";
+import { ContainedOmpTownHall } from "./application/contained-omp-town-hall.js";
 import { ContainedOmpRuntimeFactory } from "./application/contained-omp-runtime-factory.js";
 import { MatchObservationContext } from "./application/match-observation-context.js";
 import { createContainedOmpDependencies } from "./contained-omp-dependencies.js";
@@ -178,7 +180,8 @@ export class LocalOmpRunExecutor implements RunExecutor {
         maximumOutputBytes: MEBIBYTE,
         stopGraceSeconds: 2,
       },
-    }, contained, new GitContainedWorkspaceSynchronizer());
+    }, contained, new GitContainedWorkspaceSynchronizer(),
+    new DiscardingWorkspaceSynchronizer());
     const workspaces = new WorkspaceManager(
       workspaceRoot,
       new GitWorkspaceRepository(),
@@ -206,6 +209,16 @@ export class LocalOmpRunExecutor implements RunExecutor {
         workspaces,
         runtimeFactory,
         briefs,
+        new ContainedOmpTownHall(
+          runtimeFactory,
+          briefs,
+          observationContext,
+          {
+            maximumOutputTokens: 2_000,
+            wallTimeMilliseconds:
+              configuration.limits.roundDurationSeconds * 1_000,
+          },
+        ),
         integrator,
         observationContext,
         {

@@ -17,9 +17,12 @@ export class RecordObservabilitySink implements OmpObservabilitySink {
   async record(fact: OmpObservabilityFact): Promise<void> {
     const context = this.context();
     const round = context.round === null ? "r-none" : `r-${context.round}`;
+    const phase = context.phase === null
+      ? "p-none"
+      : `p-${context.phase.replaceAll(/[^a-z0-9._-]/giu, "-")}`;
     await this.service.record({
       runId: this.runId,
-      observationId: `${this.participantId}-${round}-${fact.observationId}`,
+      observationId: `${this.participantId}-${round}-${phase}-${fact.observationId}`,
       participantId: this.participantId,
       source: fact.source === "participant"
         ? { kind: "participant", id: this.participantId }

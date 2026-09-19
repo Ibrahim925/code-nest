@@ -89,6 +89,12 @@ export class ThreeRoundMatchService {
         work,
       });
       state = await this.#advance(request.runId, state);
+      while (state.phase !== "town_hall") {
+        state = await this.#advance(request.runId, state);
+      }
+      await this.dependencies.rounds.runTownHall(work.roundId, {
+        record: (fact) => this.dependencies.journal.record(request.runId, fact),
+      });
       while (state.phase !== "integration") {
         state = await this.#advance(request.runId, state);
       }

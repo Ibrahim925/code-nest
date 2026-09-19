@@ -1,4 +1,4 @@
-import type { MatchPhaseTransition } from "@code-nest/core";
+import type { MatchPhaseTransition, TownHallTurn } from "@code-nest/core";
 
 import type { BriefingReceipt, BriefingRequest } from "../../../briefing/domain/brief.js";
 import type {
@@ -33,7 +33,15 @@ export interface RoundWorkRequest {
 
 export interface RoundExecutor {
   runWork(request: RoundWorkRequest): Promise<RoundWorkResult>;
+  runTownHall(roundId: string, recorder: RoundTownHallRecorder): Promise<void>;
   integrate(roundId: string): Promise<RoundIntegrationResult>;
+}
+
+export interface RoundTownHallRecorder {
+  record(fact: Extract<
+    MatchResolutionFact,
+    { readonly type: "town_hall_started" | "town_hall_turn_recorded" }
+  >): Promise<void>;
 }
 
 export interface CandidateFreezer {
@@ -55,6 +63,16 @@ export interface FinalMatchScorer {
 export type MatchResolutionFact =
   | { readonly type: "phase_advanced"; readonly transition: MatchPhaseTransition }
   | { readonly type: "round_work_completed"; readonly work: RoundWorkResult }
+  | {
+      readonly type: "town_hall_started";
+      readonly round: number;
+      readonly speakingOrder: readonly string[];
+    }
+  | {
+      readonly type: "town_hall_turn_recorded";
+      readonly round: number;
+      readonly turn: TownHallTurn;
+    }
   | { readonly type: "round_integrated"; readonly integration: RoundIntegrationResult }
   | { readonly type: "candidate_frozen"; readonly candidate: FrozenCandidate }
   | { readonly type: "legitimate_scored"; readonly result: LegitimateMatchResult }

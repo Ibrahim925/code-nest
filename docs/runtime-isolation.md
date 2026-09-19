@@ -156,6 +156,14 @@ are removed before the next round begins. This bounds process and filesystem
 state to one round while keeping durable observations attached to the outer
 match and a round-qualified idempotency identity.
 
+After proposal capture, Town Hall uses a second set of four fresh contained
+sessions seeded read-only from those proposal workspaces. Each speaker receives
+only its private brief and the public transcript accumulated before its turn.
+The writable `/workspace` remains container tmpfs, and the discussion
+synchronizer reads only the unchanged host revision; it never imports a patch.
+Stopping the session therefore discards any attempted discussion-time file
+change before integration.
+
 The headless computer-frame adapter renders only derived safe state: participant
 identity, capture reason and sequence, Git revision, change count, and connection
 status. It never renders command arguments, results, environment values, raw

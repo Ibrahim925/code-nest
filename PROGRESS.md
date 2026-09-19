@@ -15,11 +15,11 @@ actually verified.
 ## Current Verified State
 
 - **Branch/commit:** `main`; `CN-055` remains in progress after the production
-  three-round resolution slice.
+  Town Hall and typed messaging slice.
 - **Verification status:** all automated checks pass. Every first-party code
   and test file is at most 350 physical lines. `make check` passed the
-  file-length guard, ESLint, strict typechecks across six workspaces, 92 Vitest
-  files, and 488 tests. The set includes the production three-round OMP/Luna
+  file-length guard, ESLint, strict typechecks across six workspaces, 94 Vitest
+  files, and 491 tests. The set includes the production three-round OMP/Luna
   runner, frozen-candidate networkless scoring, the four-container OMP/Luna flow,
   controller-owned Git synchronization, accessible four-computer interface,
   verified memory
@@ -35,13 +35,34 @@ actually verified.
   cleanup, redaction, trusted-test, credential, TLS, and Docker boundaries.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** replace synthetic phase skipping with a real Town Hall and
-  typed participant messaging/governance flow across all three rounds.
+- **Next priority:** make bounded agent activity and individual memory useful
+  during real multi-round runs without exposing private chain of thought.
 - **Blockers:** none for implementation. A later real run will send verified
   scenario briefs and repository-derived work to OpenAI and still requires
   explicit user approval.
 
 ## Session Records
+
+### 2026-09-19 — Production Town Hall and typed public messaging
+
+- Outcome: done; all three production rounds now run a real two-pass Town Hall,
+  while `CN-055` remains in progress for observability/memory and completed-run
+  UX.
+- Did: added a narrow Town Hall port between work and integration; started four
+  fresh contained OMP sessions from each proposal for evidence/accusation and
+  defence/rebuttal turns in deterministic roster order; delivered every prior
+  public turn to the current speaker; accepted only exact bounded
+  `message.publish` command objects; and recorded the start plus every speech or
+  explicit yield immediately as public durable facts. Discussion files live
+  only in container tmpfs and are discarded, so speech cannot mutate a proposal.
+  Observatory identities now include both round and phase to prevent restarted
+  work and discussion sessions from colliding.
+- Verification run: focused Town Hall, runner, parser, observability, and fake
+  three-round suites passed 9/9. The heterogeneous Docker match passed with the
+  new round interface. Final `make check` passed the 350-line guard, ESLint, all
+  six workspace typechecks, 94 test files, and 491 tests.
+- Remaining: two slices: useful bounded observability/memory, then completed-run
+  failure/reopen/replay/accessibility UX.
 
 ### 2026-09-19 — Production three-round resolution and trusted scoring
 

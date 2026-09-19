@@ -42,8 +42,8 @@ describe("RecordObservabilitySink", () => {
     await sink.record(fact);
 
     expect(requests.map(({ observationId }) => observationId)).toEqual([
-      "player-a-r-1-omp-live-1",
-      "player-a-r-2-omp-live-1",
+      "player-a-r-1-p-work-omp-live-1",
+      "player-a-r-2-p-work-omp-live-1",
     ]);
   });
 });

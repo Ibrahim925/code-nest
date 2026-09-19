@@ -192,6 +192,15 @@ order, and imports proposals through controller-owned Git. Round workspaces are
 removed after integration. A process-local observation context adds the round
 to restarted adapter fact identities so counters cannot collide in the ledger.
 
+Between work and integration, a narrow Town Hall application port starts four
+fresh contained discussion sessions from the captured proposal seeds. The pure
+core state machine supplies two passes and the fixed speaking order; the
+application supplies each speaker with the public transcript accumulated so far
+and persists each accepted turn before continuing. Discussion synchronization
+is deliberately discard-only, so changes made during speech remain in container
+tmpfs and never alter the proposal. Observation identities include round and
+phase because both work and discussion restart the same participant adapter.
+
 After round three the controller freezes one clean Git revision, evaluates all
 legitimate and covert facts once through the trusted-CI hexagon, and only then
 records role reveal, scoreboard, and terminal completion. The existing

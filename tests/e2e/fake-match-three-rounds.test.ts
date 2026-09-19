@@ -4,6 +4,7 @@ import { join } from "node:path";
 import { promisify } from "node:util";
 
 import { projectEventForAudience } from "../../packages/core/src/index.js";
+import { parseObservabilityEvent } from "../../packages/protocol/src/index.js";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { EventLedger } from "../../apps/controller/src/ledger/ledger.js";
@@ -98,7 +99,20 @@ describe("three-round four-agent completion", () => {
     const context = await createThreeRoundFakeMatch();
     const events = context.ledger.listEvents(context.result.runId);
     const phaseEvents = events.filter(({ kind }) => kind === "match.phase_advanced");
+    const townHallStarts = events.filter(({ kind }) => kind === "town_hall.started");
+    const townHallTurns = events.filter(
+      ({ kind }) => kind === "town_hall.turn_recorded",
+    );
     expect(phaseEvents).toHaveLength(19);
+    expect(townHallStarts).toHaveLength(3);
+    expect(townHallTurns).toHaveLength(24);
+    expect(townHallTurns.map(({ actor }) => actor.kind)).toEqual(
+      Array.from({ length: 24 }, () => "participant"),
+    );
+    for (const event of [...townHallStarts, ...townHallTurns]) {
+      const parsed = parseObservabilityEvent(event);
+      expect(parsed.ok).toBe(true);
+    }
     expect(phaseEvents.at(-1)?.payload).toEqual({
       from: { round: 3, phase: "integration" },
       to: { round: 3, phase: "completion" },

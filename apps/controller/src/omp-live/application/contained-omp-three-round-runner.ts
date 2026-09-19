@@ -12,6 +12,7 @@ import type {
 } from "../../matches/application/ports/one-round-match-ports.js";
 import type {
   RoundExecutor,
+  RoundTownHallRecorder,
   RoundWorkRequest,
 } from "../../matches/application/ports/three-round-match-ports.js";
 import {
@@ -25,10 +26,13 @@ import type {
   WorkspaceCapture,
 } from "../../workspaces/domain/workspace.js";
 import type { MatchObservationContext } from "./match-observation-context.js";
+import type { RoundTownHall } from "./contained-omp-town-hall.js";
 
 interface PendingRound {
   readonly request: RoundWorkRequest;
   readonly proposals: readonly AuthorizedPatchProposal[];
+  readonly workspaces: readonly ParticipantWorkspace[];
+  readonly townHallCompleted: boolean;
 }
 
 export interface ThreeRoundRuntimeFactory {
@@ -98,6 +102,7 @@ export class ContainedOmpThreeRoundRunner implements RoundExecutor {
     private readonly workspaces: RoundWorkspaceManager,
     private readonly runtimes: ThreeRoundRuntimeFactory,
     private readonly briefs: PrivateBriefSource,
+    private readonly townHall: RoundTownHall,
     private readonly integrator: RoundPatchIntegrator,
     private readonly context: MatchObservationContext,
     private readonly options: ContainedOmpThreeRoundRunnerOptions,
@@ -132,7 +137,12 @@ export class ContainedOmpThreeRoundRunner implements RoundExecutor {
         commitSummary: turn.commitSummary,
         publicMessages: [...turn.publicMessages],
       } satisfies RoundParticipantResult));
-      this.#pending.set(roundId, { request, proposals });
+      this.#pending.set(roundId, {
+        request,
+        proposals,
+        workspaces,
+        townHallCompleted: false,
+      });
       return {
         roundId,
         round: request.round,
@@ -148,9 +158,33 @@ export class ContainedOmpThreeRoundRunner implements RoundExecutor {
     }
   }
 
+  async runTownHall(
+    roundId: string,
+    recorder: RoundTownHallRecorder,
+  ): Promise<void> {
+    const pending = this.#pending.get(roundId);
+    if (pending === undefined || pending.townHallCompleted) {
+      throw rejected("Round is unavailable for Town Hall.");
+    }
+    try {
+      await this.townHall.run({
+        request: pending.request,
+        workspaces: pending.workspaces,
+        recorder,
+      });
+      this.#pending.set(roundId, { ...pending, townHallCompleted: true });
+    } catch (error: unknown) {
+      this.#pending.delete(roundId);
+      await this.workspaces.cleanup(roundId);
+      throw rejected("Round Town Hall failed.", error);
+    }
+  }
+
   async integrate(roundId: string): Promise<RoundIntegrationResult> {
     const pending = this.#pending.get(roundId);
-    if (pending === undefined) throw rejected("Round proposals are unavailable.");
+    if (pending === undefined || !pending.townHallCompleted) {
+      throw rejected("Round proposals or Town Hall are unavailable.");
+    }
     this.context.enter(pending.request.round, "integration");
     try {
       const report = await this.integrator.integrate({
