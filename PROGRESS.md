@@ -14,12 +14,13 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-051` adds trusted Observatory recording and
-  participant-owned working memory on top of the strict event contracts.
+- **Branch/commit:** `main`; `CN-052` adds the safe OMP telemetry and
+  computer-capture bridge on top of trusted Observatory recording.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 80 Vitest files, and 459 tests. The set
-  includes controller recording, memory ownership and secret redaction,
+  typechecks across six workspaces, 81 Vitest files, and 461 tests. The set
+  includes OMP activity/tool/submission/frame telemetry, controller recording,
+  memory ownership and secret redaction,
   Observatory payload, privacy, provenance, and artifact contracts,
   the OMP RPC lifecycle and isolation contract, four digest-bound
   offline demonstrations, recovery/restart and
@@ -29,10 +30,31 @@ actually verified.
   cleanup, redaction, trusted-test, credential, TLS, and Docker boundaries.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** `CN-052` OMP Observatory telemetry bridge.
+- **Next priority:** `CN-053` Four-agent Observatory projector.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-18 (cn-052) — OMP Observatory telemetry bridge
+
+- Outcome: done; 52 of 55 recorded features pass.
+- Did: extended the OMP connector with declared computer-frame, submitted-
+  rationale, and working-memory capabilities; three narrow host tools for
+  commands, rationales, and memory; and an ordered observability bridge. It emits
+  lifecycle and bounded tool facts, requests frames at actions/phase boundaries
+  plus a low-rate heartbeat, validates PNG captures, and turns capture errors or
+  suspected secrets into explicit withheld facts. The concrete screen source is
+  an injected port so the contained launcher can own it without coupling OMP to
+  Docker or a desktop implementation.
+- Verification run: two new real-child-process integration cases passed for all
+  telemetry families, visible/redacted and withheld frames, heartbeat behavior,
+  and invalid configuration. Serialized facts excluded the broker grant, private
+  thinking, tool arguments, and tool results. The original OMP lifecycle and
+  common contract suites also passed, 22 of 22 affected cases. Final `make check`
+  passed the 350-line guard, ESLint, all six workspace typechecks, 81 test files,
+  and 461 tests.
+- Remaining: three slices: deterministic four-agent web projection, the live
+  four-computer interface, and the complete four-container live/replay flow.
 
 ### 2026-09-18 (cn-051) — Observatory recording and memory hexagon
 

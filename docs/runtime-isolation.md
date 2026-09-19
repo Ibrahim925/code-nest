@@ -104,9 +104,21 @@ share an OMP process, session, home, or workspace.
 OMP receives controller observations only when the application begins a turn.
 Its `code_nest_submit_command` calls are captured as untrusted command values
 and still pass through normal protocol parsing and participant authorization.
-Tool start/end events become bounded Tier 1 evidence. The final assistant text
-is a work note, not a public message or trusted fact. Thinking blocks, tool
-arguments, tool results, extension UI frames, and raw stderr text are discarded.
+Two additional always-loaded host tools let the agent explicitly submit a
+bounded rationale or replace its own bounded working memory. These are
+self-reports, not inferred thought. Tool start/end events become bounded Tier 1
+evidence. The final assistant text is a work note, not a public message or
+trusted fact. Thinking blocks, tool arguments, tool results, extension UI
+frames, and raw stderr text are discarded.
+
+The connector exposes a separate computer-capture port. It requests a frame at
+phase boundaries and observable actions plus a low-rate heartbeat. Capture
+implementations must return a bounded PNG already marked clear/redacted or a
+closed withheld reason. Malformed bytes and capture failures become explicit
+`capture_failed` frames. The bridge serializes activity, tool, rationale, memory,
+and frame delivery through one injected sink so the controller can persist them
+in order. A sink failure fails the active lifecycle operation but never prevents
+OMP process cleanup.
 
 The launch uses an explicit environment and passes no credential in arguments.
 Session persistence, discovered extensions, discovered skills, title changes,

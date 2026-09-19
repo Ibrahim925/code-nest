@@ -1,5 +1,21 @@
 # Design Decisions
 
+## 2026-09-18: Expose OMP observability through narrow host and capture ports
+
+- Reason: OMP's RPC stream contains useful lifecycle and tool boundaries, while
+  rationale and memory must be deliberate agent submissions and computer images
+  come from the contained environment rather than the model protocol.
+- Rejected alternative: treating thinking deltas, tool arguments/results, or
+  extension UI frames as the agent's mind would leak private data and bind the
+  Observatory to unstable OMP internals. Making OMP itself write controller
+  events would also cross the trusted boundary.
+- Constraint: register only command, rationale, and working-memory host tools;
+  keep their outputs untrusted until the controller accepts them. Emit bounded
+  lifecycle/tool facts and request PNGs through an injected capture port on
+  actions, phase boundaries, and a 10-second default heartbeat. Invalid or failed
+  captures become explicit withheld facts. Broker credentials and private
+  thinking never enter the observability sink.
+
 ## 2026-09-18: Derive Observatory artifacts and memory history in the controller
 
 - Reason: an untrusted harness may describe what it did, but it must not choose

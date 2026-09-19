@@ -568,9 +568,9 @@
       "milestone": "M6-live-harnesses",
       "title": "OMP Observatory telemetry bridge",
       "user_visible_behavior": "Each OMP participant reports safe live activity, tools, submitted rationale, memory revisions, and action-triggered or heartbeat computer frames without leaking provider credentials or raw thought.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run packages/adapters/src/omp-observability.integration.test.ts", "make check"],
-      "evidence": "",
+      "evidence": "2026-09-18: the focused OMP observability integration passed two cases with a real child process, covering starting/working/waiting/stopped activity, bounded tool start/end facts, explicit rationale and working-memory host-tool submissions, action/phase/heartbeat frame requests, visible redacted PNGs, capture failures, suspected-secret withholding, and invalid heartbeat configuration. Serialized telemetry contained no broker grant, private thinking, tool arguments, or tool results. The existing four OMP lifecycle cases and adapter contract suite also passed, 22/22 affected tests total. Final make check passed the 350-line guard, lint, all workspace typechecks, 81 test files, and 461 tests.",
       "notes": "Translate at the adapter boundary; frame capture must emit an explicit withheld fact when redaction or capture fails."
     },
     {

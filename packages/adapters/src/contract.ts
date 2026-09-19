@@ -1,12 +1,15 @@
 export const RUNTIME_CAPABILITIES = [
+  "computer_frames",
   "interrupt",
   "private_message_delivery",
   "provider_reasoning_summaries",
   "resume",
   "streaming_output",
+  "submitted_rationales",
   "typed_tool_events",
   "usage_accounting",
   "work_notes",
+  "working_memory",
 ] as const;
 
 export type RuntimeCapability = (typeof RUNTIME_CAPABILITIES)[number];

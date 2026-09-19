@@ -90,8 +90,9 @@ export function normalizeOmpConfiguration(
       executionMode: "contained",
       observabilityTier: 1,
       capabilities: [
-        "interrupt", "resume", "streaming_output", "typed_tool_events",
-        "usage_accounting", "work_notes",
+        "computer_frames", "interrupt", "resume", "streaming_output",
+        "submitted_rationales", "typed_tool_events", "usage_accounting",
+        "work_notes", "working_memory",
       ],
     },
     sessionId: input.sessionId,

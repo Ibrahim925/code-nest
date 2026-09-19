@@ -230,6 +230,9 @@ export function parseRuntimeMetadata(input: unknown): RuntimeMetadata {
   if (
     (capabilities.includes("typed_tool_events") && observabilityTier < 1) ||
     (capabilities.includes("work_notes") && observabilityTier < 1) ||
+    (capabilities.includes("computer_frames") && observabilityTier < 1) ||
+    (capabilities.includes("submitted_rationales") && observabilityTier < 1) ||
+    (capabilities.includes("working_memory") && observabilityTier < 1) ||
     (capabilities.includes("provider_reasoning_summaries") &&
       observabilityTier < 2)
   ) {

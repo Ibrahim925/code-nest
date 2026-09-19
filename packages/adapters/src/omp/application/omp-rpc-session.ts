@@ -2,10 +2,15 @@ import { RuntimeAdapterError } from "../../contract.js";
 import type { ProcessLauncher, ProcessSession } from "../../subprocess/application/process-session.js";
 import {
   CODE_NEST_HOST_TOOL,
+  CODE_NEST_HOST_TOOLS,
+  CODE_NEST_MEMORY_TOOL,
+  CODE_NEST_RATIONALE_TOOL,
   encodeHostToolResult,
   encodeOmpCommand,
   parseOmpFrame,
+  parseSubmittedMemory,
   parseSubmittedCommand,
+  parseSubmittedRationale,
 } from "../domain/rpc.js";
 import type { NormalizedOmpConfiguration } from "../domain/configuration.js";
 
@@ -19,6 +24,8 @@ export interface OmpRpcSessionEvents {
     readonly status: "started" | "completed" | "failed";
   }) => void;
   readonly command: (command: unknown) => void;
+  readonly rationale: (body: string) => void;
+  readonly memory: (update: ReturnType<typeof parseSubmittedMemory>) => void;
 }
 
 interface Deferred<T> {
@@ -156,7 +163,7 @@ export class OmpRpcSession {
   }
 
   async configureHostTool(): Promise<void> {
-    await this.request("set_host_tools", { tools: [CODE_NEST_HOST_TOOL] });
+    await this.request("set_host_tools", { tools: CODE_NEST_HOST_TOOLS });
   }
 
   async stop(): Promise<void> {
@@ -219,9 +226,19 @@ export class OmpRpcSession {
   }
 
   #hostTool(frame: Extract<ReturnType<typeof parseOmpFrame>, { type: "host_tool_call" }>): void {
-    let failed = frame.toolName !== CODE_NEST_HOST_TOOL.name || this.#turn === undefined;
+    let failed = this.#turn === undefined;
     if (!failed) {
-      try { this.events.command(parseSubmittedCommand(frame.arguments)); }
+      try {
+        if (frame.toolName === CODE_NEST_HOST_TOOL.name) {
+          this.events.command(parseSubmittedCommand(frame.arguments));
+        } else if (frame.toolName === CODE_NEST_RATIONALE_TOOL.name) {
+          this.events.rationale(parseSubmittedRationale(frame.arguments));
+        } else if (frame.toolName === CODE_NEST_MEMORY_TOOL.name) {
+          this.events.memory(parseSubmittedMemory(frame.arguments));
+        } else {
+          failed = true;
+        }
+      }
       catch { failed = true; }
     }
     this.#process?.send(encodeHostToolResult(frame.id, failed));

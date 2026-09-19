@@ -45,6 +45,47 @@ export const CODE_NEST_HOST_TOOL = {
   loadMode: "always",
 } as const;
 
+export const CODE_NEST_RATIONALE_TOOL = {
+  name: "code_nest_submit_rationale",
+  label: "Submit rationale",
+  description:
+    "Submit a concise rationale for the human Observatory. Do not include private chain-of-thought or credentials.",
+  parameters: {
+    type: "object",
+    additionalProperties: false,
+    required: ["body"],
+    properties: { body: { type: "string", minLength: 1, maxLength: 2_000 } },
+  },
+  loadMode: "always",
+} as const;
+
+export const CODE_NEST_MEMORY_TOOL = {
+  name: "code_nest_update_memory",
+  label: "Update working memory",
+  description:
+    "Replace your private working memory with a concise safe summary for later turns.",
+  parameters: {
+    type: "object",
+    additionalProperties: false,
+    required: ["reason", "summary", "content"],
+    properties: {
+      reason: {
+        type: "string",
+        enum: ["agent_consolidation", "round_transition", "resume"],
+      },
+      summary: { type: "string", minLength: 1, maxLength: 500 },
+      content: { type: "string", minLength: 1, maxLength: 262_144 },
+    },
+  },
+  loadMode: "always",
+} as const;
+
+export const CODE_NEST_HOST_TOOLS = [
+  CODE_NEST_HOST_TOOL,
+  CODE_NEST_RATIONALE_TOOL,
+  CODE_NEST_MEMORY_TOOL,
+] as const;
+
 function record(value: unknown): Record<string, unknown> | null {
   return typeof value === "object" && value !== null && !Array.isArray(value)
     ? value as Record<string, unknown>
@@ -181,6 +222,63 @@ export function parseSubmittedCommand(input: Record<string, unknown>): unknown {
   }
 }
 
+function exactKeys(
+  input: Record<string, unknown>,
+  keys: readonly string[],
+): boolean {
+  const actual = Object.keys(input).sort();
+  const expected = [...keys].sort();
+  return (
+    actual.length === expected.length &&
+    actual.every((key, index) => key === expected[index])
+  );
+}
+
+function safeText(value: unknown, maximum: number): value is string {
+  return (
+    typeof value === "string" &&
+    value.length >= 1 &&
+    value.length <= maximum &&
+    !value.includes("\0")
+  );
+}
+
+export function parseSubmittedRationale(
+  input: Record<string, unknown>,
+): string {
+  if (!exactKeys(input, ["body"]) || !safeText(input.body, 2_000)) {
+    return protocolError("OMP submitted an invalid rationale.");
+  }
+  return input.body;
+}
+
+export interface SubmittedMemoryUpdate {
+  readonly reason: "agent_consolidation" | "round_transition" | "resume";
+  readonly summary: string;
+  readonly content: string;
+}
+
+export function parseSubmittedMemory(
+  input: Record<string, unknown>,
+): SubmittedMemoryUpdate {
+  const reasons = new Set(["agent_consolidation", "round_transition", "resume"]);
+  if (
+    !exactKeys(input, ["reason", "summary", "content"]) ||
+    typeof input.reason !== "string" ||
+    !reasons.has(input.reason) ||
+    !safeText(input.summary, 500) ||
+    !safeText(input.content, 262_144) ||
+    new TextEncoder().encode(input.content).byteLength > 262_144
+  ) {
+    return protocolError("OMP submitted invalid working memory.");
+  }
+  return {
+    reason: input.reason as SubmittedMemoryUpdate["reason"],
+    summary: input.summary,
+    content: input.content,
+  };
+}
+
 export function encodeHostToolResult(id: string, failed = false): string {
   return encodeOmpCommand({
     type: "host_tool_result",
@@ -188,7 +286,7 @@ export function encodeHostToolResult(id: string, failed = false): string {
     result: {
       content: [{
         type: "text",
-        text: failed ? "Command submission rejected." : "Command queued for controller validation.",
+        text: failed ? "Submission rejected." : "Submission queued for controller validation.",
       }],
     },
     ...(failed ? { isError: true } : {}),
