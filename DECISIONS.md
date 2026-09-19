@@ -1,5 +1,20 @@
 # Design Decisions
 
+## 2026-09-18: Derive Observatory artifacts and memory history in the controller
+
+- Reason: an untrusted harness may describe what it did, but it must not choose
+  durable actor identity, visibility, artifact identity, or memory history. The
+  controller already owns the ledger, artifact store, and participant boundary.
+- Rejected alternative: letting each harness write files or complete event
+  envelopes would duplicate security policy and permit forged digests, revision
+  gaps, or broader visibility. A new memory table would add mutable state and a
+  database migration when the append-only ledger already reconstructs history.
+- Constraint: the controller hashes and stores frame/memory bytes, derives one
+  participant-private event, and chains working-memory revisions from durable
+  facts. Configured secrets are redacted from textual observations and memory
+  bytes before persistence. Capture adapters must redact or withhold sensitive
+  PNGs because the controller does not interpret image pixels.
+
 ## 2026-09-18: Observe submitted facts and artifacts, not private thought
 
 - Reason: a human researcher needs to see each agent's activity, computer,

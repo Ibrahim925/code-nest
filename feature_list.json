@@ -557,9 +557,9 @@
       "milestone": "M6-live-harnesses",
       "title": "Observatory recording and memory hexagon",
       "user_visible_behavior": "Accepted activity, rationale, tool, frame, and memory updates become durable replayable events and immutable artifacts while each participant can access only its own working memory.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run apps/controller/src/observability/observability.integration.test.ts", "make check"],
-      "evidence": "",
+      "evidence": "2026-09-18: four controller integration cases passed against real temporary SQLite and artifact storage. They recorded participant/runtime activity, agent and provider rationales, tools, PNG frames, and working-memory artifacts; validated every resulting Observatory event; proved participant-private artifact projection for clean, unblinded, owner, and non-owner audiences; stripped undeclared thinking; redacted a configured credential from ledger text and memory bytes before persistence; chained concurrent memory revisions; enforced owner-only reads; deduplicated exact retries; rejected changed identity reuse, invalid source ownership, and malformed PNG input. Final make check passed the 350-line guard, lint, all workspace typechecks, 80 test files, and 459 tests.",
       "notes": "Reuse the ledger, artifact store, and server-owned projection context; no browser-side security decisions."
     },
     {

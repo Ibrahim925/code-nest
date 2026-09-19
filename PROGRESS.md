@@ -14,12 +14,13 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-050` adds strict Human Observatory contracts on
-  top of the verified OMP RPC connector.
+- **Branch/commit:** `main`; `CN-051` adds trusted Observatory recording and
+  participant-owned working memory on top of the strict event contracts.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 79 Vitest files, and 455 tests. The set
-  includes Observatory payload, privacy, provenance, and artifact contracts,
+  typechecks across six workspaces, 80 Vitest files, and 459 tests. The set
+  includes controller recording, memory ownership and secret redaction,
+  Observatory payload, privacy, provenance, and artifact contracts,
   the OMP RPC lifecycle and isolation contract, four digest-bound
   offline demonstrations, recovery/restart and
   serialized-leakage inspection, the 10,000-event/four-stream stress path,
@@ -28,10 +29,32 @@ actually verified.
   cleanup, redaction, trusted-test, credential, TLS, and Docker boundaries.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** `CN-051` Observatory recording and memory hexagon.
+- **Next priority:** `CN-052` OMP Observatory telemetry bridge.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-18 (cn-051) — Observatory recording and memory hexagon
+
+- Outcome: done; 51 of 55 recorded features pass.
+- Did: added a feature-oriented controller hexagon with pure observation/source
+  rules, an application recording and owner-only memory service, and one adapter
+  over the existing event ledger and immutable artifact store. The controller
+  derives actors, participant-private visibility, digests, byte counts, and the
+  single per-agent working-memory revision chain. Exact retries return their
+  original event and changed reuse fails. Configured secrets are removed from
+  event text and memory bytes before either reaches storage.
+- Verification run: four focused integration cases passed with real temporary
+  SQLite and artifact directories. They covered all five private observation
+  families, both rationale provenance paths, clean/unblinded and participant
+  access, concurrent memory chaining, owner-only reads, exact and conflicting
+  retries, malformed PNG rejection, invalid source ownership, dropped undeclared
+  thinking, and credential redaction in serialized events and memory bytes.
+  Final `make check` passed the 350-line guard, ESLint, all six workspace
+  typechecks, 80 test files, and 459 tests.
+- Remaining: four slices: OMP telemetry/frame capture, deterministic web
+  projection, the four-computer interface, and the complete four-container
+  live/replay flow.
 
 ### 2026-09-18 (cn-050) — Human Observatory event contracts
 

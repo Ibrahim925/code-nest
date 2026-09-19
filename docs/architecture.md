@@ -144,6 +144,31 @@ recomputes SHA-256 before the Observatory may display anything. The inspector
 joins those verified artifacts to the already-authorized event projection; it
 does not decide visibility or infer repository state.
 
+## Observatory recording and working-memory hexagon
+
+`apps/controller/src/observability` owns the trusted transition from normalized
+participant/runtime observations to replayable Observatory facts. Its domain
+defines the five accepted private observation families and enforces source
+ownership: participants may submit their own activity, rationale, and memory;
+runtimes may report activity, provider summaries, tools, and computer frames.
+The application service exposes recording plus owner-only working-memory reads.
+
+The event-ledger/artifact adapter derives actor, visibility, payload version,
+artifact digest, byte count, memory revision, and previous-memory digest. These
+are never accepted from an untrusted runtime. It validates the complete
+Observatory event contract before append and uses the observation ID as the
+ledger idempotency key. Exact retries return the original fact; changed reuse is
+rejected. Memory revisions are derived immediately before the synchronous ledger
+append, preserving one chain under the controller's single-writer model.
+
+Memory text is redacted with the controller's configured secret patterns before
+either its summary or artifact bytes are stored. PNG frames must already be
+classified as clear or redacted by the capture adapter; suspected secrets become
+an explicit withheld-frame fact with no artifact. Both artifact types use the
+same participant-private visibility as their event. A clean observer and another
+participant receive neither; the owner, operator, and authenticated unblinded
+human retain the existing projection semantics.
+
 ## Town Hall projection
 
 `apps/web/src/town-hall` owns a presentation-side domain and pure projector. It
