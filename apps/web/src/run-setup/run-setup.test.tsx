@@ -1,5 +1,5 @@
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { DEFAULT_RUN_SETUP, SETUP_CATALOG } from "./catalog.js";
 import { HttpOperatorRunClient, type OperatorRunClient } from "./client.js";
@@ -16,6 +16,10 @@ const runView: RunControlView = {
   updatedAt: "2026-09-18T12:00:00.000Z",
   lastEventSequence: 1,
 };
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
 
 function inertClient(): OperatorRunClient {
   return {
@@ -117,6 +121,20 @@ describe("run setup interface", () => {
 });
 
 describe("operator HTTP adapter", () => {
+  it("calls the browser fetch API with its required global receiver", async () => {
+    vi.stubGlobal("fetch", async function (this: unknown) {
+      expect(this).toBe(globalThis);
+      return new Response(JSON.stringify(runView), { status: 200 });
+    });
+    const client = new HttpOperatorRunClient({
+      baseUrl: "http://controller.test",
+      token: "operator-secret",
+      createCommandId: () => "command-browser-fetch",
+    });
+
+    await client.start(DEFAULT_RUN_SETUP);
+  });
+
   it("sends the validated setup and lifecycle commands with in-memory authority", async () => {
     const requests: { url: string; init: RequestInit | undefined }[] = [];
     const fetcher: typeof fetch = async (input, init) => {

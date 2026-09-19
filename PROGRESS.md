@@ -19,7 +19,7 @@ actually verified.
 - **Verification status:** all 55 recorded features pass. Every first-party code
   and test file is at most 350 physical lines. `make check` passed the
   file-length guard, ESLint, strict typechecks across six workspaces, 84 Vitest
-  files, and 472 tests. The set includes the four-container OMP/Luna flow,
+  files, and 473 tests. The set includes the four-container OMP/Luna flow,
   controller-owned Git synchronization, accessible four-computer interface,
   verified memory
   inspection, deterministic four-agent live/replay projection, OMP
@@ -38,6 +38,23 @@ actually verified.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-19 — Firefox/Zen operator request fix
+
+- Outcome: done; the local setup page now reaches the controller from Zen and
+  starts the four-seat contained OMP/Luna run.
+- Did: bound the browser-native `fetch` function to its required global receiver
+  before storing it in the operator HTTP adapter. Moved request-ID creation
+  outside the network error boundary so only transport failures are labelled as
+  controller-unreachable. Added a regression that exercises the native receiver.
+- Verification run: reproduced the failure in Zen, proved the proxied health and
+  run routes independently, then verified the fixed UI returned authorization
+  for a wrong token and started `station-access-run-001` with four OMP/Luna
+  participant lanes using the real token. The focused setup suite passed 7/7.
+  Final `make check` passed the 350-line guard, ESLint, all six workspace
+  typechecks, 84 test files, and 473 tests. An earlier sandboxed baseline run
+  failed only because Docker and localhost access were denied; the full host run
+  passed.
 
 ### 2026-09-18 (cn-055) — Four-container OMP live Observatory flow
 

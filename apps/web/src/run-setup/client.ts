@@ -71,7 +71,7 @@ export class HttpOperatorRunClient implements OperatorRunClient {
   readonly #createCommandId: () => string;
 
   constructor(private readonly options: HttpOperatorRunClientOptions) {
-    this.#fetch = options.fetcher ?? globalThis.fetch;
+    this.#fetch = options.fetcher ?? globalThis.fetch.bind(globalThis);
     this.#createCommandId = options.createCommandId ?? (() => crypto.randomUUID());
   }
 
@@ -99,6 +99,7 @@ export class HttpOperatorRunClient implements OperatorRunClient {
         "Enter the local operator token before sending a control request.",
       );
     }
+    const commandId = this.#createCommandId();
     let response: Response;
     try {
       response = await this.#fetch(`${this.options.baseUrl}${path}`, {
@@ -106,7 +107,7 @@ export class HttpOperatorRunClient implements OperatorRunClient {
         headers: {
           authorization: `Bearer ${this.options.token}`,
           "content-type": "application/json",
-          "idempotency-key": this.#createCommandId(),
+          "idempotency-key": commandId,
         },
       });
     } catch {
