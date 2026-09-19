@@ -12,7 +12,7 @@ export interface BuiltDemonstration {
   readonly bundle: ReplayBundle;
 }
 
-const MANIFEST_DIGEST = "sha256:a63c4f5f67b2ca2138d98f70e2b71504b18fda03288db43edab688293325deda";
+const MANIFEST_DIGEST = "sha256:0969e500b2d68b63fdc75c2ec9da734678f87fa68c5b4515838ebbef1c731480";
 const REPOSITORY_REVISION = "7488a28a62ea8c2bfe0ae64d81f4d7a99af090e0";
 const IMAGE_DIGEST = `sha256:${"a".repeat(64)}`;
 
@@ -28,7 +28,7 @@ function configuration(
       manifestDigest: MANIFEST_DIGEST,
       repositoryRevision: REPOSITORY_REVISION,
       participantImage: `ghcr.io/code-nest/participant@${IMAGE_DIGEST}`,
-      evaluatorImage: `ghcr.io/code-nest/evaluator@sha256:${"b".repeat(64)}`,
+      evaluatorImage: "node@sha256:be80f76cf40ec8e42b9bec49f60a55e0660f30af58d3e5a25530785b30ea67e2",
     },
     adapters: ["a", "b", "c", "d"].map((slot) => ({
       participantId: `player-${slot}`,

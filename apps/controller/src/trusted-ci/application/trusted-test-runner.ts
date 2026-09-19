@@ -9,7 +9,14 @@ import {
   TrustedCiError,
   type TrustedTestReport,
   type TrustedTestRequest,
+  type TrustedEvaluatorResult,
+  type NormalizedTrustedTestRequest,
 } from "../domain/trusted-test.js";
+
+interface TrustedExecution {
+  readonly request: NormalizedTrustedTestRequest;
+  readonly result: TrustedEvaluatorResult;
+}
 
 export class TrustedTestRunner {
   readonly #signingKey: Uint8Array;
@@ -26,11 +33,27 @@ export class TrustedTestRunner {
   }
 
   async run(input: TrustedTestRequest): Promise<TrustedTestReport> {
+    const { request, result } = await this.#execute(input);
+    const unsigned = projectTrustedTestReport(request, result);
+    const signature = createHmac("sha256", this.#signingKey)
+      .update(JSON.stringify(unsigned))
+      .digest("hex");
+    return { ...unsigned, signature: `hmac-sha256:${signature}` };
+  }
+
+  async evaluateForTrustedControlPlane(
+    input: TrustedTestRequest,
+  ): Promise<TrustedEvaluatorResult> {
+    const { result } = await this.#execute(input);
+    return structuredClone(result);
+  }
+
+  async #execute(input: TrustedTestRequest): Promise<TrustedExecution> {
     const request = normalizeTrustedTestRequest(input, this.roots);
     let containerId: string | undefined;
     let started = false;
     let failure: unknown;
-    let report: TrustedTestReport | undefined;
+    let result: TrustedEvaluatorResult | undefined;
     try {
       const handle = await this.engine.create(request);
       containerId = handle.containerId;
@@ -45,11 +68,8 @@ export class TrustedTestRunner {
       if (execution.exitCode !== 0) {
         throw new TrustedCiError("TRUSTED_CI_EXECUTION_FAILED", "Trusted evaluator exited without a valid report.");
       }
-      const unsigned = projectTrustedTestReport(request, parseTrustedEvaluatorResult(execution.stdout));
-      const signature = createHmac("sha256", this.#signingKey)
-        .update(JSON.stringify(unsigned))
-        .digest("hex");
-      report = { ...unsigned, signature: `hmac-sha256:${signature}` };
+      result = parseTrustedEvaluatorResult(execution.stdout);
+      projectTrustedTestReport(request, result);
     } catch (error: unknown) {
       failure = error;
     }
@@ -65,7 +85,7 @@ export class TrustedTestRunner {
       if (failure instanceof TrustedCiError) throw failure;
       throw new TrustedCiError("TRUSTED_CI_EXECUTION_FAILED", "Trusted test execution failed.", failure);
     }
-    return structuredClone(report as TrustedTestReport);
+    return { request, result: result as TrustedEvaluatorResult };
   }
 
   async #cleanup(

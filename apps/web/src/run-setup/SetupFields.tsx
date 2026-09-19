@@ -21,7 +21,7 @@ export function withOmpLunaPreset(
       executionMode: "contained" as const,
       modelDisclosure: "OpenAI Luna · OMP 18.1.14",
     })),
-    limits: { ...configuration.limits, rounds: 1 },
+    limits: { ...configuration.limits, rounds: 3 },
   };
 }
 

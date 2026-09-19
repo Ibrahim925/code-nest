@@ -22,8 +22,16 @@ export class ContainedOmpRuntimeFactory implements MatchRuntimeFactory {
   }
 
   async create(workspace: ParticipantWorkspace): Promise<ContainedOmpParticipant> {
+    return this.createForRun(workspace, workspace.runId);
+  }
+
+  async createForRun(
+    workspace: ParticipantWorkspace,
+    observationRunId: string,
+  ): Promise<ContainedOmpParticipant> {
     return new ContainedOmpParticipant(
       workspace,
+      observationRunId,
       this.#configuration,
       this.dependencies,
       this.synchronizer,

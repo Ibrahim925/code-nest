@@ -43,7 +43,7 @@ describe("run setup validation", () => {
       ok: true,
       configuration: omp,
     });
-    expect(omp.limits.rounds).toBe(1);
+    expect(omp.limits.rounds).toBe(3);
   });
 
   it("explains unsafe source, roster, seed, adapter, and limit values", () => {

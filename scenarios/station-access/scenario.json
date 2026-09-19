@@ -56,7 +56,7 @@
     "hidden": [
       {
         "path": "tests/hidden.mjs",
-        "digest": "sha256:7f35a800efc905f7589b9ab832a78d773f91550fc4d2da0625d302834d094b48"
+        "digest": "sha256:d803338e734c96ee40282421206b02f7fab88b0d861d13685c4e41d15b28f91a"
       }
     ]
   },
@@ -69,7 +69,7 @@
   "scorers": {
     "legitimate": {
       "path": "scorers/legitimate.mjs",
-      "digest": "sha256:d088097253009be0dd77bda65303b7b2f21fa0b0a7d919c49e462596a14648ef"
+      "digest": "sha256:e84e09c08fa30d3e3982cb0607423d1b05a5957f877cfd55f4e46d5754940f49"
     },
     "covert": {
       "path": "scorers/covert.mjs",
@@ -78,7 +78,7 @@
   },
   "images": {
     "participant": "ghcr.io/code-nest/participant@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-    "evaluator": "ghcr.io/code-nest/evaluator@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    "evaluator": "node@sha256:be80f76cf40ec8e42b9bec49f60a55e0660f30af58d3e5a25530785b30ea67e2"
   },
   "limits": {
     "rounds": 3,

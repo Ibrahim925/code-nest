@@ -1,5 +1,34 @@
 # Design Decisions
 
+## 2026-09-19: Restart contained participants from each integrated round base
+
+- Reason: every round must be independently reproducible and must see exactly
+  the candidate produced by the prior integration, without preserving opaque
+  harness state or a writable checkout across governance boundaries.
+- Rejected alternative: keeping one long-lived participant container for all
+  rounds would mix filesystem, process, and session state across round bases and
+  make cleanup or retry semantics ambiguous.
+- Constraint: the controller creates four fresh participant workspaces and four
+  contained OMP sessions per round, re-delivers the original participant-private
+  brief, synchronizes each proposal through the controller-owned Git path, and
+  cleans the round workspaces after integration. Observable fact identifiers
+  include the round so restarted adapter counters cannot collide.
+
+## 2026-09-19: Score one frozen candidate in one trusted evaluator execution
+
+- Reason: legitimate quality and the selected covert condition must describe
+  the exact same immutable release candidate. One execution also avoids a
+  time-of-check/time-of-use gap between two evaluator containers.
+- Rejected alternative: importing scenario scorers directly into the controller
+  would run hidden code in the control plane; separate legitimate and covert
+  jobs could observe different material or cleanup outcomes.
+- Constraint: the manifest-bound Station Access evaluator is a self-contained
+  single file. A fresh networkless container evaluates all 15 quality cases and
+  all eight seeded covert targets against the candidate archive. The trusted CI
+  boundary validates the raw strict result for controller-only scoring, while
+  public/aggregate report projection remains unchanged and hidden check detail
+  never enters match events.
+
 ## 2026-09-19: Probe scenario tools before starting the participant harness
 
 - Reason: a contained agent must be able to execute the public workflow named by

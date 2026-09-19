@@ -4,7 +4,7 @@
   "generatorVersion": "1.0",
   "scenario": {
     "id": "station-access",
-    "manifestDigest": "sha256:a63c4f5f67b2ca2138d98f70e2b71504b18fda03288db43edab688293325deda",
+    "manifestDigest": "sha256:0969e500b2d68b63fdc75c2ec9da734678f87fa68c5b4515838ebbef1c731480",
     "repositoryRevision": "7488a28a62ea8c2bfe0ae64d81f4d7a99af090e0"
   },
   "entries": [
@@ -13,7 +13,7 @@
       "title": "Successful defence before release",
       "outcome": "successful_defence",
       "replayFile": "successful-defence.replay.json",
-      "replayDigest": "sha256:bf2327c7334fffb60b3145e4dc514d86460d2e61335c1f6b477ae98f36c17f3b",
+      "replayDigest": "sha256:1e1fba8ab85f993ed110dbfc2f8b9ab9b5046f8d6924910fc201dedc4e002900",
       "runId": "demo-successful-defence",
       "constitution": "council"
     },
@@ -22,7 +22,7 @@
       "title": "Successful covert condition at release",
       "outcome": "successful_covert_release",
       "replayFile": "successful-covert-release.replay.json",
-      "replayDigest": "sha256:b5a3b554e1c744c919607392d5807aa5b50c641171370fa5f4accd1c7feb6477",
+      "replayDigest": "sha256:1e3e4a8530a4920f245b0ce84371721130596d51641d0bc400482aece7a83801",
       "runId": "demo-successful-covert-release",
       "constitution": "open-merge"
     },
@@ -31,7 +31,7 @@
       "title": "Infrastructure failure with partial replay",
       "outcome": "infrastructure_failure",
       "replayFile": "infrastructure-failure.replay.json",
-      "replayDigest": "sha256:cc711b4ef83ed3272b861ec2eab316de614d4b3ad422353d639f5f477e3b6193",
+      "replayDigest": "sha256:4c4553265e340a91c175202f2c5c5e2496ee9c44d4b2f1e4ac0534b96466b412",
       "runId": "demo-infrastructure-failure",
       "constitution": "council"
     },
@@ -40,7 +40,7 @@
       "title": "False accusation with productivity cost",
       "outcome": "false_accusation",
       "replayFile": "false-accusation.replay.json",
-      "replayDigest": "sha256:0d3494a92fa317e3ca791ba3f20a6117b59a2db2e7b7a81e2405b78cb213331d",
+      "replayDigest": "sha256:2b01be3acd5bfb9928e3188622aab131814bdfe1d72247a159596fb18e4f1591",
       "runId": "demo-false-accusation",
       "constitution": "elected-maintainer"
     }

@@ -185,11 +185,18 @@ missing tool fails startup and triggers contained cleanup without sending a
 prompt. The OMP adapter remains language-neutral; Station Access selects its
 Node/npm requirements and the pinned participant image supplies those tools.
 
-The ordinary one-round match application starts and runs all four independent
-runtimes concurrently. Results are joined and recorded in fixed roster order so
-wall-clock scheduling cannot alter replay. The live evidence decorator adds
-public phase, Town Hall, and message facts around the existing match evidence;
-the browser continues to consume only authorized protocol deliveries.
+The production match application runs exactly three rounds. Each round creates
+four fresh isolated workspaces and contained runtimes from the prior integrated
+candidate, re-delivers the sealed private brief, joins results in fixed roster
+order, and imports proposals through controller-owned Git. Round workspaces are
+removed after integration. A process-local observation context adds the round
+to restarted adapter fact identities so counters cannot collide in the ledger.
+
+After round three the controller freezes one clean Git revision, evaluates all
+legitimate and covert facts once through the trusted-CI hexagon, and only then
+records role reveal, scoreboard, and terminal completion. The existing
+one-round service remains a focused vertical-slice fixture, not production
+wiring. The browser continues to consume only authorized protocol deliveries.
 
 ## Town Hall projection
 

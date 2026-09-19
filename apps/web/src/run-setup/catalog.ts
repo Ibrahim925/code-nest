@@ -11,10 +11,10 @@ export const DEFAULT_RUN_SETUP: RunSetupConfiguration = {
   runId: "station-access-run-001",
   scenario: {
     id: "station-access",
-    manifestDigest: "sha256:a63c4f5f67b2ca2138d98f70e2b71504b18fda03288db43edab688293325deda",
+    manifestDigest: "sha256:0969e500b2d68b63fdc75c2ec9da734678f87fa68c5b4515838ebbef1c731480",
     repositoryRevision: "7488a28a62ea8c2bfe0ae64d81f4d7a99af090e0",
     participantImage: "ghcr.io/code-nest/participant@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-    evaluatorImage: "ghcr.io/code-nest/evaluator@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    evaluatorImage: "node@sha256:be80f76cf40ec8e42b9bec49f60a55e0660f30af58d3e5a25530785b30ea67e2",
   },
   adapters: ["a", "b", "c", "d"].map((suffix) => ({
     participantId: `player-${suffix}`,
@@ -24,7 +24,7 @@ export const DEFAULT_RUN_SETUP: RunSetupConfiguration = {
   })),
   seed: 2,
   limits: {
-    rounds: 1,
+    rounds: 3,
     roundDurationSeconds: 900,
     trustedTestWallTimeSeconds: 300,
     cpuCores: 2,

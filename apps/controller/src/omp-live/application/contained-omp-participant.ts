@@ -78,6 +78,7 @@ export class ContainedOmpParticipant implements MatchParticipantRuntime {
 
   constructor(
     private readonly workspace: ParticipantWorkspace,
+    private readonly observationRunId: string,
     private readonly configuration: NormalizedOmpLiveConfiguration,
     private readonly dependencies: ContainedOmpDependencies,
     private readonly synchronizer: ContainedWorkspaceSynchronizer,
@@ -91,7 +92,7 @@ export class ContainedOmpParticipant implements MatchParticipantRuntime {
     readonly workspacePath: string;
   }) {
     if (
-      request.runId !== this.workspace.runId ||
+      request.runId !== this.observationRunId ||
       request.workspacePath !== this.workspace.path ||
       this.#boundary !== undefined
     ) {

@@ -14,12 +14,13 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-055` remains in progress after the first
-  post-run correctness slice.
+- **Branch/commit:** `main`; `CN-055` remains in progress after the production
+  three-round resolution slice.
 - **Verification status:** all automated checks pass. Every first-party code
   and test file is at most 350 physical lines. `make check` passed the
-  file-length guard, ESLint, strict typechecks across six workspaces, 87 Vitest
-  files, and 482 tests. The set includes the four-container OMP/Luna flow,
+  file-length guard, ESLint, strict typechecks across six workspaces, 92 Vitest
+  files, and 488 tests. The set includes the production three-round OMP/Luna
+  runner, frozen-candidate networkless scoring, the four-container OMP/Luna flow,
   controller-owned Git synchronization, accessible four-computer interface,
   verified memory
   inspection, deterministic four-agent live/replay projection, OMP
@@ -34,14 +35,35 @@ actually verified.
   cleanup, redaction, trusted-test, credential, TLS, and Docker boundaries.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** replace the production one-round wiring with the existing
-  three-round completion path, including trusted tests, scoring, role reveal,
-  and truthful terminal events.
+- **Next priority:** replace synthetic phase skipping with a real Town Hall and
+  typed participant messaging/governance flow across all three rounds.
 - **Blockers:** none for implementation. A later real run will send verified
   scenario briefs and repository-derived work to OpenAI and still requires
   explicit user approval.
 
 ## Session Records
+
+### 2026-09-19 — Production three-round resolution and trusted scoring
+
+- Outcome: done; the production OMP composition now follows the three-round
+  resolution path, while `CN-055` remains in progress for real discourse and
+  completed-run UX.
+- Did: added a buffered participant-private brief handoff; ran four fresh,
+  isolated OMP sessions per round from the previous integrated candidate;
+  imported and integrated proposals in stable roster order; kept observability
+  identities distinct across restarted round sessions; froze the final clean
+  Git revision; and scored all legitimate and covert conditions once inside a
+  disposable, networkless, digest-bound evaluator container. The successful
+  path now publishes score, role reveal, scoreboard, and `match.completed` only
+  after all three rounds and trusted scoring. The setup preset now requests the
+  actual three-round flow and pins the real evaluator image.
+- Verification run: focused application, setup, manifest, fake three-round, and
+  demonstration suites passed 37/37. A real Docker proof matched the direct
+  Station Access scorer from the frozen integrated candidate and verified
+  cleanup. Final `make check` passed the 350-line guard, ESLint, all six
+  workspace typechecks, 92 test files, and 488 tests.
+- Remaining: three slices: real Town Hall/typed messaging, useful bounded
+  observability and memory, then completed-run/reopen/replay/accessibility UX.
 
 ### 2026-09-19 — Contained participant toolchain preflight
 

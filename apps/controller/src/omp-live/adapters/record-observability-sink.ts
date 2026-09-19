@@ -15,14 +15,16 @@ export class RecordObservabilitySink implements OmpObservabilitySink {
   ) {}
 
   async record(fact: OmpObservabilityFact): Promise<void> {
+    const context = this.context();
+    const round = context.round === null ? "r-none" : `r-${context.round}`;
     await this.service.record({
       runId: this.runId,
-      observationId: `${this.participantId}-${fact.observationId}`,
+      observationId: `${this.participantId}-${round}-${fact.observationId}`,
       participantId: this.participantId,
       source: fact.source === "participant"
         ? { kind: "participant", id: this.participantId }
         : { kind: "runtime", id: `omp-runtime-${this.participantId}` },
-      context: this.context(),
+      context,
       observation: fact.observation,
     });
   }

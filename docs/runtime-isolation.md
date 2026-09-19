@@ -149,6 +149,13 @@ stays in the broker. Container work returns as a binary Git patch that the
 controller validates and commits in the matching private host workspace. Peers
 never share a checkout or synchronize directly.
 
+Production rounds do not reuse a participant container. Four fresh contained
+sessions start from the previous round's integrated Git candidate, receive the
+same sealed role/assignment brief through a trusted process-local buffer, and
+are removed before the next round begins. This bounds process and filesystem
+state to one round while keeping durable observations attached to the outer
+match and a round-qualified idempotency identity.
+
 The headless computer-frame adapter renders only derived safe state: participant
 identity, capture reason and sequence, Git revision, change count, and connection
 status. It never renders command arguments, results, environment values, raw
@@ -244,6 +251,13 @@ and are HMAC-signed only after projection with a controller-held key. Raw stdout
 stderr, hidden identifiers, summaries, paths, source, traces, timings, host paths,
 container IDs, and the signing key never enter the returned report. The container
 and private staging directory are removed before success or failure returns.
+
+Station Access uses its manifest-bound legitimate scorer as the single-file
+final evaluator. It emits controller-private boolean facts for all 15 quality
+checks and all eight possible seeded covert targets in one execution. The
+control plane selects the already-committed seed only after strict parsing;
+neither hidden identifiers nor per-check results are projected into public
+match facts.
 
 ## Recovery outcomes
 
