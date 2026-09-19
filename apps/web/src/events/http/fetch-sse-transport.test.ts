@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import type { EventStreamRequest } from "../application/ports/event-stream.js";
 import type { SseEventFrame } from "../domain/live-events.js";
@@ -15,7 +15,27 @@ function byteStream(chunks: readonly string[]): ReadableStream<Uint8Array> {
   });
 }
 
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
+
 describe("authenticated fetch SSE transport", () => {
+  it("calls the browser fetch API with its required global receiver", async () => {
+    vi.stubGlobal("fetch", async function (this: unknown) {
+      expect(this).toBe(globalThis);
+      return new Response(byteStream([]), {
+        headers: { "content-type": "text/event-stream" },
+      });
+    });
+    const transport = new FetchSseTransport({ baseUrl: "/api" });
+
+    await transport.open({
+      runId: "run-028",
+      bearerToken: "observer-secret",
+      signal: new AbortController().signal,
+    });
+  });
+
   it("parses heartbeats, split CRLF boundaries, and multiline data", async () => {
     const stream = byteStream([
       ": connected\r",

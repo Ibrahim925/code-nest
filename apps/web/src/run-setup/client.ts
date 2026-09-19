@@ -1,4 +1,5 @@
 import type { RunControlView, RunSetupConfiguration } from "./domain.js";
+import { browserFetch } from "../http/browser-fetch.js";
 
 export type RunMutation = "pause" | "resume" | "cancel";
 
@@ -71,7 +72,7 @@ export class HttpOperatorRunClient implements OperatorRunClient {
   readonly #createCommandId: () => string;
 
   constructor(private readonly options: HttpOperatorRunClientOptions) {
-    this.#fetch = options.fetcher ?? globalThis.fetch.bind(globalThis);
+    this.#fetch = browserFetch(options.fetcher);
     this.#createCommandId = options.createCommandId ?? (() => crypto.randomUUID());
   }
 

@@ -4,6 +4,7 @@ import {
   type EventStreamTransport,
 } from "../application/ports/event-stream.js";
 import type { SseEventFrame } from "../domain/live-events.js";
+import { browserFetch } from "../../http/browser-fetch.js";
 import { readSseFrames } from "./sse-frame-reader.js";
 
 export interface FetchSseTransportOptions {
@@ -44,7 +45,7 @@ export class FetchSseTransport implements EventStreamTransport {
   readonly #fetch: typeof fetch;
 
   constructor(private readonly options: FetchSseTransportOptions) {
-    this.#fetch = options.fetcher ?? globalThis.fetch;
+    this.#fetch = browserFetch(options.fetcher);
   }
 
   async open(request: EventStreamRequest): Promise<AsyncIterable<SseEventFrame>> {

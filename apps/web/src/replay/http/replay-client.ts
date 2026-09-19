@@ -3,6 +3,7 @@ import {
   serializeReplayBundle,
   type ReplayBundle,
 } from "@code-nest/protocol";
+import { browserFetch } from "../../http/browser-fetch.js";
 
 export class ReplayClientError extends Error {
   constructor(readonly code: string, message: string) {
@@ -23,7 +24,7 @@ export class HttpReplayClient implements ReplayClient {
     readonly bearerToken: string;
     readonly fetcher?: typeof fetch;
   }) {
-    this.#fetch = options.fetcher ?? globalThis.fetch;
+    this.#fetch = browserFetch(options.fetcher);
   }
 
   async export(runId: string, signal?: AbortSignal): Promise<ReplayBundle> {

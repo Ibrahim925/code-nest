@@ -1,4 +1,5 @@
 import type { ObserverModeState } from "../domain/modes.js";
+import { browserFetch } from "../../http/browser-fetch.js";
 
 const IDENTIFIER = /^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/;
 
@@ -68,7 +69,7 @@ export class HttpObserverModeClient implements ObserverModeClient {
   readonly #createCommandId: () => string;
 
   constructor(private readonly options: HttpObserverModeClientOptions) {
-    this.#fetch = options.fetcher ?? globalThis.fetch;
+    this.#fetch = browserFetch(options.fetcher);
     this.#createCommandId = options.createCommandId ?? (() => crypto.randomUUID());
   }
 

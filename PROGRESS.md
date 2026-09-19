@@ -19,7 +19,7 @@ actually verified.
 - **Verification status:** all 55 recorded features pass. Every first-party code
   and test file is at most 350 physical lines. `make check` passed the
   file-length guard, ESLint, strict typechecks across six workspaces, 84 Vitest
-  files, and 473 tests. The set includes the four-container OMP/Luna flow,
+  files, and 474 tests. The set includes the four-container OMP/Luna flow,
   controller-owned Git synchronization, accessible four-computer interface,
   verified memory
   inspection, deterministic four-agent live/replay projection, OMP
@@ -38,6 +38,19 @@ actually verified.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-19 — Zen live-stream and browser-client repair
+
+- Outcome: done; Zen now follows the authenticated SSE stream and the remaining
+  Observatory HTTP clients use the same correct browser boundary.
+- Did: added one shared browser-fetch resolver that binds the native API to its
+  global receiver, then applied it to run control, SSE, artifacts, observer
+  mode, and replay. Added an SSE regression for the receiver contract.
+- Verification run: the two focused web suites passed 11/11 and strict web
+  typecheck passed. In Zen, a fresh four-seat OMP/Luna run displayed `FOLLOWING
+  LIVE` and the controller logged successful observer-mode and two live-event
+  requests for `station-access-run-002`. Final `make check` passed the 350-line
+  guard, ESLint, all six workspace typechecks, 84 test files, and 474 tests.
 
 ### 2026-09-19 — Firefox/Zen operator request fix
 

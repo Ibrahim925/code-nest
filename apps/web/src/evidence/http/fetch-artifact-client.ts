@@ -4,6 +4,7 @@ import {
   type ArtifactEvidenceClient,
 } from "../domain/artifact-evidence.js";
 import { verifiedArtifactDigest } from "../application/verify-artifact.js";
+import { browserFetch } from "../../http/browser-fetch.js";
 
 const MAXIMUM_INSPECTABLE_BYTES = 2 * 1_024 * 1_024;
 const MEDIA_TYPE = /^[A-Za-z0-9][A-Za-z0-9!#$&^_.+-]{0,126}\/[A-Za-z0-9][A-Za-z0-9!#$&^_.+-]{0,126}$/;
@@ -46,7 +47,7 @@ export class FetchArtifactClient implements ArtifactEvidenceClient {
   readonly #fetch: typeof fetch;
 
   constructor(private readonly options: FetchArtifactClientOptions) {
-    this.#fetch = options.fetcher ?? globalThis.fetch;
+    this.#fetch = browserFetch(options.fetcher);
   }
 
   async load(request: {
