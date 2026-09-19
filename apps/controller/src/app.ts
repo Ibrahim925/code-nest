@@ -17,9 +17,12 @@ import { registerObserverModeRoutes } from "./observer/http/modes.js";
 import { LedgerReplaySource } from "./replay/adapters/ledger-replay-source.js";
 import { ExportReplayService } from "./replay/application/export-replay.js";
 import { registerReplayRoutes } from "./replay/http/replay.js";
+import { BackgroundRunLauncher } from "./runs/application/background-run-launcher.js";
+import type { RunLauncher } from "./runs/application/ports/run-launcher.js";
 import { EventLedgerRunStore } from "./runs/adapters/event-ledger-run-store.js";
 import { RunLifecycleService } from "./runs/application/run-lifecycle.js";
 import { registerRunRoutes } from "./runs/http/routes.js";
+import { LocalOmpRunExecutor } from "./omp-live/local-omp-run-executor.js";
 
 export interface BuildAppOptions {
   readonly databasePath?: string;
@@ -30,6 +33,15 @@ export interface BuildAppOptions {
   readonly createEventId?: () => string;
   readonly secretPatterns?: readonly string[];
   readonly logger?: boolean;
+  readonly enableLocalOmpRunner?: boolean;
+  readonly runLauncher?: RunLauncher;
+}
+
+function providerCredential(apiKey: string | undefined): string {
+  if (apiKey === undefined || apiKey.length === 0) {
+    throw new Error("Local OMP runs require OPENAI_API_KEY.");
+  }
+  return apiKey.startsWith("Bearer ") ? apiKey : `Bearer ${apiKey}`;
 }
 
 export function buildApp(options: BuildAppOptions = {}): FastifyInstance {
@@ -60,8 +72,20 @@ export function buildApp(options: BuildAppOptions = {}): FastifyInstance {
   }
   const createEventId = options.createEventId ?? randomUUID;
   const now = options.now ?? (() => new Date());
+  const ompCredential = options.enableLocalOmpRunner
+    ? providerCredential(process.env.OPENAI_API_KEY)
+    : undefined;
+  const ompApiKey = options.enableLocalOmpRunner
+    ? process.env.OPENAI_API_KEY
+    : undefined;
   const ledger = EventLedger.open(databasePath, {
-    secretPatterns: [operatorToken, observerToken, ...(options.secretPatterns ?? [])],
+    secretPatterns: [
+      operatorToken,
+      observerToken,
+      ...(ompCredential === undefined ? [] : [ompCredential]),
+      ...(ompApiKey === undefined ? [] : [ompApiKey]),
+      ...(options.secretPatterns ?? []),
+    ],
   });
   const artifactRoot = options.artifactRoot ?? (
     options.databasePath === undefined
@@ -84,6 +108,25 @@ export function buildApp(options: BuildAppOptions = {}): FastifyInstance {
     createEventId,
     now,
   });
+  const runLauncher = options.runLauncher ?? (
+    options.enableLocalOmpRunner && ompCredential !== undefined
+      ? new BackgroundRunLauncher(
+          new LocalOmpRunExecutor({
+            ledger,
+            artifactRoot,
+            providerCredential: ompCredential,
+            createEventId,
+            now,
+          }),
+          {
+            report: (runId, error) => app.log.error(
+              { err: error, runId },
+              "Local OMP run failed.",
+            ),
+          },
+        )
+      : undefined
+  );
   app.addHook("onClose", async () => {
     ledger.close();
   });
@@ -101,9 +144,17 @@ export function buildApp(options: BuildAppOptions = {}): FastifyInstance {
   registerReplayRoutes(app, new ExportReplayService(
     new LedgerReplaySource(ledger, artifactRoot),
   ), { observerToken, operatorToken, observerModes });
-  registerRunRoutes(app, runService, operatorToken, (runId, sourceCommandId) => {
-    const digest = createHash("sha256").update(sourceCommandId).digest("hex").slice(0, 24);
-    observerModes.unblind(runId, `configured-unblind-${digest}`);
+  registerRunRoutes(app, runService, operatorToken, {
+    onConfiguredRunCreated: (configuration) => {
+      if (runLauncher !== undefined) void runLauncher.launch(configuration);
+    },
+    onResearcherUnblinded: (runId, sourceCommandId) => {
+      const digest = createHash("sha256")
+        .update(sourceCommandId)
+        .digest("hex")
+        .slice(0, 24);
+      observerModes.unblind(runId, `configured-unblind-${digest}`);
+    },
   });
 
   app.get("/health", async () => ({

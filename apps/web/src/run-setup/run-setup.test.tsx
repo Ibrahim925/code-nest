@@ -6,6 +6,7 @@ import { HttpOperatorRunClient, type OperatorRunClient } from "./client.js";
 import { validateRunSetup, type RunControlView } from "./domain.js";
 import { RunControls } from "./RunControls.js";
 import { RunSetupApp } from "./RunSetupApp.js";
+import { withOmpLunaPreset } from "./SetupFields.js";
 
 const runView: RunControlView = {
   schemaVersion: "1.0",
@@ -37,19 +38,12 @@ describe("run setup validation", () => {
   });
 
   it("accepts the four-seat contained OMP Luna preset", () => {
-    const omp = {
-      ...DEFAULT_RUN_SETUP,
-      adapters: DEFAULT_RUN_SETUP.adapters.map((adapter) => ({
-        ...adapter,
-        adapterId: "omp-rpc",
-        executionMode: "contained" as const,
-        modelDisclosure: "OpenAI Luna · OMP 18.1.14",
-      })),
-    };
+    const omp = withOmpLunaPreset(DEFAULT_RUN_SETUP);
     expect(validateRunSetup(omp, SETUP_CATALOG)).toEqual({
       ok: true,
       configuration: omp,
     });
+    expect(omp.limits.rounds).toBe(1);
   });
 
   it("explains unsafe source, roster, seed, adapter, and limit values", () => {
@@ -62,7 +56,8 @@ describe("run setup validation", () => {
       adapters: DEFAULT_RUN_SETUP.adapters.map((adapter) => ({
         ...adapter,
         participantId: "duplicate",
-        executionMode: "contained" as const,
+        adapterId: "fake-scripted",
+        executionMode: "split" as const,
       })),
       seed: -1,
       limits: { ...DEFAULT_RUN_SETUP.limits, cpuCores: 8 },
@@ -74,6 +69,7 @@ describe("run setup validation", () => {
       expect.arrayContaining([
         "scenario.manifestDigest",
         "adapters",
+        "adapters.0.adapterId",
         "adapters.0.executionMode",
         "seed",
         "limits.cpuCores",

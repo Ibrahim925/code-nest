@@ -1,5 +1,21 @@
 # Design Decisions
 
+## 2026-09-19: Probe scenario tools before starting the participant harness
+
+- Reason: a contained agent must be able to execute the public workflow named by
+  its verified scenario. Discovering a missing language runtime after model work
+  begins wastes provider budget and can produce an untested proposal that looks
+  complete.
+- Rejected alternative: assuming a generic participant image contains every
+  scenario tool would couple the harness to one language while still failing
+  late. Letting the model discover the absence is nondeterministic and makes
+  environment readiness part of agent performance.
+- Constraint: the trusted composition root injects a small validated list of
+  executable version probes. The participant lifecycle runs them inside its own
+  contained boundary before OMP starts, exposes no probe output, and fails closed
+  with verified cleanup. Image contents and both architecture digests remain
+  pinned; Station Access currently requires Node and npm.
+
 ## 2026-09-18: Synchronize contained OMP work through controller-owned Git patches
 
 - Reason: four agents need writable, private container filesystems while the

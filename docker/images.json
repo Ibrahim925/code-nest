@@ -1,8 +1,8 @@
 {
   "credentialBroker": "node@sha256:be80f76cf40ec8e42b9bec49f60a55e0660f30af58d3e5a25530785b30ea67e2",
   "ompParticipant": {
-    "arm64": "code-nest/omp-participant@sha256:14a8c8188c1aa21397ae650d7c19f2664d97031981e17ca6d1dcd15ef03f5adc",
-    "x64": "code-nest/omp-participant@sha256:40b62f08730966a08ff1c803ac4777e5c268095d5b15ee23153dcdde1fae779f"
+    "arm64": "code-nest/omp-participant@sha256:1a21d3c00a4f10877bd7a0786e98336ef4a079d40f5a517ac3cd8cf9cb64010a",
+    "x64": "code-nest/omp-participant@sha256:ab1ad8584b142086bd30db04da61ef9622c04f237b32c3ada25aa929e4c602e9"
   },
   "splitWorker": "alpine@sha256:4bcff63911fcb4448bd4fdacec207030997caf25e9bea4045fa6c8c44de311d1",
   "trustedEvaluator": "node@sha256:be80f76cf40ec8e42b9bec49f60a55e0660f30af58d3e5a25530785b30ea67e2"

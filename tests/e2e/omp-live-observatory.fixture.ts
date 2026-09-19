@@ -173,6 +173,10 @@ export async function createOmpLiveContext(): Promise<OmpLiveContext> {
     brokerSourcePath: join(projectRoot, "apps/controller/src/credentials"),
     trustedCodeRoot: projectRoot,
     observations,
+    requiredParticipantTools: [
+      { executable: "node", versionArguments: ["--version"] },
+      { executable: "npm", versionArguments: ["--version"] },
+    ],
     context: () => ({ round: 1, phase: "work" }),
   });
   const runtimeFactory = new ContainedOmpRuntimeFactory({

@@ -7,6 +7,7 @@ import {
   CODE_NEST_RATIONALE_TOOL,
   encodeHostToolResult,
   encodeOmpCommand,
+  isProtocolIdentifier,
   parseOmpFrame,
   parseSubmittedMemory,
   parseSubmittedCommand,
@@ -59,6 +60,9 @@ export class OmpRpcSession {
   #ready: Deferred<undefined> | undefined;
   #turn: (Deferred<OmpTurnStatus> & { interrupted: boolean }) | undefined;
   #requestIndex = 0;
+  #externalToolIndex = 0;
+  readonly #externalToolIds = new Map<string, string>();
+  readonly #externalToolNames = new Map<string, string>();
   #closed = false;
   #failure: RuntimeAdapterError | undefined;
 
@@ -200,8 +204,16 @@ export class OmpRpcSession {
       }
       if (frame.type === "tool_start" || frame.type === "tool_end") {
         this.events.tool({
-          toolCallId: frame.toolCallId,
-          toolName: frame.toolName,
+          toolCallId: this.#observableToolIdentifier(
+            frame.toolCallId,
+            this.#externalToolIds,
+            "omp-tool",
+          ),
+          toolName: this.#observableToolIdentifier(
+            frame.toolName,
+            this.#externalToolNames,
+            "omp-tool-name",
+          ),
           status: frame.type === "tool_start" ? "started" : frame.failed ? "failed" : "completed",
         });
         return;
@@ -212,6 +224,19 @@ export class OmpRpcSession {
         ? error
         : protocolError("OMP violated its RPC protocol.", error));
     }
+  }
+
+  #observableToolIdentifier(
+    value: string,
+    aliases: Map<string, string>,
+    prefix: string,
+  ): string {
+    if (isProtocolIdentifier(value)) return value;
+    const current = aliases.get(value);
+    if (current !== undefined) return current;
+    const alias = `${prefix}-${++this.#externalToolIndex}`;
+    aliases.set(value, alias);
+    return alias;
   }
 
   #response(frame: Extract<ReturnType<typeof parseOmpFrame>, { type: "response" }>): void {

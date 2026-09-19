@@ -24,6 +24,11 @@ hidden tests, another workspace, or host credentials.
 - no outbound network except a declared broker route in contained mode;
 - fresh lifecycle per participant and verified cleanup after completion.
 
+Before a contained harness starts, the trusted scenario composition may probe a
+small validated list of required executables inside that participant boundary.
+Probe output is not observable evidence. A missing tool terminates startup and
+uses the same verified cleanup path as any other contained-runtime failure.
+
 Exceptions must be scenario-declared, appear in the run manifest, and receive
 approval before implementation.
 

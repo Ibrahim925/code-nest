@@ -10,6 +10,21 @@ interface SetupFieldsProps {
   readonly onChange: (configuration: RunSetupConfiguration) => void;
 }
 
+export function withOmpLunaPreset(
+  configuration: RunSetupConfiguration,
+): RunSetupConfiguration {
+  return {
+    ...configuration,
+    adapters: configuration.adapters.map((adapter) => ({
+      ...adapter,
+      adapterId: "omp-rpc",
+      executionMode: "contained" as const,
+      modelDisclosure: "OpenAI Luna · OMP 18.1.14",
+    })),
+    limits: { ...configuration.limits, rounds: 1 },
+  };
+}
+
 const LIMIT_FIELDS: readonly {
   readonly key: keyof RunLimits;
   readonly label: string;
@@ -55,14 +70,7 @@ export function SetupFields({
   const patchLimits = (change: Partial<RunLimits>) => {
     patch({ limits: { ...configuration.limits, ...change } });
   };
-  const useOmpLuna = () => patch({
-    adapters: configuration.adapters.map((adapter) => ({
-      ...adapter,
-      adapterId: "omp-rpc",
-      executionMode: "contained" as const,
-      modelDisclosure: "OpenAI Luna · OMP 18.1.14",
-    })),
-  });
+  const useOmpLuna = () => onChange(withOmpLunaPreset(configuration));
   const selectAdapter = (index: number, adapterId: string) => {
     patchAdapter(index, adapterId === "omp-rpc" ? {
       adapterId,
@@ -143,7 +151,7 @@ export function SetupFields({
                   value={adapter.adapterId}
                   onChange={(event) => selectAdapter(index, event.target.value)}
                 >
-                  <option value="fake-scripted">Deterministic fake</option>
+                  <option value="fake-scripted" disabled>Deterministic fake · not installed</option>
                   <option value="omp-rpc">OMP RPC · OpenAI Luna</option>
                   <option value="subprocess" disabled>Subprocess · not installed</option>
                   <option value="direct-model" disabled>Direct model · not installed</option>

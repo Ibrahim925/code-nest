@@ -22,6 +22,10 @@ export interface ContainedOmpBoundary {
   stop(reason: string): Promise<ContainedRuntimeFinalReport>;
 }
 
+export interface ContainedParticipantPreflight {
+  verify(boundary: ContainedOmpBoundary): Promise<void>;
+}
+
 export interface ContainedOmpDependencies {
   createBoundary(): ContainedOmpBoundary;
   createProcessLauncher(
@@ -41,6 +45,7 @@ export interface ContainedOmpDependencies {
     boundary: ContainedOmpBoundary,
     participantId: string,
   ): OmpComputerCapturePort;
+  readonly preflight: ContainedParticipantPreflight;
 }
 
 export interface SynchronizedWorkspace {

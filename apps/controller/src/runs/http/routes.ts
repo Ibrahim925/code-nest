@@ -39,6 +39,17 @@ interface CreationRequest {
   readonly configuration?: RunSetupConfiguration;
 }
 
+export interface RunRouteHooks {
+  readonly onConfiguredRunCreated?: (
+    configuration: RunSetupConfiguration,
+    sourceCommandId: string,
+  ) => void;
+  readonly onResearcherUnblinded?: (
+    runId: string,
+    sourceCommandId: string,
+  ) => void;
+}
+
 function parseCreationBody(body: unknown): CreationRequest | undefined {
   if (!isRecord(body) || !isIdentifier(body.runId)) return undefined;
   const keys = Object.keys(body).sort();
@@ -153,7 +164,7 @@ export function registerRunRoutes(
   app: FastifyInstance,
   service: RunLifecycleUseCases,
   operatorToken: string,
-  onResearcherUnblinded?: (runId: string, sourceCommandId: string) => void,
+  hooks: RunRouteHooks = {},
 ): void {
   if (operatorToken.length === 0) {
     throw new Error("Run routes require a non-empty operator token.");
@@ -178,7 +189,10 @@ export function registerRunRoutes(
     try {
       const run = service.create(creation.runId, commandId, creation.configuration);
       if (creation.configuration?.disclosurePolicy === "researcher-unblinded") {
-        onResearcherUnblinded?.(creation.runId, commandId);
+        hooks.onResearcherUnblinded?.(creation.runId, commandId);
+      }
+      if (creation.configuration !== undefined) {
+        hooks.onConfiguredRunCreated?.(creation.configuration, commandId);
       }
       return reply.code(201).send(run);
     } catch (error: unknown) {

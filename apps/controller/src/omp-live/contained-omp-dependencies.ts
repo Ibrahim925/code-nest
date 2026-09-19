@@ -10,12 +10,17 @@ import type { RecordObservationService } from "../observability/application/reco
 import { RecordObservabilitySink } from "./adapters/record-observability-sink.js";
 import { WorkspaceComputerCapture } from "./adapters/workspace-computer-capture.js";
 import type { ContainedOmpDependencies } from "./application/ports/contained-omp-ports.js";
+import {
+  RequiredToolchainPreflight,
+  type RequiredParticipantTool,
+} from "./application/required-toolchain-preflight.js";
 
 export function createContainedOmpDependencies(input: {
   readonly allowedWorkspaceRoot: string;
   readonly brokerSourcePath: string;
   readonly trustedCodeRoot: string;
   readonly observations: RecordObservationService;
+  readonly requiredParticipantTools: readonly RequiredParticipantTool[];
   readonly context: () => {
     readonly round: number | null;
     readonly phase: string | null;
@@ -45,5 +50,6 @@ export function createContainedOmpDependencies(input: {
       ),
     createComputerCapture: (boundary, participantId) =>
       new WorkspaceComputerCapture(boundary, participantId),
+    preflight: new RequiredToolchainPreflight(input.requiredParticipantTools),
   };
 }

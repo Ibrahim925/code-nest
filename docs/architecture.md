@@ -178,6 +178,13 @@ Docker concepts into game rules. Its domain accepts only four unique contained
 owns one participant lifecycle; outer adapters supply Docker execution, safe
 computer capture, durable observations, and controller-owned Git synchronization.
 
+The composition root also injects the verified scenario's required executable
+probes through a narrow preflight port. The participant lifecycle executes those
+probes inside the started container before configuring or launching OMP. A
+missing tool fails startup and triggers contained cleanup without sending a
+prompt. The OMP adapter remains language-neutral; Station Access selects its
+Node/npm requirements and the pinned participant image supplies those tools.
+
 The ordinary one-round match application starts and runs all four independent
 runtimes concurrently. Results are joined and recorded in fixed roster order so
 wall-clock scheduling cannot alter replay. The live evidence decorator adds

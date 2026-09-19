@@ -44,9 +44,9 @@ input.on("line", (line) => {
   } else if (request.type === "prompt") {
     prompts += 1;
     response(request, { agentInvoked: true });
-    send({ type: "tool_execution_start", toolCallId: "read-1", toolName: "read",
+    send({ type: "tool_execution_start", toolCallId: "call_abc|fc_xyz", toolName: "read",
       args: { credential: process.env.BROKER_GRANT } });
-    send({ type: "tool_execution_end", toolCallId: "read-1", toolName: "read",
+    send({ type: "tool_execution_end", toolCallId: "call_abc|fc_xyz", toolName: "read",
       result: { secret: process.env.BROKER_GRANT }, isError: false });
     pending = "rationale";
     send({ type: "host_tool_call", id: "host-rationale", toolCallId: "rationale-1",
@@ -174,7 +174,7 @@ describe("OMP Observatory telemetry bridge", () => {
           source: "runtime",
           observation: expect.objectContaining({
             kind: "tool",
-            toolCallId: "read-1",
+            toolCallId: "omp-tool-1",
             summary: null,
           }),
         }),

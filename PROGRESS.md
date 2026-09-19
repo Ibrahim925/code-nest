@@ -14,12 +14,12 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-055` completes the contained four-agent OMP
-  live, Git-integration, Observatory, and replay path.
-- **Verification status:** all 55 recorded features pass. Every first-party code
+- **Branch/commit:** `main`; `CN-055` remains in progress after the first
+  post-run correctness slice.
+- **Verification status:** all automated checks pass. Every first-party code
   and test file is at most 350 physical lines. `make check` passed the
-  file-length guard, ESLint, strict typechecks across six workspaces, 84 Vitest
-  files, and 474 tests. The set includes the four-container OMP/Luna flow,
+  file-length guard, ESLint, strict typechecks across six workspaces, 87 Vitest
+  files, and 482 tests. The set includes the four-container OMP/Luna flow,
   controller-owned Git synchronization, accessible four-computer interface,
   verified memory
   inspection, deterministic four-agent live/replay projection, OMP
@@ -34,10 +34,45 @@ actually verified.
   cleanup, redaction, trusted-test, credential, TLS, and Docker boundaries.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** none; all recorded features are complete.
-- **Blockers:** none.
+- **Next priority:** replace the production one-round wiring with the existing
+  three-round completion path, including trusted tests, scoring, role reveal,
+  and truthful terminal events.
+- **Blockers:** none for implementation. A later real run will send verified
+  scenario briefs and repository-derived work to OpenAI and still requires
+  explicit user approval.
 
 ## Session Records
+
+### 2026-09-19 — Contained participant toolchain preflight
+
+- Outcome: done; the live Station Access image now supplies its public Node/npm
+  workflow and a missing required tool fails before OMP or provider work begins.
+- Did: excluded generated `.code-nest` run material from first-party linting;
+  repaired OMP wire-identifier validation without a control-character regex;
+  added an injected required-toolchain preflight port with safe errors and
+  contained cleanup; pinned Node 22.23.2 and npm 11.6.4 in both participant image
+  architectures; and corrected the amd64 OMP native-addon filename.
+- Verification run: focused preflight, OMP observability, and real four-container
+  suites passed 6/6. Both image architectures reported Node 22.23.2, npm 11.6.4,
+  and OMP 18.1.14. The finished run-007 candidate passed its 6 public tests inside
+  the pinned arm64 participant image. Final `make check` passed the 350-line
+  guard, ESLint, all six workspace typechecks, 87 test files, and 482 tests.
+
+### 2026-09-19 — Production OMP launch wiring (live verification pending)
+
+- Outcome: implementation and automated verification done; real-provider user
+  flow pending explicit authorization.
+- Did: connected durable configured-run creation to a deduplicating background
+  launcher; added the production Station Access snapshot-to-match composition,
+  four contained OMP/Luna runtimes, verified in-memory covert generator, real
+  OpenAI credential-broker route, artifacts, Git workspaces/integration, and
+  Observatory recording. The OMP preset now honestly selects the implemented
+  one-round live flow. Restarted local development with stable loopback tokens.
+- Verification run: focused launcher, generator, route, and setup tests passed
+  16/16. Final `make check` passed the 350-line guard, ESLint, all six workspace
+  typechecks, 86 test files, and 479 tests. The production external launch was
+  deliberately not performed because it sends scenario/repository material to
+  OpenAI and still requires explicit user approval.
 
 ### 2026-09-19 — Zen live-stream and browser-client repair
 

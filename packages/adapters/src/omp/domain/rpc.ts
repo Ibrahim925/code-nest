@@ -92,8 +92,25 @@ function record(value: unknown): Record<string, unknown> | null {
     : null;
 }
 
-function safeId(value: unknown): value is string {
+export function isProtocolIdentifier(value: unknown): value is string {
   return typeof value === "string" && /^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/.test(value);
+}
+
+function hasControlCharacter(value: string): boolean {
+  for (const character of value) {
+    const code = character.charCodeAt(0);
+    if (code <= 31 || code === 127) return true;
+  }
+  return false;
+}
+
+function wireIdentifier(value: unknown, maximumLength = 4_096): value is string {
+  return (
+    typeof value === "string" &&
+    value.length >= 1 &&
+    value.length <= maximumLength &&
+    !hasControlCharacter(value)
+  );
 }
 
 function protocolError(message: string): never {
@@ -138,7 +155,7 @@ export function parseOmpFrame(line: string): OmpRpcFrame {
     return { type: "ready" };
   }
   if (value.type === "response") {
-    if (!safeId(value.id) || typeof value.command !== "string" ||
+    if (!isProtocolIdentifier(value.id) || typeof value.command !== "string" ||
       value.command.length > 128 || typeof value.success !== "boolean") {
       return protocolError("OMP emitted an invalid RPC response.");
     }
@@ -149,7 +166,7 @@ export function parseOmpFrame(line: string): OmpRpcFrame {
   }
   if (value.type === "agent_end") return parseAgentEnd(value);
   if (value.type === "tool_execution_start" || value.type === "tool_execution_end") {
-    if (!safeId(value.toolCallId) || !safeId(value.toolName)) {
+    if (!wireIdentifier(value.toolCallId) || !wireIdentifier(value.toolName, 512)) {
       return protocolError("OMP emitted an invalid tool event.");
     }
     return value.type === "tool_execution_start"
@@ -161,7 +178,8 @@ export function parseOmpFrame(line: string): OmpRpcFrame {
   }
   if (value.type === "host_tool_call") {
     const args = record(value.arguments);
-    if (!safeId(value.id) || !safeId(value.toolCallId) || !safeId(value.toolName) || args === null) {
+    if (!isProtocolIdentifier(value.id) || !wireIdentifier(value.toolCallId) ||
+      !isProtocolIdentifier(value.toolName) || args === null) {
       return protocolError("OMP emitted an invalid host-tool call.");
     }
     return {
@@ -178,7 +196,8 @@ export function parseOmpState(
 ): string {
   const value = record(input);
   const model = record(value?.model);
-  if (!safeId(value?.sessionId) || model?.provider !== expected.provider || model.id !== expected.model) {
+  if (!isProtocolIdentifier(value?.sessionId) ||
+    model?.provider !== expected.provider || model.id !== expected.model) {
     return protocolError("OMP started an unexpected model or session.");
   }
   return value.sessionId;

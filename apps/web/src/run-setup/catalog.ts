@@ -2,8 +2,8 @@ import type { RunSetupConfiguration, SetupCatalog } from "./domain.js";
 
 export const SETUP_CATALOG: SetupCatalog = {
   scenarioIds: ["station-access"],
-  availableAdapterIds: ["fake-scripted", "omp-rpc"],
-  adapterModes: { "fake-scripted": ["split"], "omp-rpc": ["contained"] },
+  availableAdapterIds: ["omp-rpc"],
+  adapterModes: { "omp-rpc": ["contained"] },
 };
 
 export const DEFAULT_RUN_SETUP: RunSetupConfiguration = {
@@ -18,13 +18,13 @@ export const DEFAULT_RUN_SETUP: RunSetupConfiguration = {
   },
   adapters: ["a", "b", "c", "d"].map((suffix) => ({
     participantId: `player-${suffix}`,
-    adapterId: "fake-scripted",
-    executionMode: "split" as const,
-    modelDisclosure: "Deterministic fixture · no model provider",
+    adapterId: "omp-rpc",
+    executionMode: "contained" as const,
+    modelDisclosure: "OpenAI Luna · OMP 18.1.14",
   })),
   seed: 2,
   limits: {
-    rounds: 3,
+    rounds: 1,
     roundDurationSeconds: 900,
     trustedTestWallTimeSeconds: 300,
     cpuCores: 2,

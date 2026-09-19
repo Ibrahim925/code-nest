@@ -8,6 +8,8 @@ RUN apk add --no-cache \
       git=2.49.1-r0 \
       libgcc=14.2.0-r6 \
       libstdc++=14.2.0-r6 \
+      nodejs=22.23.2-r0 \
+      npm=11.6.4-r0 \
     && case "$TARGETARCH" in \
       arm64) \
         asset="omp-linux-musl-arm64"; \
@@ -20,7 +22,16 @@ RUN apk add --no-cache \
     && wget -q "https://github.com/can1357/oh-my-pi/releases/download/v${OMP_VERSION}/${asset}" -O /usr/local/bin/omp \
     && echo "${checksum}  /usr/local/bin/omp" | sha256sum -c - \
     && chmod 0755 /usr/local/bin/omp \
-    && omp --version | grep -Fx "omp/${OMP_VERSION}"
+    && omp --version | grep -Fx "omp/${OMP_VERSION}" \
+    && native_home="$(mktemp -d)" \
+    && (HOME="$native_home" omp --mode rpc --no-session </dev/null >/dev/null 2>&1 || true) \
+    && case "$TARGETARCH" in \
+      arm64) native="pi_natives.linux-arm64.node" ;; \
+      amd64) native="pi_natives.linux-x64-baseline.node" ;; \
+    esac \
+    && cp "$native_home/.omp/natives/${OMP_VERSION}/${native}" "/usr/local/bin/${native}" \
+    && chmod 0555 "/usr/local/bin/${native}" \
+    && rm -rf "$native_home"
 
 LABEL org.opencontainers.image.title="Code Nest OMP participant"
 LABEL org.opencontainers.image.version="18.1.14"

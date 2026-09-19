@@ -112,6 +112,7 @@ export class ContainedOmpParticipant implements MatchParticipantRuntime {
       grantLifetimeMilliseconds: 60 * 60_000,
     });
     try {
+      await this.dependencies.preflight.verify(boundary);
       await installModelsConfiguration(boundary);
       const adapter = this.dependencies.createRuntimeAdapter({
         sessionId: `omp-${request.runId}-${this.participantId}`,
@@ -120,7 +121,11 @@ export class ContainedOmpParticipant implements MatchParticipantRuntime {
         modelName: this.configuration.modelName,
         modelSelector: this.configuration.modelSelector,
         command: "omp",
-        responseTimeoutMilliseconds: 15_000,
+        responseTimeoutMilliseconds:
+          Math.min(
+            this.configuration.limits.commandTimeoutMilliseconds,
+            60_000,
+          ),
         startupTimeoutMilliseconds: 30_000,
         terminationGraceMilliseconds: 2_000,
       }, this.dependencies.createProcessLauncher(

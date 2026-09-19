@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { buildApp } from "../../app.js";
 import { EventLedger } from "../../ledger/ledger.js";
@@ -44,6 +44,26 @@ const configuration = {
 afterEach(cleanupRouteFixtures);
 
 describe("configured run creation", () => {
+  it("hands a durable configured run to the asynchronous launcher", async () => {
+    const databasePath = await createDatabasePath();
+    const launch = vi.fn(async () => undefined);
+    const app = buildApp({
+      ...appOptions(databasePath),
+      runLauncher: { launch },
+    });
+
+    const response = await app.inject({
+      method: "POST",
+      url: "/runs",
+      headers: lifecycleHeaders("configured-launch"),
+      payload: { runId: configuration.runId, configuration },
+    });
+
+    expect(response.statusCode).toBe(201);
+    expect(launch).toHaveBeenCalledWith(configuration);
+    await app.close();
+  });
+
   it("records the complete reproducibility protocol in the creation event", async () => {
     const databasePath = await createDatabasePath();
     const app = buildApp(appOptions(databasePath));
