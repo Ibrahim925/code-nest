@@ -539,6 +539,72 @@
       "verification": ["corepack pnpm vitest run packages/adapters/src/omp.integration.test.ts", "make check"],
       "evidence": "2026-09-18: four connector integration cases passed with a real child process, covering the common runtime lifecycle, exact OMP RPC flags and explicit environment, command capture, usage and bounded tool evidence, credential/thinking non-disclosure, interrupt/resume on one session, model fallback, malformed RPC, missing executable, invalid input, and output-budget overrun. No-prompt readiness and exact openai/gpt-5.6-luna state probes also passed against installed OMP 18.1.14. The three affected adapter suites passed 25/25; make check passed the 350-line guard, lint, six strict workspace typechecks, 77 test files, and 437 tests.",
       "notes": "One connector is reused for all four participant containers. Keep OMP RPC, provider routing, and Docker transport outside the controller domain; no protocol or database change."
+    },
+    {
+      "id": "CN-050",
+      "area": "observability",
+      "milestone": "M6-live-harnesses",
+      "title": "Human Observatory event contracts",
+      "user_visible_behavior": "Human researchers can follow phase changes, private agent activity, submitted rationales, tools, computer frames, memories, and discourse through strict replayable records without exposing one participant's private stream to another.",
+      "status": "passing",
+      "verification": ["corepack pnpm vitest run packages/protocol/src/observability-parser.test.ts packages/protocol/src/observability-policy.test.ts", "make check"],
+      "evidence": "2026-09-18: 18 focused contract cases passed for all nine Observatory facts, strict payload bounds, agent and provider rationale provenance, visible and withheld frames, artifact digest binding, participant-private ownership, public discourse and phase transitions, actor/context consistency, and rejection of raw thinking, tool arguments, credentials, and inline frame bytes. The additive parser reuses the existing Version 1 envelope and unblinded-human projection policy. Final make check passed the 350-line guard, lint, all workspace typechecks, 79 test files, and 455 tests.",
+      "notes": "Additive Version 1 event kinds only. Private activity remains participant-private and is available to authenticated unblinded observers under the existing projection rules. Raw chain-of-thought, credentials, hidden-test content, and inline frame bytes are forbidden."
+    },
+    {
+      "id": "CN-051",
+      "area": "observability",
+      "milestone": "M6-live-harnesses",
+      "title": "Observatory recording and memory hexagon",
+      "user_visible_behavior": "Accepted activity, rationale, tool, frame, and memory updates become durable replayable events and immutable artifacts while each participant can access only its own working memory.",
+      "status": "not_started",
+      "verification": ["corepack pnpm vitest run apps/controller/src/observability/observability.integration.test.ts", "make check"],
+      "evidence": "",
+      "notes": "Reuse the ledger, artifact store, and server-owned projection context; no browser-side security decisions."
+    },
+    {
+      "id": "CN-052",
+      "area": "adapters",
+      "milestone": "M6-live-harnesses",
+      "title": "OMP Observatory telemetry bridge",
+      "user_visible_behavior": "Each OMP participant reports safe live activity, tools, submitted rationale, memory revisions, and action-triggered or heartbeat computer frames without leaking provider credentials or raw thought.",
+      "status": "not_started",
+      "verification": ["corepack pnpm vitest run packages/adapters/src/omp-observability.integration.test.ts", "make check"],
+      "evidence": "",
+      "notes": "Translate at the adapter boundary; frame capture must emit an explicit withheld fact when redaction or capture fails."
+    },
+    {
+      "id": "CN-053",
+      "area": "research-ui",
+      "milestone": "M6-live-harnesses",
+      "title": "Four-agent Observatory projector",
+      "user_visible_behavior": "Live and replay data deterministically produces four agent cards, global phase, discourse, activity history, computer frame state, and inspectable memory revisions for the authenticated human perspective.",
+      "status": "not_started",
+      "verification": ["corepack pnpm vitest run apps/web/src/observatory/application/project-agent-observatory.test.ts", "make check"],
+      "evidence": "",
+      "notes": "Projection is pure and preserves missing, withheld, redacted, stale, and disconnected states explicitly."
+    },
+    {
+      "id": "CN-054",
+      "area": "research-ui",
+      "milestone": "M6-live-harnesses",
+      "title": "Live Village-style Observatory interface",
+      "user_visible_behavior": "A human sees four model-labelled computers in a responsive 2x2 workspace with unmistakable phase transitions, live discourse, activity and rationale, a persistent timeline, and per-agent memory inspection.",
+      "status": "not_started",
+      "verification": ["corepack pnpm vitest run apps/web/src/observatory/agent-observatory.test.tsx", "corepack pnpm --filter @code-nest/web build", "make check"],
+      "evidence": "",
+      "notes": "Use Code Nest's cobalt/navy research-workstation identity; preserve keyboard, screen-reader, reduced-motion, mobile, and bounded-rendering behavior."
+    },
+    {
+      "id": "CN-055",
+      "area": "demonstration",
+      "milestone": "M6-live-harnesses",
+      "title": "Four-container OMP live Observatory flow",
+      "user_visible_behavior": "An operator can launch four isolated OMP participants using OpenAI Luna, watch a complete live match in the Observatory, and replay the same human-visible record afterward.",
+      "status": "not_started",
+      "verification": ["corepack pnpm vitest run tests/e2e/omp-live-observatory.test.ts", "make check"],
+      "evidence": "",
+      "notes": "One standalone agent per container with isolated workspace and credential; shared changes flow only through the controller-owned Git integration path."
     }
   ]
 }

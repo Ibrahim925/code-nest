@@ -14,12 +14,13 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-049` adds the verified OMP RPC connector as the
-  first post-Version-1 live-harness extension.
+- **Branch/commit:** `main`; `CN-050` adds strict Human Observatory contracts on
+  top of the verified OMP RPC connector.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 77 Vitest files, and 437 tests. The set
-  includes the OMP RPC lifecycle and isolation contract, four digest-bound
+  typechecks across six workspaces, 79 Vitest files, and 455 tests. The set
+  includes Observatory payload, privacy, provenance, and artifact contracts,
+  the OMP RPC lifecycle and isolation contract, four digest-bound
   offline demonstrations, recovery/restart and
   serialized-leakage inspection, the 10,000-event/four-stream stress path,
   accessibility, Constitution Lab, matched trials, all three scenarios,
@@ -27,11 +28,32 @@ actually verified.
   cleanup, redaction, trusted-test, credential, TLS, and Docker boundaries.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** wire the verified connector into the contained participant
-  image and four-runtime match launcher when that deployment layer is approved.
+- **Next priority:** `CN-051` Observatory recording and memory hexagon.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-18 (cn-050) — Human Observatory event contracts
+
+- Outcome: done; 50 of 55 recorded features pass.
+- Did: added strict schemas and a non-throwing parser for activity, submitted
+  rationale, tool observation, computer frames, working memory, public messages,
+  phase changes, and Town Hall transitions. A separate pure policy layer binds
+  private events to exactly one owning participant, public events to public
+  visibility, provenance to the right actor, phase facts to their context, and
+  frame or memory facts to exact immutable artifact digests. Documented that the
+  human view contains submitted facts and artifacts, never raw private thought.
+- Verification run: 18 focused cases passed across the parser and policy suites,
+  including every supported kind, provider-summary labelling, withheld frames,
+  strict size bounds, actor/context checks, and rejection of raw thinking, tool
+  arguments, bearer credentials, and inline frame bytes. Final `make check`
+  passed the 350-line guard, ESLint, all six workspace typechecks, 79 test files,
+  and 455 tests. An initial sandboxed run correctly failed 14 pre-existing
+  Docker/listen cases for denied host access; the same gate passed with the
+  repository's integration permissions.
+- Remaining: five slices: controller recording/memory, OMP telemetry and frame
+  capture, deterministic web projection, the four-computer interface, and the
+  complete four-container live/replay flow.
 
 ### 2026-09-18 (cn-049) — OMP RPC harness connector
 

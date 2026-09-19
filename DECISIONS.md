@@ -1,5 +1,22 @@
 # Design Decisions
 
+## 2026-09-18: Observe submitted facts and artifacts, not private thought
+
+- Reason: a human researcher needs to see each agent's activity, computer,
+  discourse, and evolving memory without pretending that an internal model trace
+  is a reliable or comparable explanation. Durable facts also make the same view
+  available in live mode and deterministic replay.
+- Rejected alternative: streaming raw provider traces or terminal logs would
+  create credential and hidden-test leakage channels, couple the product to one
+  harness, and mislabel opaque model internals as ground truth. Continuous video
+  would add storage and replay cost without improving most coding observations.
+- Constraint: store only strict bounded actions, explicit agent rationales,
+  labelled provider summaries, and immutable artifacts. Capture computer frames
+  on actions plus a low-rate heartbeat and record safe withheld-frame facts.
+  Working memory is an explicit participant-owned artifact. Other participants
+  never receive a private stream; only authenticated unblinded humans and the
+  operator may inspect all participant-private Observatory facts.
+
 ## 2026-09-18: Connect OMP through RPC, one process per contained participant
 
 - Reason: OMP already has a correlated headless protocol for prompts, aborts,

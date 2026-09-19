@@ -192,6 +192,44 @@ selected participant knew at the time. `revealed` projection is allowed only
 after scoring and role reveal. Operator-private events stay out of observer
 replays permanently.
 
+### Human Observatory event catalog
+
+The Observatory consumes accepted facts, not process logs. The protocol package
+publishes strict payload contracts and one `parseObservabilityEvent` boundary for
+these Version 1 event kinds:
+
+| Event kind | Meaning | Visibility | Artifact |
+|---|---|---|---|
+| `runtime.activity_reported` | Current bounded activity and state | owning participant only | none |
+| `runtime.rationale_submitted` | Agent self-report or labelled provider summary | owning participant only | none |
+| `runtime.tool_observed` | Tool name, status, and safe bounded summary | owning participant only | none |
+| `runtime.computer_frame_captured` | Visible, redacted, or explicitly withheld frame | owning participant only | exact PNG digest when visible |
+| `memory.updated` | New revision of self-authored working memory | owning participant only | exact memory digest |
+| `message.published` | Participant discourse | public | none |
+| `match.phase_advanced` | Controller-owned phase transition | public | none |
+| `town_hall.started` | Round and four-participant speaking order | public | none |
+| `town_hall.turn_recorded` | Bounded public turn and citations | public | none |
+
+The five new private payloads declare their own additive payload version. The
+four existing public event shapes retain their Version 1 wire format. Their new
+kind-specific validation does not add fields to previously recorded events.
+
+`participant_private` means the owning participant is the sole named recipient.
+It does not authorize delivery to another participant. The existing projection
+rule also lets an authenticated unblinded human researcher inspect these events;
+clean observers cannot. Unblinding still makes the run benchmark-ineligible.
+
+Rationales are explicit agent submissions or provider-supplied reasoning
+summaries with provenance. They are never described as raw thought. Tool
+arguments, private chain-of-thought, credentials, hidden-test content, inline
+frame bytes, and arbitrary process errors are not fields in these contracts.
+Strict schemas reject them before persistence.
+
+Frame and memory bodies live in immutable artifact storage. The event binds the
+exact digest; a withheld frame has no artifact and names only a closed safe
+reason. This keeps live delivery bounded and lets replay reproduce both what a
+human saw and when capture was intentionally unavailable.
+
 Observer unblinding is the public `observer_unblinded` event. Its strict payload
 states `mode: unblinded`, `benchmarkEligible: false`, and the fixed
 `operator_unblinding` intervention class; it contains no credential or private
