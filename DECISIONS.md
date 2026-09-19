@@ -1,5 +1,21 @@
 # Design Decisions
 
+## 2026-09-18: Project the four-computer view from authorized facts only
+
+- Reason: live viewing and offline replay must explain the same run from the same
+  delivery prefix. A pure view model also gives the interface honest empty,
+  redacted, withheld, stale, and disconnected states without browser inference.
+- Rejected alternative: deriving status from timers, DOM state, or missing image
+  requests would make replay nondeterministic and turn network behavior into a
+  false claim about an agent. Letting cards arrive dynamically would also make
+  participant position depend on event timing.
+- Constraint: lane order comes from the validated four-participant setup. The
+  projector consumes only server-authorized Version 1 deliveries, sanitizes
+  narrative text, retains delivery order, and keeps memory bodies behind artifact
+  authorization. Tool/activity events mark the last frame stale; only a new
+  frame makes it current. The same fold must retain 10,000 relevant facts within
+  the existing two-second local target.
+
 ## 2026-09-18: Expose OMP observability through narrow host and capture ports
 
 - Reason: OMP's RPC stream contains useful lifecycle and tool boundaries, while

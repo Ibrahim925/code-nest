@@ -14,12 +14,13 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-052` adds the safe OMP telemetry and
-  computer-capture bridge on top of trusted Observatory recording.
+- **Branch/commit:** `main`; `CN-053` adds the deterministic four-agent
+  Observatory projector on top of authorized human-view deliveries.
 - **Verification status:** every first-party code and test file is at most 350
   physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 81 Vitest files, and 461 tests. The set
-  includes OMP activity/tool/submission/frame telemetry, controller recording,
+  typechecks across six workspaces, 82 Vitest files, and 466 tests. The set
+  includes deterministic four-agent live/replay projection, OMP
+  activity/tool/submission/frame telemetry, controller recording,
   memory ownership and secret redaction,
   Observatory payload, privacy, provenance, and artifact contracts,
   the OMP RPC lifecycle and isolation contract, four digest-bound
@@ -30,10 +31,28 @@ actually verified.
   cleanup, redaction, trusted-test, credential, TLS, and Docker boundaries.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** `CN-053` Four-agent Observatory projector.
+- **Next priority:** `CN-054` Live Village-style Observatory interface.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-18 (cn-053) — Four-agent Observatory projector
+
+- Outcome: done; 53 of 55 recorded features pass.
+- Did: added a pure web application projector that fixes exactly four agent
+  lanes from authorized setup data and reduces delivered facts into the global
+  phase, public discourse, ordered timeline, per-agent activity, bounded tool
+  status, submitted rationale attribution, latest memory revision metadata, and
+  explicit computer-frame state. Missing, redacted, stale, withheld, and
+  disconnected screens remain distinct; invalid, duplicate, and older
+  deliveries cannot corrupt the current view.
+- Verification run: five focused cases passed for initialization, phase and
+  discourse order, private facts, every computer state, malformed delivery,
+  idempotence, and deterministic bounded projection of 10,000 facts in under
+  two seconds. Final `make check` passed the 350-line guard, ESLint, all six
+  workspace typechecks, 82 test files, and 466 tests.
+- Remaining: two slices: the live four-computer interface and the complete
+  four-container OMP live/replay flow.
 
 ### 2026-09-18 (cn-052) — OMP Observatory telemetry bridge
 

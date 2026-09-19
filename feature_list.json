@@ -579,9 +579,9 @@
       "milestone": "M6-live-harnesses",
       "title": "Four-agent Observatory projector",
       "user_visible_behavior": "Live and replay data deterministically produces four agent cards, global phase, discourse, activity history, computer frame state, and inspectable memory revisions for the authenticated human perspective.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run apps/web/src/observatory/application/project-agent-observatory.test.ts", "make check"],
-      "evidence": "",
+      "evidence": "2026-09-18: five focused projector cases passed for exact four-agent initialization, private activity/rationale/memory facts, public phase and discourse order, visible/redacted/stale/withheld/disconnected computer states, malformed and duplicate delivery handling, and deterministic bounded projection of 10,000 facts. Final make check passed the 350-line guard, lint, all workspace typechecks, 82 test files, and 466 tests.",
       "notes": "Projection is pure and preserves missing, withheld, redacted, stale, and disconnected states explicitly."
     },
     {

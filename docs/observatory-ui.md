@@ -102,6 +102,23 @@ container is healthy. A health label appears only after an authorized
 container-health event. Wide screens show four equal lanes, medium screens show
 two by two, and phones use one column without changing chronological meaning.
 
+The expanded four-agent projector keeps one additional deterministic record per
+lane: bounded reported activity, latest tool, submitted rationale with provenance,
+working-memory revision metadata, and computer state. Computer state says
+`Awaiting first computer frame`, `Live computer frame`, `Redacted computer
+frame`, `Frame withheld`, or `Computer disconnected` in text. A tool or activity
+after the last frame marks that frame stale until another capture arrives. A
+withheld capture retains the last visible digest for chronology but never renders
+it as current.
+
+Memory events expose revision, reason, summary, digest, and previous digest in the
+projector. The body remains an on-demand participant-private artifact. Public
+messages and Town Hall turns share one ordered discourse record; a null Town Hall
+message is rendered as an explicit yield. Phase transitions, discourse, and all
+private Observatory facts also enter one delivery-ordered timeline. Live and
+portable replay use the same pure fold and never consult wall time, a model, or
+the network.
+
 ## Observable Workstream
 
 The Workstream defaults to merged chronology and can switch to four participant
