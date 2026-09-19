@@ -66,6 +66,17 @@ function verifyTurn(
   }
 }
 
+function settledValues<T>(
+  results: readonly PromiseSettledResult<T>[],
+  message: string,
+): T[] {
+  const errors = results.flatMap((result) =>
+    result.status === "rejected" ? [result.reason] : []
+  );
+  if (errors.length > 0) throw new AggregateError(errors, message);
+  return results.flatMap((result) => result.status === "fulfilled" ? [result.value] : []);
+}
+
 export class OneRoundMatchService {
   constructor(private readonly dependencies: OneRoundMatchDependencies) {}
 
@@ -87,20 +98,25 @@ export class OneRoundMatchService {
 
     const runtimes = new Map<string, MatchParticipantRuntime>();
     try {
-      for (const workspace of workspaces) {
-        const runtime = await this.dependencies.runtimes.create(workspace);
-        if (runtime.participantId !== workspace.participantId) {
-          throw new OneRoundMatchError(
-            "RUNTIME_RESULT_REJECTED",
-            "Runtime factory returned a participant identity mismatch.",
-          );
-        }
-        const started = await runtime.start({
-          runId: request.runId,
-          scenarioId: request.scenario.scenarioId,
-          workspacePath: workspace.path,
-        });
-        runtimes.set(workspace.participantId, runtime);
+      const startedRuntimes = settledValues(await Promise.allSettled(
+        workspaces.map(async (workspace) => {
+          const runtime = await this.dependencies.runtimes.create(workspace);
+          if (runtime.participantId !== workspace.participantId) {
+            throw new OneRoundMatchError(
+              "RUNTIME_RESULT_REJECTED",
+              "Runtime factory returned a participant identity mismatch.",
+            );
+          }
+          const started = await runtime.start({
+            runId: request.runId,
+            scenarioId: request.scenario.scenarioId,
+            workspacePath: workspace.path,
+          });
+          runtimes.set(workspace.participantId, runtime);
+          return { workspace, started };
+        }),
+      ), "One or more participant runtimes failed to start.");
+      for (const { workspace, started } of startedRuntimes) {
         await this.dependencies.evidence.record(request.runId, {
           type: "runtime_started",
           participantId: workspace.participantId,
@@ -124,20 +140,25 @@ export class OneRoundMatchService {
         })),
       }, runtimes);
 
+      const completedTurns = settledValues(await Promise.allSettled(
+        workspaces.map(async (workspace) => {
+          const runtime = runtimes.get(workspace.participantId);
+          if (runtime === undefined) {
+            throw new OneRoundMatchError(
+              "RUNTIME_RESULT_REJECTED",
+              "Participant runtime disappeared before its turn.",
+            );
+          }
+          const turn = await runtime.run(TURN_BUDGET);
+          const stopped = await runtime.stop("round_completed");
+          const capture = await this.dependencies.workspaces.capture(workspace);
+          verifyTurn(workspace.participantId, turn, capture.candidateRevision);
+          return { workspace, turn, stopped, capture };
+        }),
+      ), "One or more participant runtimes failed to complete work.");
       const participantResults = [];
       const proposals = [];
-      for (const workspace of workspaces) {
-        const runtime = runtimes.get(workspace.participantId);
-        if (runtime === undefined) {
-          throw new OneRoundMatchError(
-            "RUNTIME_RESULT_REJECTED",
-            "Participant runtime disappeared before its turn.",
-          );
-        }
-        const turn = await runtime.run(TURN_BUDGET);
-        const stopped = await runtime.stop("round_completed");
-        const capture = await this.dependencies.workspaces.capture(workspace);
-        verifyTurn(workspace.participantId, turn, capture.candidateRevision);
+      for (const { workspace, turn, stopped, capture } of completedTurns) {
         await this.dependencies.evidence.record(request.runId, {
           type: "runtime_stopped",
           participantId: workspace.participantId,

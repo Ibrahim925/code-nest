@@ -32,6 +32,22 @@ describe("run setup validation", () => {
     });
   });
 
+  it("accepts the four-seat contained OMP Luna preset", () => {
+    const omp = {
+      ...DEFAULT_RUN_SETUP,
+      adapters: DEFAULT_RUN_SETUP.adapters.map((adapter) => ({
+        ...adapter,
+        adapterId: "omp-rpc",
+        executionMode: "contained" as const,
+        modelDisclosure: "OpenAI Luna · OMP 18.1.14",
+      })),
+    };
+    expect(validateRunSetup(omp, SETUP_CATALOG)).toEqual({
+      ok: true,
+      configuration: omp,
+    });
+  });
+
   it("explains unsafe source, roster, seed, adapter, and limit values", () => {
     const invalid = {
       ...DEFAULT_RUN_SETUP,
@@ -70,6 +86,8 @@ describe("run setup interface", () => {
     expect(markup).toContain("Prepare a match protocol");
     expect(markup).toContain("Run identity and pinned source");
     expect(markup).toContain("Four participant runtimes");
+    expect(markup).toContain("Use four isolated OMP · Luna agents");
+    expect(markup).toContain("OMP RPC · OpenAI Luna");
     expect(markup).toContain("Experimental condition");
     expect(markup).toContain("Resource limits");
     expect(markup.match(/name="adapters\.\d\.participantId"/g)).toHaveLength(4);

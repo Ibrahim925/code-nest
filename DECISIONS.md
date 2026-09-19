@@ -1,5 +1,19 @@
 # Design Decisions
 
+## 2026-09-18: Synchronize contained OMP work through controller-owned Git patches
+
+- Reason: four agents need writable, private container filesystems while the
+  controller needs reproducible proposals it can inspect and integrate.
+- Rejected alternative: a shared writable checkout would leak peer work and make
+  authorship timing-dependent; mounting host Git credentials or the Docker socket
+  would cross the participant trust boundary.
+- Constraint: each container starts from one read-only workspace seed, commits
+  only inside its tmpfs copy, and exports a binary patch. The controller verifies
+  base ancestry, applies and commits that patch in the participant's private host
+  workspace, then runs the existing deterministic integration path. Four runtime
+  starts and turns may execute concurrently, but durable evidence is recorded in
+  roster order for stable replay.
+
 ## 2026-09-18: Project the four-computer view from authorized facts only
 
 - Reason: live viewing and offline replay must explain the same run from the same

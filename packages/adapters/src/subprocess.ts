@@ -2,6 +2,15 @@ import { SubprocessRuntimeAdapter } from "./subprocess/application/subprocess-ru
 import { NodeProcessLauncher } from "./subprocess/node/node-process-launcher.js";
 import type { SubprocessConfiguration } from "./subprocess/domain/configuration.js";
 
+export { NodeProcessLauncher } from "./subprocess/node/node-process-launcher.js";
+export type {
+  ProcessExit,
+  ProcessLaunchRequest,
+  ProcessLauncher,
+  ProcessSession,
+  ProcessSignal,
+} from "./subprocess/application/process-session.js";
+
 export {
   SubprocessRuntimeAdapter,
   type SubprocessRuntimeAdapterOptions,

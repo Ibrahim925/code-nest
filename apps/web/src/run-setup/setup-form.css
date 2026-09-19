@@ -105,6 +105,21 @@
   font-size: 0.82rem;
 }
 
+.runtime-preset {
+  min-height: 38px;
+  margin: -5px 0 16px;
+  padding: 8px 13px;
+  color: #fff;
+  border: 1px solid #1746a2;
+  border-radius: 2px;
+  background: #1746a2;
+  font: 750 0.72rem "SFMono-Regular", Consolas, monospace;
+  letter-spacing: 0.03em;
+}
+
+.runtime-preset:hover { background: #123b8d; }
+.runtime-preset:focus-visible { outline: 3px solid #a7c7ff; outline-offset: 2px; }
+
 .adapter-table {
   overflow: hidden;
   border: 1px solid #c4ccd7;

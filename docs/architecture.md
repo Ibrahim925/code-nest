@@ -169,6 +169,21 @@ same participant-private visibility as their event. A clean observer and another
 participant receive neither; the owner, operator, and authenticated unblinded
 human retain the existing projection semantics.
 
+## Contained OMP live-match hexagon
+
+`apps/controller/src/omp-live` composes the generic runtime, container,
+observability, workspace, match, and integration ports without moving OMP or
+Docker concepts into game rules. Its domain accepts only four unique contained
+`omp-rpc` seats disclosed as OpenAI Luna on OMP 18.1.14. The application adapter
+owns one participant lifecycle; outer adapters supply Docker execution, safe
+computer capture, durable observations, and controller-owned Git synchronization.
+
+The ordinary one-round match application starts and runs all four independent
+runtimes concurrently. Results are joined and recorded in fixed roster order so
+wall-clock scheduling cannot alter replay. The live evidence decorator adds
+public phase, Town Hall, and message facts around the existing match evidence;
+the browser continues to consume only authorized protocol deliveries.
+
 ## Town Hall projection
 
 `apps/web/src/town-hall` owns a presentation-side domain and pure projector. It

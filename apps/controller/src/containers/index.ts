@@ -1,5 +1,6 @@
 export * from "./adapters/docker-command.js";
 export * from "./adapters/docker-contained-runtime-engine.js";
+export * from "./adapters/docker-exec-process-launcher.js";
 export * from "./adapters/docker-participant-profile.js";
 export * from "./adapters/docker-split-container-engine.js";
 export * from "./application/contained-runtime-engine.js";

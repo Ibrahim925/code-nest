@@ -40,9 +40,12 @@ async function engineHost() {
 if (
   typeof images.splitWorker !== "string" ||
   typeof images.credentialBroker !== "string" ||
-  typeof images.trustedEvaluator !== "string"
+  typeof images.trustedEvaluator !== "string" ||
+  typeof images.ompParticipant !== "object" ||
+  images.ompParticipant === null ||
+  typeof images.ompParticipant[process.arch] !== "string"
 ) {
-  throw new Error("docker/images.json must declare splitWorker, credentialBroker, and trustedEvaluator.");
+  throw new Error("docker/images.json does not support this host architecture.");
 }
 
 const temporaryConfig = await mkdtemp(join(tmpdir(), "code-nest-docker-config-"));
@@ -55,6 +58,26 @@ try {
       { encoding: "utf8", env: environment(), maxBuffer: 4 * 1_048_576, timeout: 120_000 },
     );
   }
+  const ompImage = images.ompParticipant[process.arch];
+  const ompTag = "code-nest/omp-participant:18.1.14";
+  await execute(
+    "docker",
+    [
+      "--host", host,
+      "build",
+      "--pull=false",
+      "--provenance=false",
+      "--tag", ompTag,
+      "--file", join(root, "docker/omp-participant.Dockerfile"),
+      root,
+    ],
+    { encoding: "utf8", env: environment(), maxBuffer: 8 * 1_048_576, timeout: 300_000 },
+  );
+  await execute(
+    "docker",
+    ["--host", host, "image", "inspect", ompImage],
+    { encoding: "utf8", env: environment(), maxBuffer: 1_048_576, timeout: 30_000 },
+  );
 } finally {
   await rm(temporaryConfig, { recursive: true, force: true });
 }

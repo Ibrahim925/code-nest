@@ -187,6 +187,9 @@ importers:
 
   apps/controller:
     dependencies:
+      '@code-nest/adapters':
+        specifier: workspace:*
+        version: link:../../packages/adapters
       '@code-nest/core':
         specifier: workspace:*
         version: link:../../packages/core

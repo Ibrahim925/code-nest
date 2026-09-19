@@ -135,6 +135,21 @@ Malformed frames, model fallback, counter rollback, timeout, over-budget output,
 unexpected exit, and incomplete cleanup fail closed. Interrupt uses OMP's RPC
 abort command and keeps the process available for a later declared resume.
 
+The live composition pins the official Linux/musl OMP 18.1.14 executable in an
+architecture-specific participant image. The controller launches one image,
+credential broker, private bridge, egress bridge, OMP process, home tmpfs, and
+workspace tmpfs per participant. A custom OMP provider points only at the private
+broker and receives only its short-lived grant; the long-lived OpenAI credential
+stays in the broker. Container work returns as a binary Git patch that the
+controller validates and commits in the matching private host workspace. Peers
+never share a checkout or synchronize directly.
+
+The headless computer-frame adapter renders only derived safe state: participant
+identity, capture reason and sequence, Git revision, change count, and connection
+status. It never renders command arguments, results, environment values, raw
+terminal output, or private reasoning. This makes computer activity inspectable
+without claiming that a headless RPC harness owns a graphical desktop.
+
 ### Subprocess adapter v1
 
 The subprocess adapter launches a direct executable and argument vector without

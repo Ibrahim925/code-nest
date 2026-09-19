@@ -601,9 +601,9 @@
       "milestone": "M6-live-harnesses",
       "title": "Four-container OMP live Observatory flow",
       "user_visible_behavior": "An operator can launch four isolated OMP participants using OpenAI Luna, watch a complete live match in the Observatory, and replay the same human-visible record afterward.",
-      "status": "not_started",
+      "status": "passing",
       "verification": ["corepack pnpm vitest run tests/e2e/omp-live-observatory.test.ts", "make check"],
-      "evidence": "",
+      "evidence": "2026-09-18: the focused end-to-end proof passed with four distinct participant containers, four distinct credential brokers, four private networks, and the exact omp/18.1.14 binary in every architecture-pinned image. All four contained seats ran concurrently, produced isolated commits, exported binary patches through the controller-owned Git path, integrated four proposal files, and emitted safe activity, tool, rationale, memory, computer-frame, phase, Town Hall, and public-message facts. The authenticated live Observatory projection exactly equalled the portable replay projection; provider credentials, gateway-token names, and thinking were absent; all scoped containers and networks were removed. The setup accepts an explicit four-seat OMP/Luna preset, Impeccable reported no UI findings, regression suites passed, and final make check passed the 350-line guard, lint, all strict workspace typechecks, 84 test files, and 472 tests.",
       "notes": "One standalone agent per container with isolated workspace and credential; shared changes flow only through the controller-owned Git integration path."
     }
   ]

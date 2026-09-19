@@ -55,6 +55,25 @@ export function SetupFields({
   const patchLimits = (change: Partial<RunLimits>) => {
     patch({ limits: { ...configuration.limits, ...change } });
   };
+  const useOmpLuna = () => patch({
+    adapters: configuration.adapters.map((adapter) => ({
+      ...adapter,
+      adapterId: "omp-rpc",
+      executionMode: "contained" as const,
+      modelDisclosure: "OpenAI Luna · OMP 18.1.14",
+    })),
+  });
+  const selectAdapter = (index: number, adapterId: string) => {
+    patchAdapter(index, adapterId === "omp-rpc" ? {
+      adapterId,
+      executionMode: "contained",
+      modelDisclosure: "OpenAI Luna · OMP 18.1.14",
+    } : {
+      adapterId,
+      executionMode: "split",
+      modelDisclosure: "Deterministic fixture · no model provider",
+    });
+  };
 
   return (
     <div className="protocol-fields">
@@ -99,6 +118,9 @@ export function SetupFields({
         <p className="field-note">
           Every slot declares its adapter, execution boundary, and model provenance.
         </p>
+        <button className="runtime-preset" type="button" onClick={useOmpLuna}>
+          Use four isolated OMP · Luna agents
+        </button>
         <div className="adapter-table">
           <div className="adapter-head" aria-hidden="true">
             <span>Participant</span><span>Adapter</span><span>Mode</span><span>Disclosure</span>
@@ -119,9 +141,10 @@ export function SetupFields({
                 <select
                   name={`adapters.${index}.adapterId`}
                   value={adapter.adapterId}
-                  onChange={(event) => patchAdapter(index, { adapterId: event.target.value })}
+                  onChange={(event) => selectAdapter(index, event.target.value)}
                 >
                   <option value="fake-scripted">Deterministic fake</option>
+                  <option value="omp-rpc">OMP RPC · OpenAI Luna</option>
                   <option value="subprocess" disabled>Subprocess · not installed</option>
                   <option value="direct-model" disabled>Direct model · not installed</option>
                 </select>
@@ -136,7 +159,7 @@ export function SetupFields({
                   })}
                 >
                   <option value="split">Split</option>
-                  <option value="contained" disabled>Contained · unavailable</option>
+                  <option value="contained">Contained</option>
                 </select>
               </label>
               <label>

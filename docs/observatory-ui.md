@@ -119,6 +119,12 @@ private Observatory facts also enter one delivery-ordered timeline. Live and
 portable replay use the same pure fold and never consult wall time, a model, or
 the network.
 
+Run setup offers one explicit four-seat OMP/Luna preset. Applying it changes all
+four slots together to the contained OMP adapter and exact model disclosure, so
+an operator cannot accidentally describe a split or mixed execution as the live
+four-container demonstration. The final captured frame remains available after
+the runtime stops, while the activity record independently says `stopped`.
+
 ## Observable Workstream
 
 The Workstream defaults to merged chronology and can switch to four participant

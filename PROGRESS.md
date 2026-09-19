@@ -14,12 +14,14 @@ actually verified.
 
 ## Current Verified State
 
-- **Branch/commit:** `main`; `CN-054` adds the live four-computer Observatory
-  interface on top of deterministic authorized projection.
-- **Verification status:** every first-party code and test file is at most 350
-  physical lines. `make check` passed the file-length guard, ESLint, strict
-  typechecks across six workspaces, 83 Vitest files, and 470 tests. The set
-  includes the accessible four-computer interface and verified memory
+- **Branch/commit:** `main`; `CN-055` completes the contained four-agent OMP
+  live, Git-integration, Observatory, and replay path.
+- **Verification status:** all 55 recorded features pass. Every first-party code
+  and test file is at most 350 physical lines. `make check` passed the
+  file-length guard, ESLint, strict typechecks across six workspaces, 84 Vitest
+  files, and 472 tests. The set includes the four-container OMP/Luna flow,
+  controller-owned Git synchronization, accessible four-computer interface,
+  verified memory
   inspection, deterministic four-agent live/replay projection, OMP
   activity/tool/submission/frame telemetry, controller recording,
   memory ownership and secret redaction,
@@ -32,10 +34,30 @@ actually verified.
   cleanup, redaction, trusted-test, credential, TLS, and Docker boundaries.
 - **Start:** run `make dev`; controller is at `http://127.0.0.1:3100` and the
   web scaffold is at `http://127.0.0.1:5173`.
-- **Next priority:** `CN-055` Four-container OMP live Observatory flow.
+- **Next priority:** none; all recorded features are complete.
 - **Blockers:** none.
 
 ## Session Records
+
+### 2026-09-18 (cn-055) — Four-container OMP live Observatory flow
+
+- Outcome: done; 55 of 55 recorded features pass.
+- Did: pinned the official OMP 18.1.14 Linux/musl executable in separate arm64
+  and x64 participant images; composed the contained runtime, private credential
+  broker, Docker-exec transport, observability recorder, safe headless computer
+  renderer, and controller-owned Git patch synchronizer behind the OMP live
+  hexagon. The match runner now starts and runs all four independent participants
+  concurrently while recording joined outcomes in roster order. A live evidence
+  decorator adds deterministic phase, Town Hall, and public-message facts. Run
+  setup now offers one four-seat contained OMP/Luna preset.
+- Verification run: the focused E2E passed with four participant containers,
+  four brokers, four private networks, exact OMP versions, four isolated commits,
+  controller-imported patches, an integrated candidate, all Observatory fact
+  families, exact live/replay projection equality, secret/thinking exclusion,
+  and verified Docker cleanup. The one-round and setup regressions passed 8/8.
+  Impeccable returned no findings. Final `make check` passed the 350-line guard,
+  ESLint, all six workspace typechecks, 84 test files, and 472 tests.
+- Remaining: none.
 
 ### 2026-09-18 (cn-054) — Live four-computer Observatory interface
 

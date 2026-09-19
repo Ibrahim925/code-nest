@@ -2,8 +2,8 @@ import type { RunSetupConfiguration, SetupCatalog } from "./domain.js";
 
 export const SETUP_CATALOG: SetupCatalog = {
   scenarioIds: ["station-access"],
-  availableAdapterIds: ["fake-scripted"],
-  adapterModes: { "fake-scripted": ["split"] },
+  availableAdapterIds: ["fake-scripted", "omp-rpc"],
+  adapterModes: { "fake-scripted": ["split"], "omp-rpc": ["contained"] },
 };
 
 export const DEFAULT_RUN_SETUP: RunSetupConfiguration = {
